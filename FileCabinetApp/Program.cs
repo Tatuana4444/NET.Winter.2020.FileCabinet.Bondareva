@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -12,14 +13,22 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
 
+        private static FileCabinetService fileCabinetService = new FileCabinetService();
+
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
+            new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
         private static string[][] helpMessages = new string[][]
         {
+            new string[] { "create", "create new record", "The 'create' command create new record." },
+            new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
+            new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -95,6 +104,69 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+        }
+
+        private static void Stat(string parameters)
+        {
+            var recordsCount = Program.fileCabinetService.GetStat();
+            Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create(string parameters)
+        {
+            Console.Write("First name: ");
+            string firstName = Console.ReadLine();
+            Console.Write("Last name: ");
+            string lastName = Console.ReadLine();
+            Console.Write("Date of birth: ");
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeStyles styles = DateTimeStyles.None;
+            if (DateTime.TryParse(Console.ReadLine(), culture, styles, out DateTime dateOfBirth))
+            {
+                Console.Write("Gender: ");
+                if (char.TryParse(Console.ReadLine(), out char gender) && (gender.Equals('W') || gender.Equals('M')))
+                {
+                    Console.Write("Pasport Id: ");
+                    if (short.TryParse(Console.ReadLine(), out short passportId))
+                    {
+                        Console.Write("Salary: ");
+                        if (decimal.TryParse(Console.ReadLine(), out decimal salary))
+                        {
+                            int index = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, gender, passportId, salary);
+                            Console.WriteLine($"Record #{index} is created.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error, salary should be decimal, please try again.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error, passportId should be short integer, please try again.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error, gender should be  \"M\" or \"W\", please try again.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error, date of birth should be in the format \"month/day/year\", please try again.");
+            }
+        }
+
+        private static void List(string parameters)
+        {
+            FileCabinetRecord[] fileCabinetRecord = Program.fileCabinetService.GetRecords();
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
+            dtfi.ShortDatePattern = "yyyy-MMM-dd";
+            foreach (FileCabinetRecord record in fileCabinetRecord)
+            {
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
+                    $" {record.Gender}, {record.PassportId}, {record.Salary}");
+            }
         }
     }
 }
