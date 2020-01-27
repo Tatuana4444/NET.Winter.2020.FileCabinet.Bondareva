@@ -119,11 +119,40 @@ namespace FileCabinetApp
             Console.Write("Last name: ");
             string lastName = Console.ReadLine();
             Console.Write("Date of birth: ");
-            DateTime dateOfBirth;
-            if (DateTime.TryParse(Console.ReadLine(), out dateOfBirth))
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeStyles styles = DateTimeStyles.None;
+            if (DateTime.TryParse(Console.ReadLine(), culture, styles, out DateTime dateOfBirth))
             {
-                int index = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
-                Console.WriteLine($"Record #{index} is created.");
+                Console.Write("Gender: ");
+                if (char.TryParse(Console.ReadLine(), out char gender) && (gender.Equals('W') || gender.Equals('M')))
+                {
+                    Console.Write("Pasport Id: ");
+                    if (short.TryParse(Console.ReadLine(), out short passportId))
+                    {
+                        Console.Write("Salary: ");
+                        if (decimal.TryParse(Console.ReadLine(), out decimal salary))
+                        {
+                            int index = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, gender, passportId, salary);
+                            Console.WriteLine($"Record #{index} is created.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error, salary should be decimal, please try again.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error, passportId should be short integer, please try again.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error, gender should be  \"M\" or \"W\", please try again.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error, date of birth should be in the format \"month/day/year\", please try again.");
             }
         }
 
@@ -135,7 +164,8 @@ namespace FileCabinetApp
             dtfi.ShortDatePattern = "yyyy-MMM-dd";
             foreach (FileCabinetRecord record in fileCabinetRecord)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}");
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
+                    $" {record.Gender}, {record.PassportId}, {record.Salary}");
             }
         }
     }
