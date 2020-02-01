@@ -114,46 +114,144 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            Console.Write("First name: ");
-            string firstName = Console.ReadLine();
-            Console.Write("Last name: ");
-            string lastName = Console.ReadLine();
-            Console.Write("Date of birth: ");
+            string firstName;
+            do
+            {
+                Console.Write("First name: ");
+                firstName = Console.ReadLine();
+                if (firstName.Length > 2 && firstName.Length < 60
+                    && firstName.Trim().Length != 0)
+                {
+                    break;
+                }
+                else
+                {
+                    if (firstName.Length < 2 || firstName.Length > 60)
+                    {
+                        Console.WriteLine("Error, Length of first name can't be less than 2 and more than 60. Try again, please");
+                    }
+
+                    if (firstName.Trim().Length == 0)
+                    {
+                        Console.WriteLine("Error, First name can't contain only spaces. Try again, please");
+                    }
+                }
+            }
+            while (true);
+
+            string lastName;
+            do
+            {
+                Console.Write("Last name: ");
+                lastName = Console.ReadLine();
+                if (lastName.Length > 2 && lastName.Length < 60
+                    && lastName.Trim().Length != 0)
+                {
+                    break;
+                }
+                else
+                {
+                    if (lastName.Length < 2 || lastName.Length > 60)
+                    {
+                        Console.WriteLine("Error, Length of last name can't be less than 2 and more than 60. Try again, please");
+                    }
+
+                    if (lastName.Trim().Length == 0)
+                    {
+                        Console.WriteLine("Error, Last name can't contain only spaces. Try again, please");
+                    }
+                }
+            }
+            while (true);
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeStyles styles = DateTimeStyles.None;
-            if (DateTime.TryParse(Console.ReadLine(), culture, styles, out DateTime dateOfBirth))
+            DateTime dateOfBirth;
+            do
             {
-                Console.Write("Gender: ");
-                if (char.TryParse(Console.ReadLine(), out char gender) && (gender.Equals('W') || gender.Equals('M')))
+                Console.Write("Date of birth: ");
+                if (DateTime.TryParse(Console.ReadLine(), culture, styles, out dateOfBirth))
                 {
-                    Console.Write("Pasport Id: ");
-                    if (short.TryParse(Console.ReadLine(), out short passportId))
+                    if ((DateTime.Compare(new DateTime(1950, 1, 1), dateOfBirth) > 0)
+                        || (DateTime.Compare(DateTime.Now, dateOfBirth) < 0))
                     {
-                        Console.Write("Salary: ");
-                        if (decimal.TryParse(Console.ReadLine(), out decimal salary))
-                        {
-                            int index = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, gender, passportId, salary);
-                            Console.WriteLine($"Record #{index} is created.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Error, salary should be decimal, please try again.");
-                        }
+                        Console.WriteLine("Error, Date of Birth can't be less than 01-Jan-1950 and more than today. Try again, please");
                     }
                     else
                     {
-                        Console.WriteLine("Error, passportId should be short integer, please try again.");
+                        break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Error, gender should be  \"M\" or \"W\", please try again.");
+                    Console.WriteLine("Error, Date of birth should be in forma 'month/day/year'. Try again, please");
                 }
             }
-            else
+            while (true);
+            char gender;
+            do
             {
-                Console.WriteLine("Error, date of birth should be in the format \"month/day/year\", please try again.");
+                Console.Write("Gender: ");
+                if (char.TryParse(Console.ReadLine(), out gender))
+                {
+                    if (gender != 'W' && gender != 'M')
+                    {
+                        Console.WriteLine("Error, gender should be  \"M\" or \"W\". Try again, please");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error, Unvalued value. Try again, please");
+                }
             }
+            while (true);
+            short passportId;
+            do
+            {
+                Console.Write("Pasport Id: ");
+                if (short.TryParse(Console.ReadLine(), out passportId))
+                {
+                    if (passportId < 1000 || passportId > 9999)
+                    {
+                        Console.WriteLine("Error, Passport Id can't be less than 1000 and more than 9999. Try again, please");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error, passportId should be short integer. Try again, please");
+                }
+            }
+            while (true);
+            decimal salary;
+            do
+            {
+                Console.Write("Salary: ");
+                if (decimal.TryParse(Console.ReadLine(), out salary))
+                {
+                    if (salary < FileCabinetService.MinSalary)
+                    {
+                        Console.WriteLine($"Error, Salary can't be less than {FileCabinetService.MinSalary}. Try again, please");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error, salary should be decimal. Try again, please");
+                }
+            }
+            while (true);
+            int index = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, gender, passportId, salary);
+            Console.WriteLine($"Record #{index} is created.");
         }
 
         private static void List(string parameters)

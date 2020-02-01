@@ -23,7 +23,7 @@ namespace FileCabinetApp
 
             if (firstName.Trim().Length == 0)
             {
-                throw new ArgumentException("Length of first name can't contain only spaces", nameof(firstName));
+                throw new ArgumentException("First name can't contain only spaces", nameof(firstName));
             }
 
             if (lastName is null)
@@ -38,7 +38,7 @@ namespace FileCabinetApp
 
             if (lastName.Trim().Length == 0)
             {
-                throw new ArgumentException("Length of last name can't contain only spaces", nameof(firstName));
+                throw new ArgumentException("Last name can't contain only spaces", nameof(firstName));
             }
 
             if ((DateTime.Compare(new DateTime(1950, 1, 1), dateOfBirth) > 0)
