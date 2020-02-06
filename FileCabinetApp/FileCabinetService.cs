@@ -124,5 +124,26 @@ namespace FileCabinetApp
 
             return listByFirstName.ToArray();
         }
+
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            if (lastName == null)
+            {
+                throw new ArgumentNullException(nameof(lastName), "Lastname can't be null");
+            }
+
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            lastName = lastName.ToUpper(englishUS);
+            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
+            foreach (FileCabinetRecord fileCabinetRecord in this.list)
+            {
+                if (fileCabinetRecord.LastName.ToUpper(englishUS) == lastName)
+                {
+                    listByLastName.Add(fileCabinetRecord);
+                }
+            }
+
+            return listByLastName.ToArray();
+        }
     }
 }

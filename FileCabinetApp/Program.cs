@@ -422,15 +422,24 @@ namespace FileCabinetApp
         private static void Find(string parameters)
         {
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            FileCabinetRecord[] filtedList = Array.Empty<FileCabinetRecord>();
+            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
+            dtfi.ShortDatePattern = "yyyy-MMM-dd";
             string[] param = parameters.Split(' ');
             if (param[0].ToUpper(englishUS) == "FIRSTNAME")
             {
-                FileCabinetRecord[] listByFirstName = fileCabinetService.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
-                foreach (FileCabinetRecord record in listByFirstName)
-                {
-                    Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
-                    $" {record.Gender}, {record.PassportId}, {record.Salary}");
-                }
+                filtedList = fileCabinetService.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
+            }
+
+            if (param[0].ToUpper(englishUS) == "LASTNAME")
+            {
+                filtedList = fileCabinetService.FindByLastName(param[1].Substring(1, param[1].Length - 2));
+            }
+
+            foreach (FileCabinetRecord record in filtedList)
+            {
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
+                $" {record.Gender}, {record.PassportId}, {record.Salary}");
             }
         }
     }
