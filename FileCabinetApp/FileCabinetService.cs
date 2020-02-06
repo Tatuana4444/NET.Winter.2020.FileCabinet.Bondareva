@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FileCabinetApp
@@ -101,6 +102,27 @@ namespace FileCabinetApp
             this.list[id - 1].Gender = gender;
             this.list[id - 1].PassportId = passportId;
             this.list[id - 1].Salary = salary;
+        }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            if (firstName == null)
+            {
+                throw new ArgumentNullException(nameof(firstName), "Firstname can't be null");
+            }
+
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            firstName = firstName.ToUpper(englishUS);
+            List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
+            foreach (FileCabinetRecord fileCabinetRecord in this.list)
+            {
+                if (fileCabinetRecord.FirstName.ToUpper(englishUS) == firstName)
+                {
+                    listByFirstName.Add(fileCabinetRecord);
+                }
+            }
+
+            return listByFirstName.ToArray();
         }
     }
 }

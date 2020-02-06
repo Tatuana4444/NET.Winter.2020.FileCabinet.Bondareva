@@ -20,6 +20,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -30,6 +31,7 @@ namespace FileCabinetApp
             new string[] { "create", "create new record", "The 'create' command create new record." },
             new string[] { "edit", "edit record by id", "The 'edit' command edit record by id." },
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
+            new string[] { "find", "find records by creterion", "The 'find' command find records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
@@ -415,6 +417,21 @@ namespace FileCabinetApp
             while (true);
             fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, gender, passportId, salary);
             Console.WriteLine($"Record #{id} is updated.");
+        }
+
+        private static void Find(string parameters)
+        {
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            string[] param = parameters.Split(' ');
+            if (param[0].ToUpper(englishUS) == "FIRSTNAME")
+            {
+                FileCabinetRecord[] listByFirstName = fileCabinetService.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
+                foreach (FileCabinetRecord record in listByFirstName)
+                {
+                    Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
+                    $" {record.Gender}, {record.PassportId}, {record.Salary}");
+                }
+            }
         }
     }
 }
