@@ -145,5 +145,19 @@ namespace FileCabinetApp
 
             return listByLastName.ToArray();
         }
+
+        public FileCabinetRecord[] FindByDateOfBirth(DateTime date)
+        {
+            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
+            foreach (FileCabinetRecord fileCabinetRecord in this.list)
+            {
+                if (fileCabinetRecord.DateOfBirth == date)
+                {
+                    listByLastName.Add(fileCabinetRecord);
+                }
+            }
+
+            return listByLastName.ToArray();
+        }
     }
 }

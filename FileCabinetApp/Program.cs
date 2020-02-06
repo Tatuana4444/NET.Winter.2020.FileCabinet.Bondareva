@@ -123,7 +123,7 @@ namespace FileCabinetApp
             {
                 Console.Write("First name: ");
                 firstName = Console.ReadLine();
-                if (firstName.Length > 2 && firstName.Length < 60
+                if (firstName.Length >= 2 && firstName.Length <= 60
                     && firstName.Trim().Length != 0)
                 {
                     break;
@@ -148,7 +148,7 @@ namespace FileCabinetApp
             {
                 Console.Write("Last name: ");
                 lastName = Console.ReadLine();
-                if (lastName.Length > 2 && lastName.Length < 60
+                if (lastName.Length >= 2 && lastName.Length <= 60
                     && lastName.Trim().Length != 0)
                 {
                     break;
@@ -426,14 +426,30 @@ namespace FileCabinetApp
             DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
             dtfi.ShortDatePattern = "yyyy-MMM-dd";
             string[] param = parameters.Split(' ');
-            if (param[0].ToUpper(englishUS) == "FIRSTNAME")
+            switch (param[0].ToUpper(englishUS))
             {
-                filtedList = fileCabinetService.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
-            }
+                case "FIRSTNAME":
+                    {
+                        filtedList = fileCabinetService.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
+                        break;
+                    }
 
-            if (param[0].ToUpper(englishUS) == "LASTNAME")
-            {
-                filtedList = fileCabinetService.FindByLastName(param[1].Substring(1, param[1].Length - 2));
+                case "LASTNAME":
+                    {
+                        filtedList = fileCabinetService.FindByLastName(param[1].Substring(1, param[1].Length - 2));
+                        break;
+                    }
+
+                case "DATEOFBIRTH":
+                    {
+                        DateTimeStyles styles = DateTimeStyles.None;
+                        if (DateTime.TryParse(param[1].Substring(1, param[1].Length - 2), englishUS, styles, out DateTime dateOfBirth))
+                        {
+                            filtedList = fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                        }
+
+                        break;
+                    }
             }
 
             foreach (FileCabinetRecord record in filtedList)
