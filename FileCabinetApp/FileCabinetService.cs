@@ -10,6 +10,7 @@ namespace FileCabinetApp
         public const int MinSalary = 375;
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char gender, short passportId, decimal salary)
         {
@@ -74,20 +75,11 @@ namespace FileCabinetApp
                 PassportId = passportId,
                 Salary = salary,
             };
-
-            List<FileCabinetRecord> listByFirdtName;
-            if (this.firstNameDictionary.ContainsKey(firstName))
-            {
-                listByFirdtName = this.firstNameDictionary[firstName];
-            }
-            else
-            {
-                listByFirdtName = new List<FileCabinetRecord>();
-            }
-
-            listByFirdtName.Add(record);
-            this.firstNameDictionary.Add(firstName.ToUpper(CultureInfo.CreateSpecificCulture("en-US")), listByFirdtName);
             this.list.Add(record);
+            List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
+            this.AddToDictionary(this.firstNameDictionary, listByFirstName, firstName, record.Id);
+            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
+            this.AddToDictionary(this.lastNameDictionary, listByLastName, lastName, record.Id);
             return record.Id;
         }
 
@@ -113,18 +105,16 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(firstName), "Firstname can't be null");
             }
 
+            if (lastName == null)
+            {
+                throw new ArgumentNullException(nameof(firstName), "Lastname can't be null");
+            }
+
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            List<FileCabinetRecord> listByFirdtName = this.firstNameDictionary[this.list[id - 1].FirstName.ToUpper(englishUS)];
-            int item = listByFirdtName.IndexOf(this.list[id - 1]);
-            listByFirdtName.RemoveAt(item);
-            if (listByFirdtName.Count > 0)
-            {
-                this.firstNameDictionary[firstName] = listByFirdtName;
-            }
-            else
-            {
-                this.firstNameDictionary.Remove(this.list[id - 1].FirstName.ToUpper(englishUS));
-            }
+            List<FileCabinetRecord> listByFirstName = this.firstNameDictionary[this.list[id - 1].FirstName.ToUpper(englishUS)];
+            this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, lastName, id);
+            List<FileCabinetRecord> listByLastName = this.lastNameDictionary[this.list[id - 1].LastName.ToUpper(englishUS)];
+            this.RemoveFromDictionary(this.lastNameDictionary, listByLastName, lastName, id);
 
             this.list[id - 1].FirstName = firstName;
             this.list[id - 1].LastName = lastName;
@@ -133,17 +123,8 @@ namespace FileCabinetApp
             this.list[id - 1].PassportId = passportId;
             this.list[id - 1].Salary = salary;
 
-            if (this.firstNameDictionary.ContainsKey(firstName))
-            {
-                listByFirdtName = this.firstNameDictionary[firstName];
-            }
-            else
-            {
-                listByFirdtName = new List<FileCabinetRecord>();
-            }
-
-            listByFirdtName.Add(this.list[id - 1]);
-            this.firstNameDictionary.Add(firstName.ToUpper(CultureInfo.CreateSpecificCulture("en-US")), listByFirdtName);
+            this.AddToDictionary(this.firstNameDictionary, listByFirstName, firstName, id);
+            this.AddToDictionary(this.lastNameDictionary, listByLastName, lastName, id);
         }
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
@@ -174,12 +155,9 @@ namespace FileCabinetApp
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
             lastName = lastName.ToUpper(englishUS);
             List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            foreach (FileCabinetRecord fileCabinetRecord in this.list)
+            if (this.lastNameDictionary.ContainsKey(lastName.ToUpper(englishUS)))
             {
-                if (fileCabinetRecord.LastName.ToUpper(englishUS) == lastName)
-                {
-                    listByLastName.Add(fileCabinetRecord);
-                }
+                listByLastName = this.lastNameDictionary[lastName.ToUpper(englishUS)];
             }
 
             return listByLastName.ToArray();
@@ -197,6 +175,36 @@ namespace FileCabinetApp
             }
 
             return listByLastName.ToArray();
+        }
+
+        private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
+        {
+            if (dictionary.ContainsKey(name))
+            {
+                list = dictionary[name];
+            }
+            else
+            {
+                list = new List<FileCabinetRecord>();
+            }
+
+            list.Add(this.list[id - 1]);
+            dictionary.Add(name.ToUpper(CultureInfo.CreateSpecificCulture("en-US")), list);
+        }
+
+        private void RemoveFromDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
+        {
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            int itemByFirstName = list.IndexOf(this.list[id - 1]);
+            list.RemoveAt(itemByFirstName);
+            if (list.Count > 0)
+            {
+                dictionary[name] = list;
+            }
+            else
+            {
+                dictionary.Remove(this.list[id - 1].FirstName.ToUpper(englishUS));
+            }
         }
     }
 }

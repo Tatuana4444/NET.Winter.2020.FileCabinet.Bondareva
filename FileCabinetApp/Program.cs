@@ -28,10 +28,10 @@ namespace FileCabinetApp
 
         private static string[][] helpMessages = new string[][]
         {
-            new string[] { "create", "create new record", "The 'create' command create new record." },
-            new string[] { "edit", "edit record by id", "The 'edit' command edit record by id." },
+            new string[] { "create", "creates new record", "The 'create' command creates new record." },
+            new string[] { "edit", "edits record by id", "The 'edit' command edits record by id." },
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
-            new string[] { "find", "find records by creterion", "The 'find' command find records by creterion." },
+            new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
