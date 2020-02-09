@@ -20,6 +20,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -27,9 +28,10 @@ namespace FileCabinetApp
 
         private static string[][] helpMessages = new string[][]
         {
-            new string[] { "create", "create new record", "The 'create' command create new record." },
-            new string[] { "edit", "edit record by id", "The 'edit' command edit record by id." },
+            new string[] { "create", "creates new record", "The 'create' command creates new record." },
+            new string[] { "edit", "edits record by id", "The 'edit' command edits record by id." },
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
+            new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
@@ -121,7 +123,7 @@ namespace FileCabinetApp
             {
                 Console.Write("First name: ");
                 firstName = Console.ReadLine();
-                if (firstName.Length > 2 && firstName.Length < 60
+                if (firstName.Length >= 2 && firstName.Length <= 60
                     && firstName.Trim().Length != 0)
                 {
                     break;
@@ -146,7 +148,7 @@ namespace FileCabinetApp
             {
                 Console.Write("Last name: ");
                 lastName = Console.ReadLine();
-                if (lastName.Length > 2 && lastName.Length < 60
+                if (lastName.Length >= 2 && lastName.Length <= 60
                     && lastName.Trim().Length != 0)
                 {
                     break;
@@ -415,6 +417,46 @@ namespace FileCabinetApp
             while (true);
             fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, gender, passportId, salary);
             Console.WriteLine($"Record #{id} is updated.");
+        }
+
+        private static void Find(string parameters)
+        {
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            FileCabinetRecord[] filtedList = Array.Empty<FileCabinetRecord>();
+            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
+            dtfi.ShortDatePattern = "yyyy-MMM-dd";
+            string[] param = parameters.Split(' ');
+            switch (param[0].ToUpper(englishUS))
+            {
+                case "FIRSTNAME":
+                    {
+                        filtedList = fileCabinetService.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
+                        break;
+                    }
+
+                case "LASTNAME":
+                    {
+                        filtedList = fileCabinetService.FindByLastName(param[1].Substring(1, param[1].Length - 2));
+                        break;
+                    }
+
+                case "DATEOFBIRTH":
+                    {
+                        DateTimeStyles styles = DateTimeStyles.None;
+                        if (DateTime.TryParse(param[1].Substring(1, param[1].Length - 2), englishUS, styles, out DateTime dateOfBirth))
+                        {
+                            filtedList = fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                        }
+
+                        break;
+                    }
+            }
+
+            foreach (FileCabinetRecord record in filtedList)
+            {
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
+                $" {record.Gender}, {record.PassportId}, {record.Salary}");
+            }
         }
     }
 }
