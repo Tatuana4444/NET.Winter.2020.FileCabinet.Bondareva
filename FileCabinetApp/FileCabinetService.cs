@@ -11,6 +11,7 @@ namespace FileCabinetApp
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char gender, short passportId, decimal salary)
         {
@@ -76,10 +77,13 @@ namespace FileCabinetApp
                 Salary = salary,
             };
             this.list.Add(record);
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
             List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
             this.AddToDictionary(this.firstNameDictionary, listByFirstName, firstName, record.Id);
             List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
             this.AddToDictionary(this.lastNameDictionary, listByLastName, lastName, record.Id);
+            List<FileCabinetRecord> listBydateOfBirth = new List<FileCabinetRecord>();
+            this.AddToDictionary(this.dateOfBirthDictionary, listBydateOfBirth, dateOfBirth.ToString(englishUS), record.Id);
             return record.Id;
         }
 
@@ -115,6 +119,8 @@ namespace FileCabinetApp
             this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, lastName, id);
             List<FileCabinetRecord> listByLastName = this.lastNameDictionary[this.list[id - 1].LastName.ToUpper(englishUS)];
             this.RemoveFromDictionary(this.lastNameDictionary, listByLastName, lastName, id);
+            List<FileCabinetRecord> listByDateOfBirth = this.dateOfBirthDictionary[this.list[id - 1].DateOfBirth.ToString(englishUS)];
+            this.RemoveFromDictionary(this.dateOfBirthDictionary, listByDateOfBirth, dateOfBirth.ToString(englishUS), id);
 
             this.list[id - 1].FirstName = firstName;
             this.list[id - 1].LastName = lastName;
@@ -125,6 +131,7 @@ namespace FileCabinetApp
 
             this.AddToDictionary(this.firstNameDictionary, listByFirstName, firstName, id);
             this.AddToDictionary(this.lastNameDictionary, listByLastName, lastName, id);
+            this.AddToDictionary(this.dateOfBirthDictionary, listByDateOfBirth, dateOfBirth.ToString(englishUS), id);
         }
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
@@ -165,16 +172,14 @@ namespace FileCabinetApp
 
         public FileCabinetRecord[] FindByDateOfBirth(DateTime date)
         {
-            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            foreach (FileCabinetRecord fileCabinetRecord in this.list)
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
+            if (this.dateOfBirthDictionary.ContainsKey(date.ToString(englishUS)))
             {
-                if (fileCabinetRecord.DateOfBirth == date)
-                {
-                    listByLastName.Add(fileCabinetRecord);
-                }
+                listByDateOfBirth = this.dateOfBirthDictionary[date.ToString(englishUS)];
             }
 
-            return listByLastName.ToArray();
+            return listByDateOfBirth.ToArray();
         }
 
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
