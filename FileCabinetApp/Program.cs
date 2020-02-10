@@ -116,69 +116,49 @@ namespace FileCabinetApp
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
-        private static void Create(string parameters)
+        private static string GetNameFromConsole(string name)
         {
-            string firstName;
+            string value;
             do
             {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-                if (firstName.Length >= 2 && firstName.Length <= 60
-                    && firstName.Trim().Length != 0)
+                Console.Write($"{name}: ");
+                value = Console.ReadLine();
+                if (value.Length >= 2 && value.Length <= 60
+                    && value.Trim().Length != 0)
                 {
                     break;
                 }
                 else
                 {
-                    if (firstName.Length < 2 || firstName.Length > 60)
+                    if (value.Length < 2 || value.Length > 60)
                     {
-                        Console.WriteLine("Error, Length of first name can't be less than 2 and more than 60. Try again, please");
+                        Console.WriteLine($"Error, Length of {name} can't be less than 2 and more than 60. Try again, please");
                     }
 
-                    if (firstName.Trim().Length == 0)
+                    if (value.Trim().Length == 0)
                     {
-                        Console.WriteLine("Error, First name can't contain only spaces. Try again, please");
+                        Console.WriteLine($"Error, {name} can't contain only spaces. Try again, please");
                     }
                 }
             }
             while (true);
+            return value;
+        }
 
-            string lastName;
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-                if (lastName.Length >= 2 && lastName.Length <= 60
-                    && lastName.Trim().Length != 0)
-                {
-                    break;
-                }
-                else
-                {
-                    if (lastName.Length < 2 || lastName.Length > 60)
-                    {
-                        Console.WriteLine("Error, Length of last name can't be less than 2 and more than 60. Try again, please");
-                    }
-
-                    if (lastName.Trim().Length == 0)
-                    {
-                        Console.WriteLine("Error, Last name can't contain only spaces. Try again, please");
-                    }
-                }
-            }
-            while (true);
+        private static DateTime GetDateFromConsole()
+        {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeStyles styles = DateTimeStyles.None;
-            DateTime dateOfBirth;
+            DateTime date;
             do
             {
                 Console.Write("Date of birth: ");
-                if (DateTime.TryParse(Console.ReadLine(), culture, styles, out dateOfBirth))
+                if (DateTime.TryParse(Console.ReadLine(), culture, styles, out date))
                 {
-                    if ((DateTime.Compare(new DateTime(1950, 1, 1), dateOfBirth) > 0)
-                        || (DateTime.Compare(DateTime.Now, dateOfBirth) < 0))
+                    if ((DateTime.Compare(new DateTime(1950, 1, 1), date) > 0)
+                        || (DateTime.Compare(DateTime.Now, date) < 0))
                     {
-                        Console.WriteLine("Error, Date of Birth can't be less than 01-Jan-1950 and more than today. Try again, please");
+                        Console.WriteLine($"Error, Date of birth can't be less than 01-Jan-1950 and more than today. Try again, please");
                     }
                     else
                     {
@@ -187,10 +167,15 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    Console.WriteLine("Error, Date of birth should be in forma 'month/day/year'. Try again, please");
+                    Console.WriteLine($"Error, Date of birth should be in forma 'month/day/year'. Try again, please");
                 }
             }
             while (true);
+            return date;
+        }
+
+        private static char GetGenderFromConsole()
+        {
             char gender;
             do
             {
@@ -199,7 +184,7 @@ namespace FileCabinetApp
                 {
                     if (gender != 'W' && gender != 'M')
                     {
-                        Console.WriteLine("Error, gender should be  \"M\" or \"W\". Try again, please");
+                        Console.WriteLine($"Error, Gender should be  \"M\" or \"W\". Try again, please");
                     }
                     else
                     {
@@ -212,6 +197,11 @@ namespace FileCabinetApp
                 }
             }
             while (true);
+            return gender;
+        }
+
+        private static short GetPassportIdFromConsole()
+        {
             short passportId;
             do
             {
@@ -233,6 +223,11 @@ namespace FileCabinetApp
                 }
             }
             while (true);
+            return passportId;
+        }
+
+        private static decimal GetSalaryFromConsole()
+        {
             decimal salary;
             do
             {
@@ -254,6 +249,17 @@ namespace FileCabinetApp
                 }
             }
             while (true);
+            return salary;
+        }
+
+        private static void Create(string parameters)
+        {
+            string firstName = GetNameFromConsole("First Name");
+            string lastName = GetNameFromConsole("Last Name");
+            DateTime dateOfBirth = GetDateFromConsole();
+            char gender = GetGenderFromConsole();
+            short passportId = GetPassportIdFromConsole();
+            decimal salary = GetSalaryFromConsole();
             int index = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, gender, passportId, salary);
             Console.WriteLine($"Record #{index} is created.");
         }
@@ -279,142 +285,12 @@ namespace FileCabinetApp
                 return;
             }
 
-            string firstName;
-            do
-            {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-                if (firstName.Length > 2 && firstName.Length < 60
-                    && firstName.Trim().Length != 0)
-                {
-                    break;
-                }
-                else
-                {
-                    if (firstName.Length < 2 || firstName.Length > 60)
-                    {
-                        Console.WriteLine("Error, Length of first name can't be less than 2 and more than 60. Try again, please");
-                    }
-
-                    if (firstName.Trim().Length == 0)
-                    {
-                        Console.WriteLine("Error, First name can't contain only spaces. Try again, please");
-                    }
-                }
-            }
-            while (true);
-
-            string lastName;
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-                if (lastName.Length > 2 && lastName.Length < 60
-                    && lastName.Trim().Length != 0)
-                {
-                    break;
-                }
-                else
-                {
-                    if (lastName.Length < 2 || lastName.Length > 60)
-                    {
-                        Console.WriteLine("Error, Length of last name can't be less than 2 and more than 60. Try again, please");
-                    }
-
-                    if (lastName.Trim().Length == 0)
-                    {
-                        Console.WriteLine("Error, Last name can't contain only spaces. Try again, please");
-                    }
-                }
-            }
-            while (true);
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeStyles styles = DateTimeStyles.None;
-            DateTime dateOfBirth;
-            do
-            {
-                Console.Write("Date of birth: ");
-                if (DateTime.TryParse(Console.ReadLine(), culture, styles, out dateOfBirth))
-                {
-                    if ((DateTime.Compare(new DateTime(1950, 1, 1), dateOfBirth) > 0)
-                        || (DateTime.Compare(DateTime.Now, dateOfBirth) < 0))
-                    {
-                        Console.WriteLine("Error, Date of Birth can't be less than 01-Jan-1950 and more than today. Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error, Date of birth should be in forma 'month/day/year'. Try again, please");
-                }
-            }
-            while (true);
-            char gender;
-            do
-            {
-                Console.Write("Gender: ");
-                if (char.TryParse(Console.ReadLine(), out gender))
-                {
-                    if (gender != 'W' && gender != 'M')
-                    {
-                        Console.WriteLine("Error, gender should be  \"M\" or \"W\". Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error, Unvalued value. Try again, please");
-                }
-            }
-            while (true);
-            short passportId;
-            do
-            {
-                Console.Write("Pasport Id: ");
-                if (short.TryParse(Console.ReadLine(), out passportId))
-                {
-                    if (passportId < 1000 || passportId > 9999)
-                    {
-                        Console.WriteLine("Error, Passport Id can't be less than 1000 and more than 9999. Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error, passportId should be short integer. Try again, please");
-                }
-            }
-            while (true);
-            decimal salary;
-            do
-            {
-                Console.Write("Salary: ");
-                if (decimal.TryParse(Console.ReadLine(), out salary))
-                {
-                    if (salary < FileCabinetService.MinSalary)
-                    {
-                        Console.WriteLine($"Error, Salary can't be less than {FileCabinetService.MinSalary}. Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error, salary should be decimal. Try again, please");
-                }
-            }
-            while (true);
+            string firstName = GetNameFromConsole("First Name");
+            string lastName = GetNameFromConsole("Last Name");
+            DateTime dateOfBirth = GetDateFromConsole();
+            char gender = GetGenderFromConsole();
+            short passportId = GetPassportIdFromConsole();
+            decimal salary = GetSalaryFromConsole();
             fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, gender, passportId, salary);
             Console.WriteLine($"Record #{id} is updated.");
         }
