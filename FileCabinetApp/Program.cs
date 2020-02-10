@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Class that gets comands and information from user and give it to FileCabinetService.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Tatyana Bondareva";
@@ -37,6 +40,10 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
+        /// <summary>
+        /// Gets command and calls their methods.
+        /// </summary>
+        /// <param name="args">Arguments from console runs.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");

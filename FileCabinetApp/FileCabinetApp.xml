@@ -4,5 +4,144 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            Describes record.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets user's id.
+            </summary>
+            <value>
+            User's id.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets user's First name.
+            </summary>
+            <value>
+            User's First name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets user's Last name.
+            </summary>
+            <value>
+            User's Last name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets user's date of Birth.
+            </summary>
+            <value>
+            User's date of Birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Gender">
+            <summary>
+            Gets or sets user's gender.
+            </summary>
+            <value>
+            User's gender.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.PassportId">
+            <summary>
+            Gets or sets user's passport id.
+            </summary>
+            <value>
+            User's passport id.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Salary">
+            <summary>
+            Gets or sets user's salary.
+            </summary>
+            <value>
+            User's salary.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>
+            Service for File Cabinet.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.FileCabinetService.MinSalary">
+            <summary>
+            Min salary for Belarus.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>
+            Create a new record.
+            </summary>
+            <param name="firstName">User's first name.</param>
+            <param name="lastName">User's last name.</param>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <param name="gender">User's gender.</param>
+            <param name="passportId">User's passport id.</param>
+            <param name="salary">User's salary.</param>
+            <returns>Id of a new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>
+            Returns all records.
+            </summary>
+            <returns>All records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>
+            Returns count of records.
+            </summary>
+            <returns>Count of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>
+            Edit record by id.
+            </summary>
+            <param name="id">User's id.</param>
+            <param name="firstName">User's first name.</param>
+            <param name="lastName">User's last name.</param>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <param name="gender">User's gender.</param>
+            <param name="passportId">User's passport id.</param>
+            <param name="salary">User's salary.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds records by first name.
+            </summary>
+            <param name="firstName">User's first name.</param>
+            <returns>Records whith sought-for firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds records by last name.
+            </summary>
+            <param name="lastName">User's last name.</param>
+            <returns>Records whith sought-for lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records by DateOfBirth.
+            </summary>
+            <param name="date">User's date of Birth.</param>
+            <returns>Records whith sought-for date of Birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            Class that gets comands and information from user and give it to FileCabinetService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>
+            Gets command and calls their methods.
+            </summary>
+            <param name="args">Arguments from console runs.</param>
+        </member>
     </members>
 </doc>
