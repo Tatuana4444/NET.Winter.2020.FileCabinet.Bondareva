@@ -4,6 +4,60 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            Custom Validator.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CustomValidator.MinSalary">
+            <summary>
+            Min salary for Belarus.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Implements cusstom validator.
+            </summary>
+            <param name="recordData">User's data.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            Default Validator.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.DefaultValidator.MinSalary">
+            <summary>
+            Min salary for Belarus.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            DefaultValidator.
+            </summary>
+            <param name="recordData">User's data.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            Implements Custom FileCabinetService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
+            <summary>
+            Create new custom validator.
+            </summary>
+            <returns>Custom validator.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            Implements Default FileCabinetService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
+            <summary>
+            Implements Default CreateValidator.
+            </summary>
+            <returns>Default Validator.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Describes record.
@@ -75,16 +129,11 @@
             Min salary for Belarus.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordData)">
             <summary>
             Create a new record.
             </summary>
-            <param name="firstName">User's first name.</param>
-            <param name="lastName">User's last name.</param>
-            <param name="dateOfBirth">User's date of Birth.</param>
-            <param name="gender">User's gender.</param>
-            <param name="passportId">User's passport id.</param>
-            <param name="salary">User's salary.</param>
+            <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
@@ -99,17 +148,12 @@
             </summary>
             <returns>Count of records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
             <summary>
             Edit record by id.
             </summary>
             <param name="id">User's id.</param>
-            <param name="firstName">User's first name.</param>
-            <param name="lastName">User's last name.</param>
-            <param name="dateOfBirth">User's date of Birth.</param>
-            <param name="gender">User's gender.</param>
-            <param name="passportId">User's passport id.</param>
-            <param name="salary">User's salary.</param>
+            <param name="recordData">User's data.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
             <summary>
@@ -132,6 +176,23 @@
             <param name="date">User's date of Birth.</param>
             <returns>Records whith sought-for date of Birth.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
+            <summary>
+            Create new Validator.
+            </summary>
+            <returns>New Validator.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Inferface for validators.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Implements validator.
+            </summary>
+            <param name="recordData">User's data.</param>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             Class that gets comands and information from user and give it to FileCabinetService.
@@ -142,6 +203,70 @@
             Gets command and calls their methods.
             </summary>
             <param name="args">Arguments from console runs.</param>
+        </member>
+        <member name="T:FileCabinetApp.RecordData">
+            <summary>
+            Implements Introduce Parameter Object.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordData.#ctor(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.RecordData"/> class.
+            </summary>
+            <param name="firstName">User's first name.</param>
+            <param name="lastName">User's last name.</param>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <param name="gender">User's gender.</param>
+            <param name="passportId">User's passport id.</param>
+            <param name="salary">User's salary.</param>
+        </member>
+        <member name="P:FileCabinetApp.RecordData.FirstName">
+            <summary>
+            Gets user's First name.
+            </summary>
+            <value>
+            User's First name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordData.LastName">
+            <summary>
+            Gets user's Last name.
+            </summary>
+            <value>
+            User's Last name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordData.DateOfBirth">
+            <summary>
+            Gets user's date of Birth.
+            </summary>
+            <value>
+            User's date of Birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordData.Gender">
+            <summary>
+            Gets user's gender.
+            </summary>
+            <value>
+            User's gender.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordData.PassportId">
+            <summary>
+            Gets user's passport id.
+            </summary>
+            <value>
+            User's passport id.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordData.Salary">
+            <summary>
+            Gets user's salary.
+            </summary>
+            <value>
+            User's salary.
+            </value>
         </member>
     </members>
 </doc>

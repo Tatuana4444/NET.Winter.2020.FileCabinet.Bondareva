@@ -32,7 +32,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            this.ValidateParametrs(recordData);
+            this.CreateValidator().ValidateParametrs(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -83,7 +83,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            this.ValidateParametrs(recordData);
+            this.CreateValidator().ValidateParametrs(recordData);
 
             List<FileCabinetRecord> listByFirstName = this.firstNameDictionary[this.list[id - 1].FirstName.ToUpper(this.englishUS)];
             this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, recordData.LastName, id);
@@ -165,10 +165,10 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Validates user's data.
+        /// Create new Validator.
         /// </summary>
-        /// <param name="recordData">User's data.</param>
-        protected abstract void ValidateParametrs(RecordData recordData);
+        /// <returns>New Validator.</returns>
+        protected abstract IRecordValidator CreateValidator();
 
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
         {
