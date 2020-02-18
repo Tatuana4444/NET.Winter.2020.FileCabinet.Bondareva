@@ -10,13 +10,15 @@ namespace FileCabinetApp
     {
         private const string DeveloperName = "Tatyana Bondareva";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
+        private const string DefaultValidationMessage = "Using default validation rules.";
+        private const string CustomValidationMessage = "Using custom validation rules.";
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
         private static bool isRunning = true;
 
-        private static FileCabinetService fileCabinetService = new FileCabinetCustomService();
+        private static FileCabinetService fileCabinetService = new FileCabinetDefaultService();
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -47,6 +49,30 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            if (args != null && args.Length > 0)
+            {
+                if (args.Length == 1)
+                {
+                    string[] param = args[0].Split('=');
+                    if (param[0] == "--validation-rules")
+                    {
+                        SetValidationRules(param[1]);
+                    }
+                }
+
+                if (args.Length == 2)
+                {
+                    if (args[0] == "-v")
+                    {
+                        SetValidationRules(args[1]);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine(DefaultValidationMessage);
+            }
+
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
@@ -109,6 +135,22 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine();
+        }
+
+        private static void SetValidationRules(string param)
+        {
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+
+            if (param.ToUpper(englishUS) == "CUSTOM")
+            {
+                fileCabinetService = new FileCabinetCustomService();
+                Console.WriteLine(CustomValidationMessage);
+            }
+
+            if (param.ToUpper(englishUS) == "DEFAULT")
+            {
+                Console.WriteLine(DefaultValidationMessage);
+            }
         }
 
         private static void Exit(string parameters)
