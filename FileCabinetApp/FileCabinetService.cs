@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Service for File Cabinet.
     /// </summary>
-    public class FileCabinetService
+    public abstract class FileCabinetService
     {
         /// <summary>
         /// Min salary for Belarus.
@@ -32,57 +32,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            if (recordData.FirstName is null)
-            {
-                throw new ArgumentNullException(nameof(recordData), "First name can't be null");
-            }
-
-            if (recordData.FirstName.Length < 2 || recordData.FirstName.Length > 60)
-            {
-                throw new ArgumentException("Length of first name can't be less than 2 and more than 60", nameof(recordData));
-            }
-
-            if (recordData.FirstName.Trim().Length == 0)
-            {
-                throw new ArgumentException("First name can't contain only spaces", nameof(recordData));
-            }
-
-            if (recordData.LastName is null)
-            {
-                throw new ArgumentNullException(nameof(recordData), "Last name can't be null");
-            }
-
-            if (recordData.LastName.Length < 2 || recordData.LastName.Length > 60)
-            {
-                throw new ArgumentException("Length of last name can't be less than 2 and more than 60", nameof(recordData));
-            }
-
-            if (recordData.LastName.Trim().Length == 0)
-            {
-                throw new ArgumentException("Last name can't contain only spaces", nameof(recordData));
-            }
-
-            if ((DateTime.Compare(new DateTime(1950, 1, 1), recordData.DateOfBirth) > 0)
-                || (DateTime.Compare(DateTime.Now, recordData.DateOfBirth) < 0))
-            {
-                throw new ArgumentException("Date of Birth can't be less than 01-Jan-1950 and more than today", nameof(recordData));
-            }
-
-            if (recordData.Gender != 'W' && recordData.Gender != 'M')
-            {
-                throw new ArgumentException("Gender should be W or M", nameof(recordData));
-            }
-
-            if (recordData.PassportId < 1000 || recordData.PassportId > 9999)
-            {
-                throw new ArgumentException("Passport Id can't be less than 1000 and more than 9999", nameof(recordData));
-            }
-
-            if (recordData.Salary < MinSalary)
-            {
-                throw new ArgumentException($"Salary can't be less than {MinSalary}", nameof(recordData));
-            }
-
+            this.ValidateParametrs(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -133,20 +83,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            if (id > this.list.Count)
-            {
-                throw new ArgumentException($"#{id} record is not found.", nameof(id));
-            }
-
-            if (recordData.FirstName == null)
-            {
-                throw new ArgumentNullException(nameof(recordData), "Firstname can't be null");
-            }
-
-            if (recordData.LastName == null)
-            {
-                throw new ArgumentNullException(nameof(recordData), "Lastname can't be null");
-            }
+            this.ValidateParametrs(recordData);
 
             List<FileCabinetRecord> listByFirstName = this.firstNameDictionary[this.list[id - 1].FirstName.ToUpper(this.englishUS)];
             this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, recordData.LastName, id);
@@ -226,6 +163,12 @@ namespace FileCabinetApp
 
             return listByDateOfBirth.ToArray();
         }
+
+        /// <summary>
+        /// Validates user's data.
+        /// </summary>
+        /// <param name="recordData">User's data.</param>
+        protected abstract void ValidateParametrs(RecordData recordData);
 
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
         {
