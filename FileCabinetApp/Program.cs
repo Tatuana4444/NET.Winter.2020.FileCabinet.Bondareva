@@ -267,7 +267,8 @@ namespace FileCabinetApp
             char gender = GetGenderFromConsole();
             short passportId = GetPassportIdFromConsole();
             decimal salary = GetSalaryFromConsole();
-            int index = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, gender, passportId, salary);
+            RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
+            int index = Program.fileCabinetService.CreateRecord(recordData);
             Console.WriteLine($"Record #{index} is created.");
         }
 
@@ -298,7 +299,8 @@ namespace FileCabinetApp
             char gender = GetGenderFromConsole();
             short passportId = GetPassportIdFromConsole();
             decimal salary = GetSalaryFromConsole();
-            fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, gender, passportId, salary);
+            RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
+            fileCabinetService.EditRecord(id, recordData);
             Console.WriteLine($"Record #{id} is updated.");
         }
 

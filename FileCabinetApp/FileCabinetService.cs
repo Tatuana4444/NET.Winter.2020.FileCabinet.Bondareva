@@ -23,83 +23,83 @@ namespace FileCabinetApp
         /// <summary>
         /// Create a new record.
         /// </summary>
-        /// <param name="firstName">User's first name.</param>
-        /// <param name="lastName">User's last name.</param>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <param name="gender">User's gender.</param>
-        /// <param name="passportId">User's passport id.</param>
-        /// <param name="salary">User's salary.</param>
+        /// <param name="recordData">User's data.</param>
         /// <returns>Id of a new record.</returns>
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char gender, short passportId, decimal salary)
+        public int CreateRecord(RecordData recordData)
         {
-            if (firstName is null)
+            if (recordData is null)
             {
-                throw new ArgumentNullException(nameof(firstName), "First name can't be null");
+                throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (recordData.FirstName is null)
             {
-                throw new ArgumentException("Length of first name can't be less than 2 and more than 60", nameof(firstName));
+                throw new ArgumentNullException(nameof(recordData), "First name can't be null");
             }
 
-            if (firstName.Trim().Length == 0)
+            if (recordData.FirstName.Length < 2 || recordData.FirstName.Length > 60)
             {
-                throw new ArgumentException("First name can't contain only spaces", nameof(firstName));
+                throw new ArgumentException("Length of first name can't be less than 2 and more than 60", nameof(recordData));
             }
 
-            if (lastName is null)
+            if (recordData.FirstName.Trim().Length == 0)
             {
-                throw new ArgumentNullException(nameof(lastName), "Last name can't be null");
+                throw new ArgumentException("First name can't contain only spaces", nameof(recordData));
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (recordData.LastName is null)
             {
-                throw new ArgumentException("Length of last name can't be less than 2 and more than 60", nameof(firstName));
+                throw new ArgumentNullException(nameof(recordData), "Last name can't be null");
             }
 
-            if (lastName.Trim().Length == 0)
+            if (recordData.LastName.Length < 2 || recordData.LastName.Length > 60)
             {
-                throw new ArgumentException("Last name can't contain only spaces", nameof(firstName));
+                throw new ArgumentException("Length of last name can't be less than 2 and more than 60", nameof(recordData));
             }
 
-            if ((DateTime.Compare(new DateTime(1950, 1, 1), dateOfBirth) > 0)
-                || (DateTime.Compare(DateTime.Now, dateOfBirth) < 0))
+            if (recordData.LastName.Trim().Length == 0)
             {
-                throw new ArgumentException("Date of Birth can't be less than 01-Jan-1950 and more than today", nameof(dateOfBirth));
+                throw new ArgumentException("Last name can't contain only spaces", nameof(recordData));
             }
 
-            if (gender != 'W' && gender != 'M')
+            if ((DateTime.Compare(new DateTime(1950, 1, 1), recordData.DateOfBirth) > 0)
+                || (DateTime.Compare(DateTime.Now, recordData.DateOfBirth) < 0))
             {
-                throw new ArgumentException("Gender should be W or M", nameof(gender));
+                throw new ArgumentException("Date of Birth can't be less than 01-Jan-1950 and more than today", nameof(recordData));
             }
 
-            if (passportId < 1000 || passportId > 9999)
+            if (recordData.Gender != 'W' && recordData.Gender != 'M')
             {
-                throw new ArgumentException("Passport Id can't be less than 1000 and more than 9999", nameof(passportId));
+                throw new ArgumentException("Gender should be W or M", nameof(recordData));
             }
 
-            if (salary < MinSalary)
+            if (recordData.PassportId < 1000 || recordData.PassportId > 9999)
             {
-                throw new ArgumentException($"Salary can't be less than {MinSalary}", nameof(salary));
+                throw new ArgumentException("Passport Id can't be less than 1000 and more than 9999", nameof(recordData));
+            }
+
+            if (recordData.Salary < MinSalary)
+            {
+                throw new ArgumentException($"Salary can't be less than {MinSalary}", nameof(recordData));
             }
 
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Gender = gender,
-                PassportId = passportId,
-                Salary = salary,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                Gender = recordData.Gender,
+                PassportId = recordData.PassportId,
+                Salary = recordData.Salary,
             };
             this.list.Add(record);
             List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
-            this.AddToDictionary(this.firstNameDictionary, listByFirstName, firstName, record.Id);
+            this.AddToDictionary(this.firstNameDictionary, listByFirstName, recordData.FirstName, record.Id);
             List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            this.AddToDictionary(this.lastNameDictionary, listByLastName, lastName, record.Id);
+            this.AddToDictionary(this.lastNameDictionary, listByLastName, recordData.LastName, record.Id);
             List<FileCabinetRecord> listBydateOfBirth = new List<FileCabinetRecord>();
-            this.AddToDictionary(this.dateOfBirthDictionary, listBydateOfBirth, dateOfBirth.ToString(this.englishUS), record.Id);
+            this.AddToDictionary(this.dateOfBirthDictionary, listBydateOfBirth, recordData.DateOfBirth.ToString(this.englishUS), record.Id);
             return record.Id;
         }
 
@@ -125,46 +125,46 @@ namespace FileCabinetApp
         /// Edit record by id.
         /// </summary>
         /// <param name="id">User's id.</param>
-        /// <param name="firstName">User's first name.</param>
-        /// <param name="lastName">User's last name.</param>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <param name="gender">User's gender.</param>
-        /// <param name="passportId">User's passport id.</param>
-        /// <param name="salary">User's salary.</param>
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, char gender, short passportId, decimal salary)
+        /// <param name="recordData">User's data.</param>
+        public void EditRecord(int id, RecordData recordData)
         {
+            if (recordData is null)
+            {
+                throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
+            }
+
             if (id > this.list.Count)
             {
                 throw new ArgumentException($"#{id} record is not found.", nameof(id));
             }
 
-            if (firstName == null)
+            if (recordData.FirstName == null)
             {
-                throw new ArgumentNullException(nameof(firstName), "Firstname can't be null");
+                throw new ArgumentNullException(nameof(recordData), "Firstname can't be null");
             }
 
-            if (lastName == null)
+            if (recordData.LastName == null)
             {
-                throw new ArgumentNullException(nameof(firstName), "Lastname can't be null");
+                throw new ArgumentNullException(nameof(recordData), "Lastname can't be null");
             }
 
             List<FileCabinetRecord> listByFirstName = this.firstNameDictionary[this.list[id - 1].FirstName.ToUpper(this.englishUS)];
-            this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, lastName, id);
+            this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, recordData.LastName, id);
             List<FileCabinetRecord> listByLastName = this.lastNameDictionary[this.list[id - 1].LastName.ToUpper(this.englishUS)];
-            this.RemoveFromDictionary(this.lastNameDictionary, listByLastName, lastName, id);
+            this.RemoveFromDictionary(this.lastNameDictionary, listByLastName, recordData.LastName, id);
             List<FileCabinetRecord> listByDateOfBirth = this.dateOfBirthDictionary[this.list[id - 1].DateOfBirth.ToString(this.englishUS)];
-            this.RemoveFromDictionary(this.dateOfBirthDictionary, listByDateOfBirth, dateOfBirth.ToString(this.englishUS), id);
+            this.RemoveFromDictionary(this.dateOfBirthDictionary, listByDateOfBirth, recordData.DateOfBirth.ToString(this.englishUS), id);
 
-            this.list[id - 1].FirstName = firstName;
-            this.list[id - 1].LastName = lastName;
-            this.list[id - 1].DateOfBirth = dateOfBirth;
-            this.list[id - 1].Gender = gender;
-            this.list[id - 1].PassportId = passportId;
-            this.list[id - 1].Salary = salary;
+            this.list[id - 1].FirstName = recordData.FirstName;
+            this.list[id - 1].LastName = recordData.LastName;
+            this.list[id - 1].DateOfBirth = recordData.DateOfBirth;
+            this.list[id - 1].Gender = recordData.Gender;
+            this.list[id - 1].PassportId = recordData.PassportId;
+            this.list[id - 1].Salary = recordData.Salary;
 
-            this.AddToDictionary(this.firstNameDictionary, listByFirstName, firstName, id);
-            this.AddToDictionary(this.lastNameDictionary, listByLastName, lastName, id);
-            this.AddToDictionary(this.dateOfBirthDictionary, listByDateOfBirth, dateOfBirth.ToString(this.englishUS), id);
+            this.AddToDictionary(this.firstNameDictionary, listByFirstName, recordData.FirstName, id);
+            this.AddToDictionary(this.lastNameDictionary, listByLastName, recordData.LastName, id);
+            this.AddToDictionary(this.dateOfBirthDictionary, listByDateOfBirth, recordData.DateOfBirth.ToString(this.englishUS), id);
         }
 
         /// <summary>
