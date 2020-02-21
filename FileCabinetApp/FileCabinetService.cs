@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 
@@ -67,9 +68,9 @@ namespace FileCabinetApp
         /// Returns all records.
         /// </summary>
         /// <returns>All records.</returns>
-        public FileCabinetRecord[] GetRecords()
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            return this.list.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(this.list);
         }
 
         /// <summary>
@@ -119,7 +120,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">User's first name.</param>
         /// <returns>Records whith sought-for firstName.</returns>
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -133,7 +134,7 @@ namespace FileCabinetApp
                 listByFirstName = this.firstNameDictionary[firstName.ToUpper(this.englishUS)];
             }
 
-            return listByFirstName.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(listByFirstName);
         }
 
         /// <summary>
@@ -141,7 +142,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">User's last name.</param>
         /// <returns>Records whith sought-for lastName.</returns>
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -155,7 +156,7 @@ namespace FileCabinetApp
                 listByLastName = this.lastNameDictionary[lastName.ToUpper(this.englishUS)];
             }
 
-            return listByLastName.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(listByLastName);
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="date">User's date of Birth.</param>
         /// <returns>Records whith sought-for date of Birth.</returns>
-        public FileCabinetRecord[] FindByDateOfBirth(DateTime date)
+        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime date)
         {
             List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
             if (this.dateOfBirthDictionary.ContainsKey(date.ToString(this.englishUS)))
@@ -171,7 +172,7 @@ namespace FileCabinetApp
                 listByDateOfBirth = this.dateOfBirthDictionary[date.ToString(this.englishUS)];
             }
 
-            return listByDateOfBirth.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(listByDateOfBirth);
         }
 
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)

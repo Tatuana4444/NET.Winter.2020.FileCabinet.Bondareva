@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace FileCabinetApp
@@ -316,7 +318,7 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            FileCabinetRecord[] fileCabinetRecord = Program.fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> fileCabinetRecord = Program.fileCabinetService.GetRecords();
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
             dtfi.ShortDatePattern = "yyyy-MMM-dd";
@@ -349,7 +351,7 @@ namespace FileCabinetApp
         private static void Find(string parameters)
         {
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            FileCabinetRecord[] filtedList = Array.Empty<FileCabinetRecord>();
+            ReadOnlyCollection<FileCabinetRecord> filtedList = new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
             dtfi.ShortDatePattern = "yyyy-MMM-dd";
             string[] param = parameters.Split(' ');
