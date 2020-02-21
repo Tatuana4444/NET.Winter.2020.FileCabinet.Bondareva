@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Service for File Cabinet.
     /// </summary>
-    public abstract class FileCabinetService
+    public class FileCabinetService
     {
         /// <summary>
         /// Min salary for Belarus.
@@ -25,7 +25,7 @@ namespace FileCabinetApp
         /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
         /// </summary>
         /// <param name="validator">Validator for params.</param>
-        protected FileCabinetService(IRecordValidator validator)
+        public FileCabinetService(IRecordValidator validator)
         {
             this.validator = validator;
         }
@@ -42,7 +42,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            this.CreateValidator().ValidateParametrs(recordData);
+            this.validator.ValidateParametrs(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -93,7 +93,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            this.CreateValidator().ValidateParametrs(recordData);
+            this.validator.ValidateParametrs(recordData);
 
             List<FileCabinetRecord> listByFirstName = this.firstNameDictionary[this.list[id - 1].FirstName.ToUpper(this.englishUS)];
             this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, recordData.LastName, id);
@@ -173,12 +173,6 @@ namespace FileCabinetApp
 
             return listByDateOfBirth.ToArray();
         }
-
-        /// <summary>
-        /// Create new Validator.
-        /// </summary>
-        /// <returns>New Validator.</returns>
-        protected abstract IRecordValidator CreateValidator();
 
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
         {

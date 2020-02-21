@@ -36,38 +36,6 @@
             </summary>
             <param name="recordData">User's data.</param>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
-            <summary>
-            Implements Custom FileCabinetService.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetCustomService"/> class.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
-            <summary>
-            Create new custom validator.
-            </summary>
-            <returns>Custom validator.</returns>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
-            <summary>
-            Implements Default FileCabinetService.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetDefaultService"/> class.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
-            <summary>
-            Implements Default CreateValidator.
-            </summary>
-            <returns>Default Validator.</returns>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Describes record.
@@ -191,12 +159,6 @@
             </summary>
             <param name="date">User's date of Birth.</param>
             <returns>Records whith sought-for date of Birth.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
-            <summary>
-            Create new Validator.
-            </summary>
-            <returns>New Validator.</returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
