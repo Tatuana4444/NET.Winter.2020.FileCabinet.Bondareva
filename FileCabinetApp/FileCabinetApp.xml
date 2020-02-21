@@ -157,7 +157,59 @@
             <summary>
             Finds records by DateOfBirth.
             </summary>
-            <param name="date">User's date of Birth.</param>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <returns>Records whith sought-for date of Birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            Interface for FileCabinetService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.RecordData)">
+            <summary>
+            Create a new record.
+            </summary>
+            <param name="recordData">User's data.</param>
+            <returns>Id of a new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>
+            Returns all records.
+            </summary>
+            <returns>All records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>
+            Returns count of records.
+            </summary>
+            <returns>Count of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
+            <summary>
+            Edit record by id.
+            </summary>
+            <param name="id">User's id.</param>
+            <param name="recordData">User's data.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds records by first name.
+            </summary>
+            <param name="firstName">User's first name.</param>
+            <returns>Records whith sought-for firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds records by last name.
+            </summary>
+            <param name="lastName">User's last name.</param>
+            <returns>Records whith sought-for lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records by DateOfBirth.
+            </summary>
+            <param name="dateOfBirth">User's date of Birth.</param>
             <returns>Records whith sought-for date of Birth.</returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">

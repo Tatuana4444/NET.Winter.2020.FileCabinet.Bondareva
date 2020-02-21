@@ -9,7 +9,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Service for File Cabinet.
     /// </summary>
-    public class FileCabinetService
+    public class FileCabinetService : IFileCabinetService
     {
         /// <summary>
         /// Min salary for Belarus.
@@ -162,14 +162,14 @@ namespace FileCabinetApp
         /// <summary>
         /// Finds records by DateOfBirth.
         /// </summary>
-        /// <param name="date">User's date of Birth.</param>
+        /// <param name="dateOfBirth">User's date of Birth.</param>
         /// <returns>Records whith sought-for date of Birth.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime date)
+        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
-            if (this.dateOfBirthDictionary.ContainsKey(date.ToString(this.englishUS)))
+            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth.ToString(this.englishUS)))
             {
-                listByDateOfBirth = this.dateOfBirthDictionary[date.ToString(this.englishUS)];
+                listByDateOfBirth = this.dateOfBirthDictionary[dateOfBirth.ToString(this.englishUS)];
             }
 
             return new ReadOnlyCollection<FileCabinetRecord>(listByDateOfBirth);
