@@ -58,7 +58,7 @@ namespace FileCabinetApp
             if ((DateTime.Compare(new DateTime(1900, 1, 1), recordData.DateOfBirth) > 0)
                 || (DateTime.Compare(DateTime.Now, recordData.DateOfBirth) < 0))
             {
-                throw new ArgumentException("Date of Birth can't be less than 01-Jan-1950 and more than today", nameof(recordData));
+                throw new ArgumentException("Date of Birth can't be less than 01-Jan-1900 and more than today", nameof(recordData));
             }
 
             if (recordData.Gender != 'W' && recordData.Gender != 'M')
@@ -68,12 +68,12 @@ namespace FileCabinetApp
 
             if (recordData.PassportId < 0)
             {
-                throw new ArgumentException("Passport Id can't be less than 1000 and more than 9999", nameof(recordData));
+                throw new ArgumentException("Passport Id can't be less than 0", nameof(recordData));
             }
 
             if (recordData.Salary < 0)
             {
-                throw new ArgumentException($"Salary can't be less than {MinSalary}", nameof(recordData));
+                throw new ArgumentException($"Salary can't be less than 0", nameof(recordData));
             }
         }
     }

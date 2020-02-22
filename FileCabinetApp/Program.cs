@@ -17,6 +17,7 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private static bool isDefaulRule;
 
         private static bool isRunning = true;
 
@@ -145,12 +146,14 @@ namespace FileCabinetApp
 
             if (param.ToUpper(englishUS) == "CUSTOM")
             {
-                fileCabinetService = new FileCabinetService(new CustomValidator());
+                Program.fileCabinetService = new FileCabinetService(new CustomValidator());
+                Program.isDefaulRule = true;
                 Console.WriteLine(CustomValidationMessage);
             }
 
             if (param.ToUpper(englishUS) == "DEFAULT")
             {
+                Program.isDefaulRule = false;
                 Console.WriteLine(DefaultValidationMessage);
             }
         }
@@ -167,153 +170,254 @@ namespace FileCabinetApp
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
-        private static string GetNameFromConsole(string name)
-        {
-            string value;
-            do
-            {
-                Console.Write($"{name}: ");
-                value = Console.ReadLine();
-                if (value.Length >= 2 && value.Length <= 60
-                    && value.Trim().Length != 0)
-                {
-                    break;
-                }
-                else
-                {
-                    if (value.Length < 2 || value.Length > 60)
-                    {
-                        Console.WriteLine($"Error, Length of {name} can't be less than 2 and more than 60. Try again, please");
-                    }
-
-                    if (value.Trim().Length == 0)
-                    {
-                        Console.WriteLine($"Error, {name} can't contain only spaces. Try again, please");
-                    }
-                }
-            }
-            while (true);
-            return value;
-        }
-
-        private static DateTime GetDateFromConsole()
-        {
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeStyles styles = DateTimeStyles.None;
-            DateTime date;
-            do
-            {
-                Console.Write("Date of birth: ");
-                if (DateTime.TryParse(Console.ReadLine(), culture, styles, out date))
-                {
-                    if ((DateTime.Compare(new DateTime(1950, 1, 1), date) > 0)
-                        || (DateTime.Compare(DateTime.Now, date) < 0))
-                    {
-                        Console.WriteLine($"Error, Date of birth can't be less than 01-Jan-1950 and more than today. Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Error, Date of birth should be in forma 'month/day/year'. Try again, please");
-                }
-            }
-            while (true);
-            return date;
-        }
-
-        private static char GetGenderFromConsole()
-        {
-            char gender;
-            do
-            {
-                Console.Write("Gender: ");
-                if (char.TryParse(Console.ReadLine(), out gender))
-                {
-                    if (gender != 'W' && gender != 'M')
-                    {
-                        Console.WriteLine($"Error, Gender should be  \"M\" or \"W\". Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error, Unvalued value. Try again, please");
-                }
-            }
-            while (true);
-            return gender;
-        }
-
-        private static short GetPassportIdFromConsole()
-        {
-            short passportId;
-            do
-            {
-                Console.Write("Pasport Id: ");
-                if (short.TryParse(Console.ReadLine(), out passportId))
-                {
-                    if (passportId < 1000 || passportId > 9999)
-                    {
-                        Console.WriteLine("Error, Passport Id can't be less than 1000 and more than 9999. Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error, passportId should be short integer. Try again, please");
-                }
-            }
-            while (true);
-            return passportId;
-        }
-
-        private static decimal GetSalaryFromConsole()
-        {
-            decimal salary;
-            do
-            {
-                Console.Write("Salary: ");
-                if (decimal.TryParse(Console.ReadLine(), out salary))
-                {
-                    if (salary < FileCabinetService.MinSalary)
-                    {
-                        Console.WriteLine($"Error, Salary can't be less than {FileCabinetService.MinSalary}. Try again, please");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error, salary should be decimal. Try again, please");
-                }
-            }
-            while (true);
-            return salary;
-        }
-
         private static void Create(string parameters)
         {
-            string firstName = GetNameFromConsole("First Name");
-            string lastName = GetNameFromConsole("Last Name");
-            DateTime dateOfBirth = GetDateFromConsole();
-            char gender = GetGenderFromConsole();
-            short passportId = GetPassportIdFromConsole();
-            decimal salary = GetSalaryFromConsole();
+            Console.Write("First name: ");
+            var firstName = Program.isDefaulRule ? ReadInput(StringConverter, FirstNameValidatorDefault)
+                : ReadInput(StringConverter, FirstNameValidatorCustom);
+
+            Console.Write("Last name: ");
+            var lastName = Program.isDefaulRule ? ReadInput(StringConverter, LastNameValidatorDefault)
+                : ReadInput(StringConverter, LastNameValidatorCustom);
+
+            Console.Write("Date of birth: ");
+            var dateOfBirth = Program.isDefaulRule ? ReadInput(DateConverter, DateOfBirthValidatorDefault)
+                : ReadInput(DateConverter, DateOfBirthValidatorCustom);
+
+            Console.Write("Gender: ");
+            var gender = ReadInput(CharConverter, GenderValidator);
+
+            Console.Write("Passport ID: ");
+            var passportId = Program.isDefaulRule ? ReadInput(ShortConverter, PassportIdValidatorDefault)
+                : ReadInput(ShortConverter, PassportIdValidatorCustom);
+
+            Console.Write("Salary: ");
+            var salary = Program.isDefaulRule ? ReadInput(DecimalConverter, SalaryValidatorDefault)
+                : ReadInput(DecimalConverter, SalaryValidatorCustom);
+
             RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
             int index = Program.fileCabinetService.CreateRecord(recordData);
             Console.WriteLine($"Record #{index} is created.");
+        }
+
+        private static Tuple<bool, string, string> StringConverter(string data)
+        {
+            return new Tuple<bool, string, string>(true, string.Empty, data);
+        }
+
+        private static Tuple<bool, string, DateTime> DateConverter(string data)
+        {
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeStyles styles = DateTimeStyles.None;
+            if (DateTime.TryParse(data, culture, styles, out DateTime date))
+            {
+                return new Tuple<bool, string, DateTime>(true, string.Empty, date);
+            }
+            else
+            {
+                return new Tuple<bool, string, DateTime>(false, "Error, Date of birth should be in forma 'month/day/year'. Try again, please", date);
+            }
+        }
+
+        private static Tuple<bool, string, char> CharConverter(string data)
+        {
+            if (char.TryParse(data, out char gender))
+            {
+                return new Tuple<bool, string, char>(true, string.Empty, gender);
+            }
+            else
+            {
+                return new Tuple<bool, string, char>(false, "Error, Unvalued value. Try again, please", gender);
+            }
+        }
+
+        private static Tuple<bool, string, short> ShortConverter(string data)
+        {
+            if (short.TryParse(data, out short passportId))
+            {
+                return new Tuple<bool, string, short>(true, string.Empty, passportId);
+            }
+            else
+            {
+                return new Tuple<bool, string, short>(false, "Error, passportId should be short integer. Try again, please", passportId);
+            }
+        }
+
+        private static Tuple<bool, string, decimal> DecimalConverter(string data)
+        {
+            if (decimal.TryParse(data, out decimal salary))
+            {
+                return new Tuple<bool, string, decimal>(true, string.Empty, salary);
+            }
+            else
+            {
+                return new Tuple<bool, string, decimal>(false, "Error, salary should be decimal. Try again, please", salary);
+            }
+        }
+
+        private static Tuple<bool, string> FirstNameValidatorDefault(string firstName)
+        {
+            if (firstName.Length >= 2 && firstName.Length <= 60
+                    && firstName.Trim().Length != 0)
+            {
+                return new Tuple<bool, string>(true, string.Empty);
+            }
+
+            if (firstName.Length < 2 || firstName.Length > 60)
+            {
+                return new Tuple<bool, string>(false, $"Error, Length of {nameof(firstName)} can't be less than 2 and more than 60. Try again, please");
+            }
+
+            return new Tuple<bool, string>(false, $"Error, {nameof(firstName)} can't contain only spaces. Try again, please");
+        }
+
+        private static Tuple<bool, string> LastNameValidatorDefault(string lastName)
+        {
+            if (lastName.Length >= 2 && lastName.Length <= 60
+                    && lastName.Trim().Length != 0)
+            {
+                return new Tuple<bool, string>(true, string.Empty);
+            }
+
+            if (lastName.Length < 2 || lastName.Length > 60)
+            {
+                return new Tuple<bool, string>(false, $"Error, Length of {nameof(lastName)} can't be less than 2 and more than 60. Try again, please");
+            }
+
+            return new Tuple<bool, string>(false, $"Error, {nameof(lastName)} can't contain only spaces. Try again, please");
+        }
+
+        private static Tuple<bool, string> DateOfBirthValidatorDefault(DateTime dateOfBirth)
+        {
+            if ((DateTime.Compare(new DateTime(1950, 1, 1), dateOfBirth) > 0)
+                        || (DateTime.Compare(DateTime.Now, dateOfBirth) < 0))
+            {
+                return new Tuple<bool, string>(false, "Error, Date of birth can't be less than 01-Jan-1950 and more than today. Try again, please");
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static Tuple<bool, string> GenderValidator(char gender)
+        {
+            if (gender != 'W' && gender != 'M')
+            {
+                return new Tuple<bool, string>(false, "Error, Gender should be  \"M\" or \"W\". Try again, please");
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static Tuple<bool, string> PassportIdValidatorDefault(short passportId)
+        {
+            if (passportId < 1000 || passportId > 9999)
+            {
+                return new Tuple<bool, string>(false, "Error, Passport Id can't be less than 1000 and more than 9999. Try again, please");
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static Tuple<bool, string> SalaryValidatorDefault(decimal salary)
+        {
+            if (salary < DefaultValidator.MinSalary)
+            {
+                return new Tuple<bool, string>(false, $"Error, Salary can't be less than {FileCabinetService.MinSalary}. Try again, please");
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static Tuple<bool, string> FirstNameValidatorCustom(string firstName)
+        {
+            if (firstName.Length >= 2 && firstName.Length <= 100
+                    && firstName.Trim().Length != 0)
+            {
+                return new Tuple<bool, string>(true, string.Empty);
+            }
+
+            if (firstName.Length < 2 || firstName.Length > 100)
+            {
+                return new Tuple<bool, string>(false, $"Error, Length of {nameof(firstName)} can't be less than 2 and more than 100. Try again, please");
+            }
+
+            return new Tuple<bool, string>(false, $"Error, {nameof(firstName)} can't contain only spaces. Try again, please");
+        }
+
+        private static Tuple<bool, string> LastNameValidatorCustom(string lastName)
+        {
+            if (lastName.Length >= 2 && lastName.Length <= 100
+                    && lastName.Trim().Length != 0)
+            {
+                return new Tuple<bool, string>(true, string.Empty);
+            }
+
+            if (lastName.Length < 2 || lastName.Length > 100)
+            {
+                return new Tuple<bool, string>(false, $"Error, Length of {nameof(lastName)} can't be less than 2 and more than 100. Try again, please");
+            }
+
+            return new Tuple<bool, string>(false, $"Error, {nameof(lastName)} can't contain only spaces. Try again, please");
+        }
+
+        private static Tuple<bool, string> DateOfBirthValidatorCustom(DateTime dateOfBirth)
+        {
+            if ((DateTime.Compare(new DateTime(1900, 1, 1), dateOfBirth) > 0)
+                || (DateTime.Compare(DateTime.Now, dateOfBirth) < 0))
+            {
+                return new Tuple<bool, string>(false, "Error, Date of birth can't be less than 01-Jan-1900 and more than today. Try again, please");
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static Tuple<bool, string> PassportIdValidatorCustom(short passportId)
+        {
+            if (passportId < 0)
+            {
+                return new Tuple<bool, string>(false, "Passport Id can't be less than 0. Try again, please");
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static Tuple<bool, string> SalaryValidatorCustom(decimal salary)
+        {
+            if (salary < 0)
+            {
+                return new Tuple<bool, string>(false, $"Error, Salary can't be less than 0. Try again, please");
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
 
         private static void List(string parameters)
@@ -337,12 +441,29 @@ namespace FileCabinetApp
                 return;
             }
 
-            string firstName = GetNameFromConsole("First Name");
-            string lastName = GetNameFromConsole("Last Name");
-            DateTime dateOfBirth = GetDateFromConsole();
-            char gender = GetGenderFromConsole();
-            short passportId = GetPassportIdFromConsole();
-            decimal salary = GetSalaryFromConsole();
+            Console.Write("First name: ");
+            var firstName = Program.isDefaulRule ? ReadInput(StringConverter, FirstNameValidatorDefault)
+                : ReadInput(StringConverter, FirstNameValidatorCustom);
+
+            Console.Write("Last name: ");
+            var lastName = Program.isDefaulRule ? ReadInput(StringConverter, LastNameValidatorDefault)
+                : ReadInput(StringConverter, LastNameValidatorCustom);
+
+            Console.Write("Date of birth: ");
+            var dateOfBirth = Program.isDefaulRule ? ReadInput(DateConverter, DateOfBirthValidatorDefault)
+                : ReadInput(DateConverter, DateOfBirthValidatorCustom);
+
+            Console.Write("Gender: ");
+            var gender = ReadInput(CharConverter, GenderValidator);
+
+            Console.Write("Passport ID: ");
+            var passportId = Program.isDefaulRule ? ReadInput(ShortConverter, PassportIdValidatorDefault)
+                : ReadInput(ShortConverter, PassportIdValidatorCustom);
+
+            Console.Write("Salary: ");
+            var salary = Program.isDefaulRule ? ReadInput(DecimalConverter, SalaryValidatorDefault)
+                : ReadInput(DecimalConverter, SalaryValidatorCustom);
+
             RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
             fileCabinetService.EditRecord(id, recordData);
             Console.WriteLine($"Record #{id} is updated.");
