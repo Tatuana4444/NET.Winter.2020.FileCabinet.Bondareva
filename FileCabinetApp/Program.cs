@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace FileCabinetApp
 {
@@ -30,6 +32,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
         };
@@ -41,6 +44,7 @@ namespace FileCabinetApp
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
             new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
+            new string[] { "export", "export records", "The 'export' command expord records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -506,6 +510,51 @@ namespace FileCabinetApp
             {
                 Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
                 $" {record.Gender}, {record.PassportId}, {record.Salary}");
+            }
+        }
+
+        private static void Export(string parameters)
+        {
+            string[] param = parameters.Split(' ');
+            if (File.Exists(param[1]))
+            {
+                char answer;
+                do
+                {
+                    Console.Write($"File is exist - rewrite {param[1]}? [Y/n] ");
+                    answer = (char)Console.Read();
+                }
+                while (answer != 'Y' && answer != 'n');
+                if (answer == 'n')
+                {
+                    return;
+                }
+            }
+
+            try
+            {
+                StreamWriter writer = new StreamWriter(param[1]);
+                var snapshot = FileCabinetService.MakeSnapshot();
+                snapshot.SetState(Program.fileCabinetService.GetRecords().ToArray());
+                if (param[0] == "csv")
+                {
+                    snapshot.SaveToCsv(writer);
+                }
+
+                writer.Close();
+                Console.WriteLine($"All records are exported to file {param[1]}.");
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine($"Export failed: can't open file {param[1]}.");
+            }
+            catch (IOException)
+            {
+                Console.WriteLine($"Export failed: can't open file {param[1]}.");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"Export failed: can't open file {param[1]}.");
             }
         }
     }
