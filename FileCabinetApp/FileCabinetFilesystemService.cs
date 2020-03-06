@@ -15,7 +15,6 @@ namespace FileCabinetApp
         private FileStream fileStream;
         private IRecordValidator validator;
         private Encoding enc = Encoding.Unicode;
-        private int count = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
@@ -51,7 +50,7 @@ namespace FileCabinetApp
             }
 
             this.fileStream.Write(this.enc.GetBytes("status"), 0, 2);
-            this.fileStream.Write(BitConverter.GetBytes(this.count), 0, 4);
+            this.fileStream.Write(BitConverter.GetBytes(this.GetStat() + 1), 0, 4);
             byte[] tempFirstName = this.enc.GetBytes(recordData.FirstName);
             Array.Resize(ref tempFirstName, 120);
             this.fileStream.Write(tempFirstName, 0, 120);
@@ -71,7 +70,7 @@ namespace FileCabinetApp
 
             this.fileStream.Flush();
 
-            return this.count++;
+            return this.GetStat();
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace FileCabinetApp
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-            long count = this.fileStream.Seek(0, SeekOrigin.End) / 278;
+            long count = this.GetStat();
             this.fileStream.Seek(0, SeekOrigin.Begin);
             for (long i = 0; i < count; i++)
             {
@@ -194,7 +193,7 @@ namespace FileCabinetApp
         /// <returns>Count of records.</returns>
         public int GetStat()
         {
-            throw new NotImplementedException();
+            return (int)(this.fileStream.Seek(0, SeekOrigin.End) / 278);
         }
     }
 }
