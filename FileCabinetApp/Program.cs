@@ -23,7 +23,7 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
 
-        private static IFileCabinetService fileCabinetService = new FileCabinetService(new DefaultValidator());
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -150,7 +150,7 @@ namespace FileCabinetApp
 
             if (param.ToUpper(englishUS) == "CUSTOM")
             {
-                Program.fileCabinetService = new FileCabinetService(new CustomValidator());
+                Program.fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
                 Program.isDefaulRule = true;
                 Console.WriteLine(CustomValidationMessage);
             }
@@ -326,7 +326,7 @@ namespace FileCabinetApp
         {
             if (salary < DefaultValidator.MinSalary)
             {
-                return new Tuple<bool, string>(false, $"Error, Salary can't be less than {FileCabinetService.MinSalary}. Try again, please");
+                return new Tuple<bool, string>(false, $"Error, Salary can't be less than {FileCabinetMemoryService.MinSalary}. Try again, please");
             }
 
             return new Tuple<bool, string>(true, string.Empty);
@@ -534,7 +534,7 @@ namespace FileCabinetApp
             try
             {
                 StreamWriter writer = new StreamWriter(param[1]);
-                var snapshot = FileCabinetService.MakeSnapshot();
+                var snapshot = FileCabinetMemoryService.MakeSnapshot();
                 snapshot.SetState(Program.fileCabinetService.GetRecords().ToArray());
                 if (param[0] == "csv")
                 {
