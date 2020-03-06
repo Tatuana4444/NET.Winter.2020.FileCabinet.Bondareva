@@ -56,29 +56,39 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            string[] cmdParam = new string[] { "default", "memory" };
             if (args != null && args.Length > 0)
             {
-                if (args.Length == 1)
+                int i = 0;
+                cmdParam = new string[] { "default", "memory" };
+                while (i < args.Length)
                 {
-                    string[] param = args[0].Split('=');
-                    if (param[0] == "--validation-rules")
+                    if (args[i] == "-v")
                     {
-                        SetValidationRules(param[1]);
+                        cmdParam[0] = args[++i];
                     }
-                }
 
-                if (args.Length == 2)
-                {
-                    if (args[0] == "-v")
+                    if (args[i] == "-s")
                     {
-                        SetValidationRules(args[1]);
+                        cmdParam[1] = args[++i];
                     }
+
+                    string[] param = args[i].Split('=');
+                    if (param.Length == 2 && param[0] == "--validation-rules")
+                    {
+                        cmdParam[0] = param[1];
+                    }
+
+                    if (param.Length == 2 && param[0] == "--storage ")
+                    {
+                        cmdParam[0] = param[1];
+                    }
+
+                    i++;
                 }
             }
-            else
-            {
-                Console.WriteLine(DefaultValidationMessage);
-            }
+
+            SetValidationRules(cmdParam);
 
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
@@ -144,19 +154,38 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
-        private static void SetValidationRules(string param)
+        private static void SetValidationRules(string[] param)
         {
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
 
-            if (param.ToUpper(englishUS) == "CUSTOM")
+            if (param[0].ToUpper(englishUS) == "CUSTOM")
             {
-                Program.fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
+                if (param[1].ToUpper(englishUS) == "MEMORY")
+                {
+                    Program.fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
+                }
+                else
+                {
+                    FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
+                    Program.fileCabinetService = new FileCabinetFilesystemService(stream, new CustomValidator());
+                }
+
                 Program.isDefaulRule = true;
                 Console.WriteLine(CustomValidationMessage);
             }
 
-            if (param.ToUpper(englishUS) == "DEFAULT")
+            if (param[0].ToUpper(englishUS) == "DEFAULT")
             {
+                if (param[1].ToUpper(englishUS) == "MEMORY")
+                {
+                    Program.fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                }
+                else
+                {
+                    FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
+                    Program.fileCabinetService = new FileCabinetFilesystemService(stream, new DefaultValidator());
+                }
+
                 Program.isDefaulRule = false;
                 Console.WriteLine(DefaultValidationMessage);
             }

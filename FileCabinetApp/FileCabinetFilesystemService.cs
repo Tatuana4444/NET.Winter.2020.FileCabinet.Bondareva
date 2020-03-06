@@ -12,19 +12,27 @@ namespace FileCabinetApp
     public class FileCabinetFilesystemService : IFileCabinetService
     {
         private FileStream fileStream;
+        private IRecordValidator validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
         /// </summary>
         /// <param name="fileStream">File stream.</param>
-        public FileCabinetFilesystemService(FileStream fileStream)
+        /// <param name="validator">Validator for params.</param>
+        public FileCabinetFilesystemService(FileStream fileStream, IRecordValidator validator)
         {
             if (fileStream is null)
             {
                 throw new ArgumentNullException(nameof(fileStream), "FileStream can't be null");
             }
 
+            if (validator is null)
+            {
+                throw new ArgumentNullException(nameof(validator), "Validator can't be null");
+            }
+
             this.fileStream = fileStream;
+            this.validator = validator;
         }
 
         /// <summary>
