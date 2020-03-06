@@ -52,10 +52,12 @@ namespace FileCabinetApp
 
             this.fileStream.Write(this.enc.GetBytes("status"), 0, 2);
             this.fileStream.Write(BitConverter.GetBytes(this.count), 0, 4);
-            this.fileStream.Write(this.enc.GetBytes(recordData.FirstName), 0, recordData.FirstName.Length);
-            this.fileStream.Seek(120 - recordData.FirstName.Length, SeekOrigin.Current);
-            this.fileStream.Write(this.enc.GetBytes(recordData.LastName), 0, recordData.LastName.Length);
-            this.fileStream.Seek(120 - recordData.LastName.Length, SeekOrigin.Current);
+            byte[] tempFirstName = this.enc.GetBytes(recordData.FirstName);
+            Array.Resize(ref tempFirstName, 120);
+            this.fileStream.Write(tempFirstName, 0, 120);
+            byte[] tempLastName = this.enc.GetBytes(recordData.LastName);
+            Array.Resize(ref tempLastName, 120);
+            this.fileStream.Write(tempLastName, 0, 120);
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, 4);
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, 4);
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Day), 0, 4);
@@ -66,6 +68,8 @@ namespace FileCabinetApp
             {
                 this.fileStream.Write(BitConverter.GetBytes(s), 0, 4);
             }
+
+            this.fileStream.Flush();
 
             return this.count++;
         }
@@ -116,7 +120,72 @@ namespace FileCabinetApp
         /// <returns>All records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            throw new NotImplementedException();
+            List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+            long count = this.fileStream.Seek(0, SeekOrigin.End) / 278;
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            for (long i = 0; i < count; i++)
+            {
+                byte[] temp = new byte[38];
+                FileCabinetRecord record = new FileCabinetRecord();
+
+                this.fileStream.Read(temp, 0, 2);
+                short status = BitConverter.ToInt16(temp, 0);
+
+                this.fileStream.Read(temp, 2, 4);
+                record.Id = BitConverter.ToInt32(temp, 2);
+
+                byte[] tempForStrings = new byte[120];
+                this.fileStream.Read(tempForStrings, 0, 120);
+                int end = 0;
+                while (tempForStrings[end] != '\0' || tempForStrings[end + 1] != '\0')
+                {
+                    end += 2;
+                }
+
+                Array.Resize(ref tempForStrings, end);
+                record.FirstName = this.enc.GetString(tempForStrings);
+
+                tempForStrings = new byte[120];
+                this.fileStream.Read(tempForStrings, 0, 120);
+                end = 0;
+                while (tempForStrings[end] != '\0' || tempForStrings[end + 1] != '\0')
+                {
+                    end += 2;
+                }
+
+                Array.Resize(ref tempForStrings, end);
+                record.LastName = this.enc.GetString(tempForStrings);
+
+                this.fileStream.Read(temp, 6, 4);
+                int year = BitConverter.ToInt32(temp, 6);
+
+                this.fileStream.Read(temp, 10, 4);
+                int month = BitConverter.ToInt32(temp, 10);
+
+                this.fileStream.Read(temp, 14, 4);
+                int day = BitConverter.ToInt32(temp, 14);
+
+                record.DateOfBirth = new DateTime(year, month, day);
+
+                this.fileStream.Read(temp, 18, 2);
+                record.Gender = BitConverter.ToChar(temp, 18);
+
+                this.fileStream.Read(temp, 20, 2);
+                record.PassportId = BitConverter.ToInt16(temp, 20);
+
+                int[] bytes = new int[4];
+                for (int j = 0; j < 4; j++)
+                {
+                    this.fileStream.Read(temp, 22 + (j * 4), 4);
+                    bytes[j] = BitConverter.ToInt32(temp, 22 + (j * 4));
+                }
+
+                record.Salary = new decimal(bytes);
+
+                list.Add(record);
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(list);
         }
 
         /// <summary>
