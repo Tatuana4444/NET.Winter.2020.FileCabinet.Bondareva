@@ -80,7 +80,46 @@ namespace FileCabinetApp
         /// <param name="recordData">User's data.</param>
         public void EditRecord(int id, RecordData recordData)
         {
-            throw new NotImplementedException();
+            if (recordData is null)
+            {
+                throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
+            }
+
+            this.validator.ValidateParametrs(recordData);
+
+            long i = 0;
+            int currentId = -1;
+            byte[] temp = new byte[4];
+            while (currentId != id && i < this.GetStat())
+            {
+                this.fileStream.Seek((i * 278) + 2, SeekOrigin.Begin);
+
+                this.fileStream.Read(temp, 0, 4);
+                currentId = BitConverter.ToInt32(temp, 0);
+                i++;
+            }
+
+            if (currentId == id)
+            {
+                byte[] tempFirstName = this.enc.GetBytes(recordData.FirstName);
+                Array.Resize(ref tempFirstName, 120);
+                this.fileStream.Write(tempFirstName, 0, 120);
+                byte[] tempLastName = this.enc.GetBytes(recordData.LastName);
+                Array.Resize(ref tempLastName, 120);
+                this.fileStream.Write(tempLastName, 0, 120);
+                this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Day), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(recordData.Gender), 0, 2);
+                this.fileStream.Write(BitConverter.GetBytes(recordData.PassportId), 0, 2);
+                int[] sal = decimal.GetBits(recordData.Salary);
+                foreach (var s in sal)
+                {
+                    this.fileStream.Write(BitConverter.GetBytes(s), 0, 4);
+                }
+
+                this.fileStream.Flush();
+            }
         }
 
         /// <summary>
