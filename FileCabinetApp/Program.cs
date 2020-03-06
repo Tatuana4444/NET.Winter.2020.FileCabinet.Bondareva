@@ -541,6 +541,11 @@ namespace FileCabinetApp
                     snapshot.SaveToCsv(writer);
                 }
 
+                if (param[0] == "xml")
+                {
+                    snapshot.SaveToXml(writer);
+                }
+
                 writer.Close();
                 Console.WriteLine($"All records are exported to file {param[1]}.");
             }
