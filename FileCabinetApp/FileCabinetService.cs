@@ -32,6 +32,15 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Create new snapshot.
+        /// </summary>
+        /// <returns>Snapshot.</returns>
+        public static FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            return new FileCabinetServiceSnapshot();
+        }
+
+        /// <summary>
         /// Create a new record.
         /// </summary>
         /// <param name="recordData">User's data.</param>
