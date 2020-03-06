@@ -56,11 +56,10 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "memory" };
+            string[] cmdParam = new string[] { "default", "file" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
-                cmdParam = new string[] { "default", "memory" };
                 while (i < args.Length)
                 {
                     if (args[i] == "-v")

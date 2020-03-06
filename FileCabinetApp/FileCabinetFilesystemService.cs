@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -13,6 +14,8 @@ namespace FileCabinetApp
     {
         private FileStream fileStream;
         private IRecordValidator validator;
+        private Encoding enc = Encoding.Unicode;
+        private int count = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
@@ -42,7 +45,29 @@ namespace FileCabinetApp
         /// <returns>Id of a new record.</returns>
         public int CreateRecord(RecordData recordData)
         {
-            throw new NotImplementedException();
+            if (recordData is null)
+            {
+                throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
+            }
+
+            this.fileStream.Write(this.enc.GetBytes("status"), 0, 2);
+            this.fileStream.Write(BitConverter.GetBytes(this.count), 0, 4);
+            this.fileStream.Write(this.enc.GetBytes(recordData.FirstName), 0, recordData.FirstName.Length);
+            this.fileStream.Seek(120 - recordData.FirstName.Length, SeekOrigin.Current);
+            this.fileStream.Write(this.enc.GetBytes(recordData.LastName), 0, recordData.LastName.Length);
+            this.fileStream.Seek(120 - recordData.LastName.Length, SeekOrigin.Current);
+            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, 4);
+            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, 4);
+            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Day), 0, 4);
+            this.fileStream.Write(BitConverter.GetBytes(recordData.Gender), 0, 2);
+            this.fileStream.Write(BitConverter.GetBytes(recordData.PassportId), 0, 2);
+            int[] sal = decimal.GetBits(recordData.Salary);
+            foreach (var s in sal)
+            {
+                this.fileStream.Write(BitConverter.GetBytes(s), 0, 4);
+            }
+
+            return this.count++;
         }
 
         /// <summary>
