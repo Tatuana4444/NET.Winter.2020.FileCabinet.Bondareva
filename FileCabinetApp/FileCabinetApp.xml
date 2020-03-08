@@ -76,6 +76,13 @@
             <param name="firstName">User's first name.</param>
             <returns>Records whith sought-for firstName.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByLastName(System.String)">
+            <summary>
+            Finds records by last name.
+            </summary>
+            <param name="lastName">User's last name.</param>
+            <returns>Records whith sought-for lastName.</returns>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetRecords">
             <summary>
             Returns all records.
@@ -87,13 +94,6 @@
             Returns count of records.
             </summary>
             <returns>Count of records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByLastName(System.String)">
-            <summary>
-            Finds records by last name.
-            </summary>
-            <param name="lastName">User's last name.</param>
-            <returns>Records whith sought-for lastName.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
