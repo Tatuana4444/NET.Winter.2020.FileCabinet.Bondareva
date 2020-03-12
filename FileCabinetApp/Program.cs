@@ -33,6 +33,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
         };
@@ -45,6 +46,7 @@ namespace FileCabinetApp
             new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
             new string[] { "export", "export records", "The 'export' command expord records." },
+            new string[] { "import", "import records", "The 'import' command import records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -588,6 +590,26 @@ namespace FileCabinetApp
             catch (UnauthorizedAccessException)
             {
                 Console.WriteLine($"Export failed: can't open file {param[1]}.");
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            string[] param = parameters.Split(' ');
+            if (param.Length == 2)
+            {
+                if (param[0] == "csv")
+                {
+                    if (File.Exists(param[1]))
+                    {
+                        int count = 0;
+                        Console.WriteLine($"{count} records were imported from {param[1]}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Import error: file {param[1]} is not exist.");
+                    }
+                }
             }
         }
     }
