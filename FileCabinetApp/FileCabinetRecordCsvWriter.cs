@@ -37,7 +37,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(record), "Record can't be null.");
             }
 
-            this.writer.Write($"{record.Id}, {record.FirstName}, {record.LastName}, " +
+            this.writer.WriteLine($"{record.Id}, {record.FirstName}, {record.LastName}, " +
                 $"{record.DateOfBirth}, {record.Gender}, {record.PassportId}, {record.Salary}");
         }
     }
