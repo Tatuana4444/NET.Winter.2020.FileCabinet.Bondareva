@@ -261,6 +261,15 @@ namespace FileCabinetApp
             return new ReadOnlyCollection<FileCabinetRecord>(listByLastName);
         }
 
+        /// <summary>
+        /// Restore date from snapshot.
+        /// </summary>
+        /// <param name="snapshot">Snapshot.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            throw new NotImplementedException();
+        }
+
         private FileCabinetRecord ReadFromFile()
         {
             byte[] temp = new byte[38];

@@ -58,7 +58,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file" };
+            string[] cmdParam = new string[] { "default", "memory" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -565,7 +565,6 @@ namespace FileCabinetApp
             {
                 StreamWriter writer = new StreamWriter(param[1]);
                 var snapshot = FileCabinetMemoryService.MakeSnapshot();
-                snapshot.SetState(Program.fileCabinetService.GetRecords().ToArray());
                 if (param[0] == "csv")
                 {
                     snapshot.SaveToCsv(writer);
@@ -602,7 +601,10 @@ namespace FileCabinetApp
                 {
                     if (File.Exists(param[1]))
                     {
-                        int count = 0;
+                        FileStream stream = new FileStream(param[1], FileMode.Open);
+                        var snapshot = new FileCabinetServiceSnapshot();
+                        int count = snapshot.LoadFromCsv(new StreamReader(stream));
+                        fileCabinetService.Restore(snapshot);
                         Console.WriteLine($"{count} records were imported from {param[1]}");
                     }
                     else

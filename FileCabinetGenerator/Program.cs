@@ -21,8 +21,8 @@ namespace FileCabinetGenerator
         {
             bool isCsv = true;
             string outputFile = "1.csv";
-            int amount = 1;
-            int startId = 0;
+            int amount = 10000;
+            int startId = 30;
 
             int i = 0;
             while(i < args.Length)
@@ -109,7 +109,7 @@ namespace FileCabinetGenerator
                     DateOfBirth = date.AddDays(rnd.Next((currentDate - date).Days)),
                     Gender = rnd.Next(1, 2) == 1 ? 'M' : 'W',
                     PassportId = (short)rnd.Next(1000, 9999),
-                    Salary = rnd.Next(375),
+                    Salary = rnd.Next(375, int.MaxValue),
                 };
 
                 list.Add(record);
