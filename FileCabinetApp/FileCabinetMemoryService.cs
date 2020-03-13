@@ -212,6 +212,12 @@ namespace FileCabinetApp
                 }
 
                 newList.Add(record);
+                List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
+                this.AddToDictionary(this.firstNameDictionary, listByFirstName, record.FirstName, record.Id);
+                List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
+                this.AddToDictionary(this.lastNameDictionary, listByLastName, record.LastName, record.Id);
+                List<FileCabinetRecord> listBydateOfBirth = new List<FileCabinetRecord>();
+                this.AddToDictionary(this.dateOfBirthDictionary, listBydateOfBirth, record.DateOfBirth.ToString(this.englishUS), record.Id);
             }
 
             this.list = newList;

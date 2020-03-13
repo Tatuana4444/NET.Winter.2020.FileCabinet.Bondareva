@@ -8,20 +8,14 @@ using System.Xml.Serialization;
 
 namespace FileCabinetGenerator
 {
-    public class ListOfRecord
-    {
-        [XmlArray("Records")]
-        public List<FileCabinetRecord> List { get; set; }
-    };
-
     class Program
     {
         
         static void Main(string[] args)
         {
-            bool isCsv = true;
-            string outputFile = "1.csv";
-            int amount = 10000;
+            bool isCsv = false;
+            string outputFile = "1.xml";
+            int amount = 100;
             int startId = 1;
 
             int i = 0;
@@ -65,16 +59,13 @@ namespace FileCabinetGenerator
                 i++;
             }
 
-            ListOfRecord listOfRecord = new ListOfRecord
-            {
-                List = GenerateData(amount, startId)
-            };
+            List<FileCabinetRecord> list = GenerateData(amount, startId);
 
             TextWriter writer = new StreamWriter(outputFile);
             if (isCsv)
             {
                 
-                foreach (var record in listOfRecord.List)
+                foreach (var record in list)
                 {
                     writer.WriteLine($"{record.Id}, {record.FirstName}, {record.LastName}, " +
                     $"{record.DateOfBirth}, {record.Gender}, {record.PassportId}, {record.Salary}");
@@ -83,10 +74,10 @@ namespace FileCabinetGenerator
             }
             else
             {
-                XmlSerializer ser = new XmlSerializer(typeof(ListOfRecord));
+                XmlSerializer ser = new XmlSerializer(typeof(List<FileCabinetRecord>));
                 //foreach (var record in list)
                 //{
-                    ser.Serialize(writer, listOfRecord);
+                    ser.Serialize(writer, list);
                 //}
 
             }

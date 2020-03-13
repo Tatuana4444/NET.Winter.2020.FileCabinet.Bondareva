@@ -271,6 +271,23 @@
             </summary>
             <param name="record">Record.</param>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>
+            Reader for xml files.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="stream">Current Stream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            Read all records from stream.
+            </summary>
+            <returns>List of records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>
             Serializes records to xml file.
@@ -321,6 +338,13 @@
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
             <summary>
             Loads records from csv file.
+            </summary>
+            <param name="stream">Current stream.</param>
+            <returns>Count loaded records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromXml(System.IO.StreamReader)">
+            <summary>
+            Loads records from xml file.
             </summary>
             <param name="stream">Current stream.</param>
             <returns>Count loaded records.</returns>

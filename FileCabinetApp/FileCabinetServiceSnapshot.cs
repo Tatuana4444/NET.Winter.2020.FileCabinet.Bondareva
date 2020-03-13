@@ -66,5 +66,17 @@ namespace FileCabinetApp
             this.records = reader.ReadAll().ToArray();
             return this.records.Length;
         }
+
+        /// <summary>
+        /// Loads records from xml file.
+        /// </summary>
+        /// <param name="stream">Current stream.</param>
+        /// <returns>Count loaded records.</returns>
+        internal int LoadFromXml(StreamReader stream)
+        {
+            FileCabinetRecordXmlReader reader = new FileCabinetRecordXmlReader(stream);
+            this.records = reader.ReadAll().ToArray();
+            return this.records.Length;
+        }
     }
 }

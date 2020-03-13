@@ -58,7 +58,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file" };
+            string[] cmdParam = new string[] { "default", "memory" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -604,6 +604,23 @@ namespace FileCabinetApp
                         FileStream stream = new FileStream(param[1], FileMode.Open);
                         var snapshot = new FileCabinetServiceSnapshot();
                         int count = snapshot.LoadFromCsv(new StreamReader(stream));
+                        fileCabinetService.Restore(snapshot);
+                        Console.WriteLine($"{count} records were imported from {param[1]}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Import error: file {param[1]} is not exist.");
+                    }
+                }
+
+                if (param[0] == "xml")
+                {
+                    if (File.Exists(param[1]))
+                    {
+                        FileStream stream = new FileStream(param[1], FileMode.Open);
+                        var snapshot = new FileCabinetServiceSnapshot();
+                        using var streamReader = new StreamReader(stream);
+                        int count = snapshot.LoadFromXml(streamReader);
                         fileCabinetService.Restore(snapshot);
                         Console.WriteLine($"{count} records were imported from {param[1]}");
                     }
