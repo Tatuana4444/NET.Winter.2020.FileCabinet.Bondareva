@@ -22,7 +22,7 @@ namespace FileCabinetGenerator
             bool isCsv = true;
             string outputFile = "1.csv";
             int amount = 10000;
-            int startId = 30;
+            int startId = 1;
 
             int i = 0;
             while(i < args.Length)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace FileCabinetApp
@@ -50,14 +51,15 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
+            this.fileStream.Seek(0, SeekOrigin.End);
             this.fileStream.Write(this.enc.GetBytes("status"), 0, 2);
             this.fileStream.Write(BitConverter.GetBytes(this.GetStat() + 1), 0, 4);
             byte[] tempFirstName = this.enc.GetBytes(recordData.FirstName);
-            Array.Resize(ref tempFirstName, 120);
-            this.fileStream.Write(tempFirstName, 0, 120);
+            this.fileStream.Write(tempFirstName, 0, tempFirstName.Length);
+            this.fileStream.Position += 120 - tempFirstName.Length;
             byte[] tempLastName = this.enc.GetBytes(recordData.LastName);
-            Array.Resize(ref tempLastName, 120);
-            this.fileStream.Write(tempLastName, 0, 120);
+            this.fileStream.Write(tempLastName, 0, tempLastName.Length);
+            this.fileStream.Position += 120 - tempLastName.Length;
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, 4);
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, 4);
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Day), 0, 4);
@@ -103,11 +105,11 @@ namespace FileCabinetApp
             if (currentId == id)
             {
                 byte[] tempFirstName = this.enc.GetBytes(recordData.FirstName);
-                Array.Resize(ref tempFirstName, 120);
-                this.fileStream.Write(tempFirstName, 0, 120);
+                this.fileStream.Write(tempFirstName, 0, tempFirstName.Length);
+                this.fileStream.Position += 120 - tempFirstName.Length;
                 byte[] tempLastName = this.enc.GetBytes(recordData.LastName);
-                Array.Resize(ref tempLastName, 120);
-                this.fileStream.Write(tempLastName, 0, 120);
+                this.fileStream.Write(tempLastName, 0, tempLastName.Length);
+                this.fileStream.Position += 120 - tempLastName.Length;
                 this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, 4);
                 this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, 4);
                 this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Day), 0, 4);
@@ -267,7 +269,37 @@ namespace FileCabinetApp
         /// <param name="snapshot">Snapshot.</param>
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
-            throw new NotImplementedException();
+            if (snapshot is null)
+            {
+                throw new ArgumentNullException(nameof(snapshot), "Snapshot can't be null");
+            }
+
+            List<FileCabinetRecord> list = snapshot.Records.ToList();
+            foreach (FileCabinetRecord record in list)
+            {
+                this.fileStream.Position = (record.Id - 1) * 278;
+
+                this.fileStream.Write(this.enc.GetBytes("status"), 0, 2);
+                this.fileStream.Write(BitConverter.GetBytes(this.GetStat() + 1), 0, 4);
+                byte[] tempFirstName = this.enc.GetBytes(record.FirstName);
+                this.fileStream.Write(tempFirstName, 0, tempFirstName.Length);
+                this.fileStream.Position += 120 - tempFirstName.Length;
+                byte[] tempLastName = this.enc.GetBytes(record.LastName);
+                this.fileStream.Write(tempLastName, 0, tempLastName.Length);
+                this.fileStream.Position += 120 - tempLastName.Length;
+                this.fileStream.Write(BitConverter.GetBytes(record.DateOfBirth.Year), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(record.DateOfBirth.Month), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(record.DateOfBirth.Day), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(record.Gender), 0, 2);
+                this.fileStream.Write(BitConverter.GetBytes(record.PassportId), 0, 2);
+                int[] sal = decimal.GetBits(record.Salary);
+                foreach (var s in sal)
+                {
+                    this.fileStream.Write(BitConverter.GetBytes(s), 0, 4);
+                }
+
+                this.fileStream.Flush();
+            }
         }
 
         private FileCabinetRecord ReadFromFile()
