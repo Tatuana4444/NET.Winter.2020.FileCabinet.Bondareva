@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace FileCabinetApp
@@ -15,11 +16,11 @@ namespace FileCabinetApp
         /// Min salary for Belarus.
         /// </summary>
         public const int MinSalary = 375;
-        private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+        private List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private IRecordValidator validator;
 
         /// <summary>
@@ -182,6 +183,44 @@ namespace FileCabinetApp
             }
 
             return new ReadOnlyCollection<FileCabinetRecord>(listByDateOfBirth);
+        }
+
+        /// <summary>
+        /// Restore data fron snapshot.
+        /// </summary>
+        /// <param name="snapshot">Snapshot.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            if (snapshot is null)
+            {
+                throw new ArgumentNullException(nameof(snapshot), "Snapshot can't be null");
+            }
+
+            List<FileCabinetRecord> list = snapshot.Records.ToList();
+            List<FileCabinetRecord> newList = new List<FileCabinetRecord>();
+            int i = 0;
+            foreach (FileCabinetRecord record in list)
+            {
+                while (i < this.list.Count && this.list[i].Id < record.Id)
+                {
+                    newList.Add(this.list[i++]);
+                }
+
+                if (i < this.list.Count && this.list[i].Id == record.Id)
+                {
+                    i++;
+                }
+
+                newList.Add(record);
+                List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
+                this.AddToDictionary(this.firstNameDictionary, listByFirstName, record.FirstName, record.Id);
+                List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
+                this.AddToDictionary(this.lastNameDictionary, listByLastName, record.LastName, record.Id);
+                List<FileCabinetRecord> listBydateOfBirth = new List<FileCabinetRecord>();
+                this.AddToDictionary(this.dateOfBirthDictionary, listBydateOfBirth, record.DateOfBirth.ToString(this.englishUS), record.Id);
+            }
+
+            this.list = newList;
         }
 
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)

@@ -95,6 +95,12 @@
             <param name="lastName">User's last name.</param>
             <returns>Records whith sought-for lastName.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restore date from snapshot.
+            </summary>
+            <param name="snapshot">Snapshot.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Service for File Cabinet.
@@ -164,6 +170,12 @@
             <param name="dateOfBirth">User's date of Birth.</param>
             <returns>Records whith sought-for date of Birth.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restore data fron snapshot.
+            </summary>
+            <param name="snapshot">Snapshot.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Describes record.
@@ -225,6 +237,23 @@
             User's salary.
             </value>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
+            <summary>
+            Reader for csv.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="stream">Current Stream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            Read all records from stream.
+            </summary>
+            <returns>List of records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
             <summary>
             Serializes records to csv file.
@@ -241,6 +270,23 @@
             Writes records to csv file.
             </summary>
             <param name="record">Record.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>
+            Reader for xml files.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="stream">Current Stream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            Read all records from stream.
+            </summary>
+            <returns>List of records.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>
@@ -269,11 +315,13 @@
             Snapshot.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SetState(FileCabinetApp.FileCabinetRecord[])">
+        <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.Records">
             <summary>
-            Set records.
+            Gets records.
             </summary>
-            <param name="records">Snapshot of records.</param>
+            <value>
+            Records.
+            </value>
         </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
@@ -286,6 +334,20 @@
             Save records to xml file.
             </summary>
             <param name="streamWriter">Stream for writing.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
+            <summary>
+            Loads records from csv file.
+            </summary>
+            <param name="stream">Current stream.</param>
+            <returns>Count loaded records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromXml(System.IO.StreamReader)">
+            <summary>
+            Loads records from xml file.
+            </summary>
+            <param name="stream">Current stream.</param>
+            <returns>Count loaded records.</returns>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
@@ -338,6 +400,12 @@
             </summary>
             <param name="dateOfBirth">User's date of Birth.</param>
             <returns>Records whith sought-for date of Birth.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restore data from snapshot.
+            </summary>
+            <param name="snapshot">Snapshot.</param>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
