@@ -58,7 +58,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "memory" };
+            string[] cmdParam = new string[] { "default", "file" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -167,6 +167,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
+                    File.Delete("cabinet-records.db");
                     FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
                     Program.fileCabinetService = new FileCabinetFilesystemService(stream, new CustomValidator());
                 }
@@ -183,6 +184,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
+                    File.Delete("cabinet-records.db");
                     FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
                     Program.fileCabinetService = new FileCabinetFilesystemService(stream, new DefaultValidator());
                 }
