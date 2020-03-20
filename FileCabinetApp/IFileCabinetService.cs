@@ -62,5 +62,12 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
         void Restore(FileCabinetServiceSnapshot snapshot);
+
+        /// <summary>
+        /// Remove record by id.
+        /// </summary>
+        /// <param name="id">Id record.</param>
+        /// <returns>True, if record exists, otherway returns false.</returns>
+        bool Remove(int id);
     }
 }

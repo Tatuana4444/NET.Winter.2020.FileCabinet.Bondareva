@@ -29,6 +29,7 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("remove", Remove),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("stat", Stat),
@@ -42,11 +43,12 @@ namespace FileCabinetApp
         {
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "edit", "edits record by id", "The 'edit' command edits record by id." },
+            new string[] { "remove", "removes record by id", "The 'remove' command removes record by id." },
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
             new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
-            new string[] { "export", "export records", "The 'export' command expord records." },
-            new string[] { "import", "import records", "The 'import' command import records." },
+            new string[] { "export", "exports records", "The 'export' command expord records." },
+            new string[] { "import", "imports records", "The 'import' command import records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -58,7 +60,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file" };
+            string[] cmdParam = new string[] { "default", "memory" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -172,7 +174,7 @@ namespace FileCabinetApp
                     Program.fileCabinetService = new FileCabinetFilesystemService(stream, new CustomValidator());
                 }
 
-                Program.isDefaulRule = true;
+                Program.isDefaulRule = false;
                 Console.WriteLine(CustomValidationMessage);
             }
 
@@ -189,7 +191,7 @@ namespace FileCabinetApp
                     Program.fileCabinetService = new FileCabinetFilesystemService(stream, new DefaultValidator());
                 }
 
-                Program.isDefaulRule = false;
+                Program.isDefaulRule = true;
                 Console.WriteLine(DefaultValidationMessage);
             }
         }
@@ -631,6 +633,25 @@ namespace FileCabinetApp
                         Console.WriteLine($"Import error: file {param[1]} is not exist.");
                     }
                 }
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (int.TryParse(parameters, out int id))
+            {
+                if (fileCabinetService.Remove(id))
+                {
+                    Console.WriteLine($"Record #{id} is removed.");
+                }
+                else
+                {
+                    Console.WriteLine($"Record #{id} doesn't exists.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalide id.");
             }
         }
     }

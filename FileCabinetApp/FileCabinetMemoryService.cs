@@ -22,6 +22,7 @@ namespace FileCabinetApp
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
         private List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private IRecordValidator validator;
+        private Dictionary<int, int> presentIdList = new Dictionary<int, int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
@@ -56,7 +57,7 @@ namespace FileCabinetApp
             this.validator.ValidateParametrs(recordData);
             var record = new FileCabinetRecord
             {
-                Id = this.list.Count + 1,
+                Id = this.GetNextFreeId(),
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
@@ -65,12 +66,9 @@ namespace FileCabinetApp
                 Salary = recordData.Salary,
             };
             this.list.Add(record);
-            List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
-            this.AddToDictionary(this.firstNameDictionary, listByFirstName, recordData.FirstName, record.Id);
-            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            this.AddToDictionary(this.lastNameDictionary, listByLastName, recordData.LastName, record.Id);
-            List<FileCabinetRecord> listBydateOfBirth = new List<FileCabinetRecord>();
-            this.AddToDictionary(this.dateOfBirthDictionary, listBydateOfBirth, recordData.DateOfBirth.ToString(this.englishUS), record.Id);
+            this.AddToDictionary(this.firstNameDictionary, recordData.FirstName.ToUpper(this.englishUS), record.Id);
+            this.AddToDictionary(this.lastNameDictionary, recordData.LastName.ToUpper(this.englishUS), record.Id);
+            this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.englishUS), record.Id);
             return record.Id;
         }
 
@@ -106,12 +104,9 @@ namespace FileCabinetApp
 
             this.validator.ValidateParametrs(recordData);
 
-            List<FileCabinetRecord> listByFirstName = this.firstNameDictionary[this.list[id - 1].FirstName.ToUpper(this.englishUS)];
-            this.RemoveFromDictionary(this.firstNameDictionary, listByFirstName, recordData.LastName, id);
-            List<FileCabinetRecord> listByLastName = this.lastNameDictionary[this.list[id - 1].LastName.ToUpper(this.englishUS)];
-            this.RemoveFromDictionary(this.lastNameDictionary, listByLastName, recordData.LastName, id);
-            List<FileCabinetRecord> listByDateOfBirth = this.dateOfBirthDictionary[this.list[id - 1].DateOfBirth.ToString(this.englishUS)];
-            this.RemoveFromDictionary(this.dateOfBirthDictionary, listByDateOfBirth, recordData.DateOfBirth.ToString(this.englishUS), id);
+            this.RemoveFromDictionary(this.firstNameDictionary, recordData.LastName, id);
+            this.RemoveFromDictionary(this.lastNameDictionary, recordData.LastName, id);
+            this.RemoveFromDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.englishUS), id);
 
             this.list[id - 1].FirstName = recordData.FirstName;
             this.list[id - 1].LastName = recordData.LastName;
@@ -120,9 +115,9 @@ namespace FileCabinetApp
             this.list[id - 1].PassportId = recordData.PassportId;
             this.list[id - 1].Salary = recordData.Salary;
 
-            this.AddToDictionary(this.firstNameDictionary, listByFirstName, recordData.FirstName, id);
-            this.AddToDictionary(this.lastNameDictionary, listByLastName, recordData.LastName, id);
-            this.AddToDictionary(this.dateOfBirthDictionary, listByDateOfBirth, recordData.DateOfBirth.ToString(this.englishUS), id);
+            this.AddToDictionary(this.firstNameDictionary, recordData.FirstName.ToUpper(this.englishUS), id);
+            this.AddToDictionary(this.lastNameDictionary, recordData.LastName.ToUpper(this.englishUS), id);
+            this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.englishUS), id);
         }
 
         /// <summary>
@@ -197,59 +192,111 @@ namespace FileCabinetApp
             }
 
             List<FileCabinetRecord> list = snapshot.Records.ToList();
-            List<FileCabinetRecord> newList = new List<FileCabinetRecord>();
-            int i = 0;
             foreach (FileCabinetRecord record in list)
             {
-                while (i < this.list.Count && this.list[i].Id < record.Id)
+                if (this.presentIdList.TryGetValue(record.Id, out int pos))
                 {
-                    newList.Add(this.list[i++]);
+                    this.RemoveFromDictionary(this.firstNameDictionary, this.list[pos].FirstName.ToUpper(this.englishUS), record.Id);
+                    this.RemoveFromDictionary(this.lastNameDictionary, this.list[pos].LastName.ToUpper(this.englishUS), record.Id);
+                    this.RemoveFromDictionary(this.dateOfBirthDictionary, this.list[pos].DateOfBirth.ToString(this.englishUS), record.Id);
+                    this.list[pos] = record;
+                }
+                else
+                {
+                    this.list.Add(record);
                 }
 
-                if (i < this.list.Count && this.list[i].Id == record.Id)
-                {
-                    i++;
-                }
-
-                newList.Add(record);
-                List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
-                this.AddToDictionary(this.firstNameDictionary, listByFirstName, record.FirstName, record.Id);
-                List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-                this.AddToDictionary(this.lastNameDictionary, listByLastName, record.LastName, record.Id);
-                List<FileCabinetRecord> listBydateOfBirth = new List<FileCabinetRecord>();
-                this.AddToDictionary(this.dateOfBirthDictionary, listBydateOfBirth, record.DateOfBirth.ToString(this.englishUS), record.Id);
+                this.AddToDictionary(this.firstNameDictionary, record.FirstName.ToUpper(this.englishUS), record.Id);
+                this.AddToDictionary(this.lastNameDictionary, record.LastName.ToUpper(this.englishUS), record.Id);
+                this.AddToDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.englishUS), record.Id);
             }
-
-            this.list = newList;
         }
 
-        private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
+        /// <summary>
+        /// Remove record by id.
+        /// </summary>
+        /// <param name="id">Id record.</param>
+        /// <returns>True, if record exists, otherway returns false.</returns>
+        public bool Remove(int id)
         {
-            if (dictionary.ContainsKey(name))
+            int i = this.FindRecord(this.list, id);
+            if (i == this.list.Count)
             {
-                list = dictionary[name];
+                return false;
+            }
+
+            FileCabinetRecord record = this.list[i];
+            this.list.RemoveAt(i);
+
+            this.RemoveFromDictionary(this.firstNameDictionary, record.FirstName.ToUpper(this.englishUS), id);
+            this.RemoveFromDictionary(this.lastNameDictionary, record.LastName.ToUpper(this.englishUS), id);
+            this.RemoveFromDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.englishUS), id);
+            this.presentIdList.Remove(id);
+
+            return true;
+        }
+
+        private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string name, int id)
+        {
+            List<FileCabinetRecord> list;
+            if (dictionary.ContainsKey(name.ToUpper(this.englishUS)))
+            {
+                dictionary[name.ToUpper(this.englishUS)].Add(this.list[id - 1]);
             }
             else
             {
                 list = new List<FileCabinetRecord>();
+                list.Add(this.list[this.presentIdList[id]]);
+                dictionary.Add(name.ToUpper(this.englishUS), list);
             }
-
-            list.Add(this.list[id - 1]);
-            dictionary.Add(name.ToUpper(this.englishUS), list);
         }
 
-        private void RemoveFromDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, List<FileCabinetRecord> list, string name, int id)
+        private void RemoveFromDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string name, int id)
         {
-            int itemByFirstName = list.IndexOf(this.list[id - 1]);
-            list.RemoveAt(itemByFirstName);
+            List<FileCabinetRecord> list = dictionary[name];
+            int i = 0;
+            while (id != list[i].Id)
+            {
+                i++;
+            }
+
+            list.RemoveAt(i);
             if (list.Count > 0)
             {
                 dictionary[name] = list;
             }
             else
             {
-                dictionary.Remove(this.list[id - 1].FirstName.ToUpper(this.englishUS));
+                dictionary.Remove(name);
             }
+        }
+
+        private int FindRecord(List<FileCabinetRecord> list, int id)
+        {
+            int i = 0;
+            while (list[i].Id != id && i < list.Count)
+            {
+                i++;
+            }
+
+            return i;
+        }
+
+        private int GetNextFreeId()
+        {
+            int i = 1;
+            while (i < this.presentIdList.Count)
+            {
+                if (!this.presentIdList.TryGetValue(i, out int _))
+                {
+                    return i;
+                }
+
+                i++;
+            }
+
+            this.presentIdList.Add(i, this.list.Count);
+            return i;
         }
     }
 }
