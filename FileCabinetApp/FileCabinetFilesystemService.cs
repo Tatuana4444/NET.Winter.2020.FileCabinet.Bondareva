@@ -278,6 +278,58 @@ namespace FileCabinetApp
             return true;
         }
 
+        /// <summary>
+        /// Defragment the data file.
+        /// </summary>
+        /// <returns>Count of defragmented records.</returns>
+        public int Purge()
+        {
+            int purgedCount = 0;
+            int i = 0, offsetCount = 0;
+            while (i < this.fileStream.Length / 278)
+            {
+                this.fileStream.Position = (i * 278) + 1;
+                int b = this.fileStream.ReadByte();
+                if ((b & 2) == 2)
+                {
+                    offsetCount++;
+                    i++;
+                }
+                else
+                {
+                    if (offsetCount > 0)
+                    {
+                        this.DefragmentFile(i, offsetCount);
+                        i -= offsetCount;
+                        purgedCount += offsetCount;
+                        offsetCount = 0;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+
+            this.fileStream.SetLength(this.fileStream.Length - (offsetCount * 278));
+
+            return purgedCount + offsetCount;
+        }
+
+        private void DefragmentFile(int i, int offsetCount)
+        {
+            while (i < this.fileStream.Length / 278)
+            {
+                this.fileStream.Position = i * 278;
+                FileCabinetRecord record = this.ReadFromFile();
+                RecordData recordData = new RecordData(record.FirstName, record.LastName, record.DateOfBirth, record.Gender, record.PassportId, record.Salary);
+                this.WriteToFile(recordData, record.Id, (i - offsetCount) * 278);
+                i++;
+            }
+
+            this.fileStream.SetLength(this.fileStream.Length - (offsetCount * 278));
+        }
+
         private void WriteToFile(RecordData recordData,  int id, long pos)
         {
             this.fileStream.Position = pos;

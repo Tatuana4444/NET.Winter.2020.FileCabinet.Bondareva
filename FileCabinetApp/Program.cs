@@ -35,6 +35,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("purge", Purge),
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
         };
@@ -47,8 +48,9 @@ namespace FileCabinetApp
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
             new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
-            new string[] { "export", "exports records", "The 'export' command expord records." },
-            new string[] { "import", "imports records", "The 'import' command import records." },
+            new string[] { "export", "exports records", "The 'export' command expords records." },
+            new string[] { "import", "imports records", "The 'import' command imports records." },
+            new string[] { "purge", "purges records", "The 'purge' command purges records deleted records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -60,7 +62,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "memory" };
+            string[] cmdParam = new string[] { "default", "file" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -653,6 +655,13 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Invalide id.");
             }
+        }
+
+        private static void Purge(string parameters)
+        {
+            int purged = fileCabinetService.Purge();
+            Console.WriteLine($"Data file processing is completed: {purged} of " +
+                $"{fileCabinetService.GetStat() + purged} records were purged.");
         }
     }
 }

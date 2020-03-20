@@ -69,5 +69,11 @@ namespace FileCabinetApp
         /// <param name="id">Id record.</param>
         /// <returns>True, if record exists, otherway returns false.</returns>
         bool Remove(int id);
+
+        /// <summary>
+        /// Defragment the data file.
+        /// </summary>
+        /// <returns>Count of defragmented records.</returns>
+        int Purge();
     }
 }

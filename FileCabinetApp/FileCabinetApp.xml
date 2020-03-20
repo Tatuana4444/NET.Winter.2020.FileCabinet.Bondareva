@@ -109,6 +109,12 @@
             <param name="id">Id record.</param>
             <returns>True, if record exists, otherway returns false.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Purge">
+            <summary>
+            Defragment the data file.
+            </summary>
+            <returns>Count of defragmented records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Service for File Cabinet.
@@ -190,6 +196,12 @@
             </summary>
             <param name="id">Id record.</param>
             <returns>True, if record exists, otherway returns false.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge">
+            <summary>
+            For memory service does nothing.
+            </summary>
+            <returns>Returns 0.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -428,6 +440,12 @@
             </summary>
             <param name="id">Id record.</param>
             <returns>True, if record exists, otherway returns false.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Purge">
+            <summary>
+            Defragment the data file.
+            </summary>
+            <returns>Count of defragmented records.</returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

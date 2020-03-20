@@ -236,6 +236,15 @@ namespace FileCabinetApp
             return true;
         }
 
+        /// <summary>
+        /// For memory service does nothing.
+        /// </summary>
+        /// <returns>Returns 0.</returns>
+        public int Purge()
+        {
+            return 0;
+        }
+
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string name, int id)
         {
             List<FileCabinetRecord> list;
