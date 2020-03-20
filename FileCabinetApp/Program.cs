@@ -29,11 +29,13 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("remove", Remove),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("purge", Purge),
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
         };
@@ -42,11 +44,13 @@ namespace FileCabinetApp
         {
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "edit", "edits record by id", "The 'edit' command edits record by id." },
+            new string[] { "remove", "removes record by id", "The 'remove' command removes record by id." },
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
             new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
-            new string[] { "export", "export records", "The 'export' command expord records." },
-            new string[] { "import", "import records", "The 'import' command import records." },
+            new string[] { "export", "exports records", "The 'export' command expords records." },
+            new string[] { "import", "imports records", "The 'import' command imports records." },
+            new string[] { "purge", "purges records", "The 'purge' command purges records deleted records." },
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -172,7 +176,7 @@ namespace FileCabinetApp
                     Program.fileCabinetService = new FileCabinetFilesystemService(stream, new CustomValidator());
                 }
 
-                Program.isDefaulRule = true;
+                Program.isDefaulRule = false;
                 Console.WriteLine(CustomValidationMessage);
             }
 
@@ -189,7 +193,7 @@ namespace FileCabinetApp
                     Program.fileCabinetService = new FileCabinetFilesystemService(stream, new DefaultValidator());
                 }
 
-                Program.isDefaulRule = false;
+                Program.isDefaulRule = true;
                 Console.WriteLine(DefaultValidationMessage);
             }
         }
@@ -203,7 +207,7 @@ namespace FileCabinetApp
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{recordsCount.Item1} record(s) and {recordsCount.Item2} deleted record(s).");
         }
 
         private static void Create(string parameters)
@@ -471,7 +475,7 @@ namespace FileCabinetApp
 
         private static void Edit(string parameters)
         {
-            if (!int.TryParse(parameters, out int id) || id > fileCabinetService.GetStat())
+            if (!int.TryParse(parameters, out int id) || id > fileCabinetService.GetStat().Item1)
             {
                 Console.WriteLine($"#{id} record is not found.");
                 return;
@@ -632,6 +636,32 @@ namespace FileCabinetApp
                     }
                 }
             }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (int.TryParse(parameters, out int id))
+            {
+                if (fileCabinetService.Remove(id))
+                {
+                    Console.WriteLine($"Record #{id} is removed.");
+                }
+                else
+                {
+                    Console.WriteLine($"Record #{id} doesn't exists.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalide id.");
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            int purged = fileCabinetService.Purge();
+            Console.WriteLine($"Data file processing is completed: {purged} of " +
+                $"{fileCabinetService.GetStat().Item1 + purged} records were purged.");
         }
     }
 }

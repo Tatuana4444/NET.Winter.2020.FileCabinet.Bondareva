@@ -26,8 +26,8 @@ namespace FileCabinetApp
         /// <summary>
         /// Returns count of records.
         /// </summary>
-        /// <returns>Count of records.</returns>
-        public int GetStat();
+        /// <returns>Count of records and count of deleted records.</returns>
+        public Tuple<int, int> GetStat();
 
         /// <summary>
         /// Edit record by id.
@@ -62,5 +62,18 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
         void Restore(FileCabinetServiceSnapshot snapshot);
+
+        /// <summary>
+        /// Remove record by id.
+        /// </summary>
+        /// <param name="id">Id record.</param>
+        /// <returns>True, if record exists, otherway returns false.</returns>
+        bool Remove(int id);
+
+        /// <summary>
+        /// Defragment the data file.
+        /// </summary>
+        /// <returns>Count of defragmented records.</returns>
+        int Purge();
     }
 }
