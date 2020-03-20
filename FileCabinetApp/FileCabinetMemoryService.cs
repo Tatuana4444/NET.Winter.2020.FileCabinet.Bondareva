@@ -82,12 +82,12 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Returns count of records.
+        /// Returns count of records and count of deleted records.
         /// </summary>
-        /// <returns>Count of records.</returns>
-        public int GetStat()
+        /// <returns>Count of records  and 0.</returns>
+        public Tuple<int, int> GetStat()
         {
-            return this.list.Count;
+            return new Tuple<int, int>(this.list.Count, 0);
         }
 
         /// <summary>

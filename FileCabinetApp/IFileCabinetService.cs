@@ -26,8 +26,8 @@ namespace FileCabinetApp
         /// <summary>
         /// Returns count of records.
         /// </summary>
-        /// <returns>Count of records.</returns>
-        public int GetStat();
+        /// <returns>Count of records and count of deleted records.</returns>
+        public Tuple<int, int> GetStat();
 
         /// <summary>
         /// Edit record by id.

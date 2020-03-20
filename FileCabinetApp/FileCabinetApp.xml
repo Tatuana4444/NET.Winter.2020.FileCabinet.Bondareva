@@ -85,9 +85,9 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
             <summary>
-            Returns count of records.
+            Returns count of records  and count of deleted records.
             </summary>
-            <returns>Count of records.</returns>
+            <returns>Count of records  and count of deleted records.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByLastName(System.String)">
             <summary>
@@ -152,9 +152,9 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat">
             <summary>
-            Returns count of records.
+            Returns count of records and count of deleted records.
             </summary>
-            <returns>Count of records.</returns>
+            <returns>Count of records  and 0.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
             <summary>
@@ -398,7 +398,7 @@
             <summary>
             Returns count of records.
             </summary>
-            <returns>Count of records.</returns>
+            <returns>Count of records and count of deleted records.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
             <summary>

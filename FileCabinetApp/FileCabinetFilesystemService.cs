@@ -127,7 +127,7 @@ namespace FileCabinetApp
 
             firstName = firstName.ToUpper(this.englishUS);
             List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
-            for (int i = 0; i < this.GetStat(); i++)
+            for (int i = 0; i < this.GetStat().Item1; i++)
             {
                 this.fileStream.Position = (i * 278) + 6;
                 byte[] tempForStrings = new byte[120];
@@ -163,7 +163,7 @@ namespace FileCabinetApp
         {
             List<FileCabinetRecord> list = new List<FileCabinetRecord>();
             this.fileStream.Position = 0;
-            for (long i = 0; i < this.GetStat(); i++)
+            for (long i = 0; i < this.GetStat().Item1; i++)
             {
                 FileCabinetRecord record = this.ReadFromFile();
                 if (record != null)
@@ -176,12 +176,26 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Returns count of records.
+        /// Returns count of records  and count of deleted records.
         /// </summary>
-        /// <returns>Count of records.</returns>
-        public int GetStat()
+        /// <returns>Count of records  and count of deleted records.</returns>
+        public Tuple<int, int> GetStat()
         {
-            return (int)(this.fileStream.Length / 278);
+            int deletedCount = 0;
+            int i = 0;
+            while (i < this.fileStream.Length / 278)
+            {
+                this.fileStream.Position = (i * 278) + 1;
+                int b = this.fileStream.ReadByte();
+                if ((b & 2) == 2)
+                {
+                    deletedCount++;
+                }
+
+                i++;
+            }
+
+            return new Tuple<int, int>((int)(this.fileStream.Length / 278), deletedCount);
         }
 
         /// <summary>
@@ -198,7 +212,7 @@ namespace FileCabinetApp
 
             lastName = lastName.ToUpper(this.englishUS);
             List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            for (int i = 0; i < this.GetStat(); i++)
+            for (int i = 0; i < this.GetStat().Item1; i++)
             {
                 this.fileStream.Position = (i * 278) + 126;
                 byte[] tempForStrings = new byte[120];

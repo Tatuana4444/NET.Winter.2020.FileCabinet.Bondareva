@@ -207,7 +207,7 @@ namespace FileCabinetApp
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{recordsCount.Item1} record(s) and {recordsCount.Item2} deleted record(s).");
         }
 
         private static void Create(string parameters)
@@ -475,7 +475,7 @@ namespace FileCabinetApp
 
         private static void Edit(string parameters)
         {
-            if (!int.TryParse(parameters, out int id) || id > fileCabinetService.GetStat())
+            if (!int.TryParse(parameters, out int id) || id > fileCabinetService.GetStat().Item1)
             {
                 Console.WriteLine($"#{id} record is not found.");
                 return;
@@ -661,7 +661,7 @@ namespace FileCabinetApp
         {
             int purged = fileCabinetService.Purge();
             Console.WriteLine($"Data file processing is completed: {purged} of " +
-                $"{fileCabinetService.GetStat() + purged} records were purged.");
+                $"{fileCabinetService.GetStat().Item1 + purged} records were purged.");
         }
     }
 }
