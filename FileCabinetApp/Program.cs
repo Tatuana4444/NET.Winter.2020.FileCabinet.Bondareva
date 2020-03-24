@@ -1,10 +1,7 @@
-﻿using FileCabinetApp.CommandHandlers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
+using FileCabinetApp.CommandHandlers;
 
 namespace FileCabinetApp
 {
@@ -13,7 +10,6 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
-
         public static bool isRunning = true;
         public static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
 
@@ -63,7 +59,7 @@ namespace FileCabinetApp
             }
 
             SetValidationRules(cmdParam);
-            var commandHandler = CreateCommandHandlers();
+            ICommandHandler commandHandler = CreateCommandHandlers();
 
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
@@ -88,10 +84,32 @@ namespace FileCabinetApp
             while (isRunning);
         }
 
-        private static CommandHandler CreateCommandHandlers()
+        private static ICommandHandler CreateCommandHandlers()
         {
-            var commandHandler = new CommandHandler();
-            return commandHandler;
+            ICommandHandler createCommandHandler = new CreateCommandHandler();
+            ICommandHandler editCommandHandler = new EditCommandHandler();
+            ICommandHandler removeCommandHandler = new RemoveCommandHandler();
+            ICommandHandler listCommandHandler = new ListCommandHandler();
+            ICommandHandler findCommandHandler = new FindCommandHandler();
+            ICommandHandler statCommandHandler = new StatCommandHandler();
+            ICommandHandler exportCommandHandler = new ExportCommandHandler();
+            ICommandHandler importCommandHandler = new ImportCommandHandler();
+            ICommandHandler purgeCommandHandler = new PurgeCommandHandler();
+            ICommandHandler helpCommandHandler = new HelpCommandHandler();
+            ICommandHandler exitCommandHandler = new ExitCommandHandler();
+
+            createCommandHandler.SetNext(editCommandHandler);
+            editCommandHandler.SetNext(removeCommandHandler);
+            removeCommandHandler.SetNext(listCommandHandler);
+            listCommandHandler.SetNext(findCommandHandler);
+            findCommandHandler.SetNext(statCommandHandler);
+            statCommandHandler.SetNext(exportCommandHandler);
+            exportCommandHandler.SetNext(importCommandHandler);
+            importCommandHandler.SetNext(purgeCommandHandler);
+            purgeCommandHandler.SetNext(helpCommandHandler);
+            helpCommandHandler.SetNext(exitCommandHandler);
+
+            return createCommandHandler;
         }
 
         private static void SetValidationRules(string[] param)
