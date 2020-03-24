@@ -181,6 +181,7 @@ namespace FileCabinetApp
         /// <returns>Count of records  and count of deleted records.</returns>
         public Tuple<int, int> GetStat()
         {
+            long pos = this.fileStream.Position;
             int deletedCount = 0;
             int i = 0;
             while (i < this.fileStream.Length / 278)
@@ -195,6 +196,7 @@ namespace FileCabinetApp
                 i++;
             }
 
+            this.fileStream.Position = pos;
             return new Tuple<int, int>((int)(this.fileStream.Length / 278), deletedCount);
         }
 
