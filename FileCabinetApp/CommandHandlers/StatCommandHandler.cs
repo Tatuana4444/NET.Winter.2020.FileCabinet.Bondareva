@@ -6,6 +6,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     public class StatCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        public StatCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.service = fileCabinetService;
+        }
+
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -25,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
+            var recordsCount = this.service.GetStat();
             Console.WriteLine($"{recordsCount.Item1} record(s) and {recordsCount.Item2} deleted record(s).");
         }
     }

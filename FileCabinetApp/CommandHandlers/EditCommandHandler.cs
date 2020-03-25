@@ -7,6 +7,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     public class EditCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        public EditCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -246,7 +253,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Edit(string parameters)
         {
-            if (!int.TryParse(parameters, out int id) || id > Program.fileCabinetService.GetStat().Item1)
+            if (!int.TryParse(parameters, out int id) || id > this.service.GetStat().Item1)
             {
                 Console.WriteLine($"#{id} record is not found.");
                 return;
@@ -276,7 +283,7 @@ namespace FileCabinetApp.CommandHandlers
                 : ReadInput(DecimalConverter, SalaryValidatorCustom);
 
             RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
-            Program.fileCabinetService.EditRecord(id, recordData);
+            this.service.EditRecord(id, recordData);
             Console.WriteLine($"Record #{id} is updated.");
         }
     }

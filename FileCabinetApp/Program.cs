@@ -11,7 +11,7 @@ namespace FileCabinetApp
     public static class Program
     {
         public static bool isRunning = true;
-        public static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
 
         private const string DeveloperName = "Tatyana Bondareva";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
@@ -59,7 +59,7 @@ namespace FileCabinetApp
             }
 
             SetValidationRules(cmdParam);
-            ICommandHandler commandHandler = CreateCommandHandlers();
+            ICommandHandler commandHandler = CreateCommandHandlers(fileCabinetService);
 
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
@@ -84,17 +84,17 @@ namespace FileCabinetApp
             while (isRunning);
         }
 
-        private static ICommandHandler CreateCommandHandlers()
+        private static ICommandHandler CreateCommandHandlers(IFileCabinetService fileCabinetService)
         {
-            ICommandHandler createCommandHandler = new CreateCommandHandler();
-            ICommandHandler editCommandHandler = new EditCommandHandler();
-            ICommandHandler removeCommandHandler = new RemoveCommandHandler();
-            ICommandHandler listCommandHandler = new ListCommandHandler();
-            ICommandHandler findCommandHandler = new FindCommandHandler();
-            ICommandHandler statCommandHandler = new StatCommandHandler();
+            ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
+            ICommandHandler editCommandHandler = new EditCommandHandler(fileCabinetService);
+            ICommandHandler removeCommandHandler = new RemoveCommandHandler(fileCabinetService);
+            ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService);
+            ICommandHandler findCommandHandler = new FindCommandHandler(fileCabinetService);
+            ICommandHandler statCommandHandler = new StatCommandHandler(fileCabinetService);
             ICommandHandler exportCommandHandler = new ExportCommandHandler();
-            ICommandHandler importCommandHandler = new ImportCommandHandler();
-            ICommandHandler purgeCommandHandler = new PurgeCommandHandler();
+            ICommandHandler importCommandHandler = new ImportCommandHandler(fileCabinetService);
+            ICommandHandler purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
             ICommandHandler helpCommandHandler = new HelpCommandHandler();
             ICommandHandler exitCommandHandler = new ExitCommandHandler();
 

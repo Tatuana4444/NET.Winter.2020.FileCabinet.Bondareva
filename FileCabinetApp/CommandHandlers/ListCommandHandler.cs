@@ -8,6 +8,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     public class ListCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        public ListCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -21,14 +28,13 @@ namespace FileCabinetApp.CommandHandlers
             }
             else
             {
-
                 base.Handle(commandRequest);
             }
         }
 
         private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> fileCabinetRecord = Program.fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> fileCabinetRecord = this.service.GetRecords();
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
             dtfi.ShortDatePattern = "yyyy-MMM-dd";

@@ -6,6 +6,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     public class PurgeCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        public PurgeCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -25,9 +32,9 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Purge(string parameters)
         {
-            int purged = Program.fileCabinetService.Purge();
+            int purged = this.service.Purge();
             Console.WriteLine($"Data file processing is completed: {purged} of " +
-                $"{Program.fileCabinetService.GetStat().Item1 + purged} records were purged.");
+                $"{this.service.GetStat().Item1 + purged} records were purged.");
         }
     }
 }

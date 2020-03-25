@@ -8,6 +8,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     public class FindCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        public FindCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -36,13 +43,13 @@ namespace FileCabinetApp.CommandHandlers
             {
                 case "FIRSTNAME":
                     {
-                        filtedList = Program.fileCabinetService.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
+                        filtedList = this.service.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
                         break;
                     }
 
                 case "LASTNAME":
                     {
-                        filtedList = Program.fileCabinetService.FindByLastName(param[1].Substring(1, param[1].Length - 2));
+                        filtedList = this.service.FindByLastName(param[1].Substring(1, param[1].Length - 2));
                         break;
                     }
 
@@ -51,7 +58,7 @@ namespace FileCabinetApp.CommandHandlers
                         DateTimeStyles styles = DateTimeStyles.None;
                         if (DateTime.TryParse(param[1].Substring(1, param[1].Length - 2), englishUS, styles, out DateTime dateOfBirth))
                         {
-                            filtedList = Program.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                            filtedList = this.service.FindByDateOfBirth(dateOfBirth);
                         }
 
                         break;

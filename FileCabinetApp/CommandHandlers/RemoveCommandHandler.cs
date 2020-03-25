@@ -6,6 +6,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     public class RemoveCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        public RemoveCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -27,7 +34,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (int.TryParse(parameters, out int id))
             {
-                if (Program.fileCabinetService.Remove(id))
+                if (this.service.Remove(id))
                 {
                     Console.WriteLine($"Record #{id} is removed.");
                 }

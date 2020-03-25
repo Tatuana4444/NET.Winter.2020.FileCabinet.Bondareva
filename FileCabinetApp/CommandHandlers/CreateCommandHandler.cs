@@ -7,6 +7,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     public class CreateCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        public CreateCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -243,6 +250,7 @@ namespace FileCabinetApp.CommandHandlers
             }
             while (true);
         }
+
         private void Create(string parameters)
         {
             Console.Write("First name: ");
@@ -269,7 +277,7 @@ namespace FileCabinetApp.CommandHandlers
                 : ReadInput(DecimalConverter, SalaryValidatorCustom);
 
             RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
-            int index = Program.fileCabinetService.CreateRecord(recordData);
+            int index = this.service.CreateRecord(recordData);
             Console.WriteLine($"Record #{index} is created.");
         }
     }
