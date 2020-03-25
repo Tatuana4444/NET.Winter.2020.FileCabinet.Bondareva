@@ -9,6 +9,17 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class ExitCommandHandler : CommandHandlerBase
     {
+        private Action<bool> exiting;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
+        /// </summary>
+        /// <param name="action">Delegate for existing.</param>
+        public ExitCommandHandler(Action<bool> action)
+        {
+            this.exiting = action;
+        }
+
         /// <summary>
         /// Exit request handler.
         /// </summary>
@@ -33,7 +44,7 @@ namespace FileCabinetApp.CommandHandlers
         private void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
-            Program.isRunning = false;
+            this.exiting(false);
         }
     }
 }

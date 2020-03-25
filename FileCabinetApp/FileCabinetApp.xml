@@ -88,6 +88,12 @@
             Handler for command exit.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(System.Action{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExitCommandHandler"/> class.
+            </summary>
+            <param name="action">Delegate for existing.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Exit request handler.
