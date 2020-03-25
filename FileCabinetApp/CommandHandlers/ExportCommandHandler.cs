@@ -5,8 +5,15 @@ using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
+    /// <summary>
+    /// Handler for command export.
+    /// </summary>
     public class ExportCommandHandler : CommandHandlerBase
     {
+        /// <summary>
+        /// Export request handler.
+        /// </summary>
+        /// <param name="commandRequest">Request.</param>
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)

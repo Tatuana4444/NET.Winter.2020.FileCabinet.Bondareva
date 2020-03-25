@@ -4,15 +4,24 @@ using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
-    public class RemoveCommandHandler : CommandHandlerBase
+    /// <summary>
+    ///  Handler for command remove.
+    /// </summary>
+    public class RemoveCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Current service.</param>
         public RemoveCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
+        /// <summary>
+        /// Remove request handler.
+        /// </summary>
+        /// <param name="commandRequest">Request.</param>
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)

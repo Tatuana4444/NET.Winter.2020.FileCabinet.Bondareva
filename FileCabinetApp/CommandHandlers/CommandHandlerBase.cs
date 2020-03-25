@@ -4,10 +4,17 @@ using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
+    /// <summary>
+    /// Base class for command handler.
+    /// </summary>
     public abstract class CommandHandlerBase : ICommandHandler
     {
         private ICommandHandler nextHandler;
 
+        /// <summary>
+        /// Base request handler.
+        /// </summary>
+        /// <param name="commandRequest">Request.</param>
         public virtual void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -25,6 +32,10 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
+        /// <summary>
+        /// Set next handler.
+        /// </summary>
+        /// <param name="handler">Handler.</param>
         public void SetNext(ICommandHandler handler)
         {
             this.nextHandler = handler;

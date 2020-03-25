@@ -6,15 +6,24 @@ using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
-    public class FindCommandHandler : CommandHandlerBase
+    /// <summary>
+    ///  Handler for command find.
+    /// </summary>
+    public class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Current service.</param>
         public FindCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
+        /// <summary>
+        /// Find request handler.
+        /// </summary>
+        /// <param name="commandRequest">Request.</param>
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)

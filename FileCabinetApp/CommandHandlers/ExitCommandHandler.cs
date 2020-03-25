@@ -4,8 +4,15 @@ using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
+    /// <summary>
+    /// Handler for command exit.
+    /// </summary>
     public class ExitCommandHandler : CommandHandlerBase
     {
+        /// <summary>
+        /// Exit request handler.
+        /// </summary>
+        /// <param name="commandRequest">Request.</param>
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)

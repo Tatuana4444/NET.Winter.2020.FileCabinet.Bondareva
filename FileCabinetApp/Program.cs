@@ -10,15 +10,20 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
+        /// <summary>
+        /// Gets a value indicating whether defaulRule.
+        /// </summary>
+        /// <value>
+        /// A value indicating whether defaulRule.
+        /// </value>
+        public static bool IsDefaulRule { get; private set; }
         public static bool isRunning = true;
-        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
 
         private const string DeveloperName = "Tatyana Bondareva";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const string DefaultValidationMessage = "Using default validation rules.";
         private const string CustomValidationMessage = "Using custom validation rules.";
-
-        public static bool IsDefaulRule { get; private set; }
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
 
         /// <summary>
         /// Gets command and calls their methods.

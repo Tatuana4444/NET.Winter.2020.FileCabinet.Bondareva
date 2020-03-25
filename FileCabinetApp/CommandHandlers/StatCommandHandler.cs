@@ -4,15 +4,24 @@ using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
-    public class StatCommandHandler : CommandHandlerBase
+    /// <summary>
+    ///  Handler for command stat.
+    /// </summary>
+    public class StatCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
-        public StatCommandHandler(IFileCabinetService fileCabinetService)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Current service.</param>
+        public StatCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = fileCabinetService;
         }
 
+        /// <summary>
+        /// Stat request handler.
+        /// </summary>
+        /// <param name="commandRequest">Request.</param>
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)

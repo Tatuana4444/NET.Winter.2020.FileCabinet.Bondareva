@@ -6,15 +6,24 @@ using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
-    public class ListCommandHandler : CommandHandlerBase
+    /// <summary>
+    ///  Handler for command list.
+    /// </summary>
+    public class ListCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Current service.</param>
         public ListCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
+        /// <summary>
+        /// List request handler.
+        /// </summary>
+        /// <param name="commandRequest">Request.</param>
         public override void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
