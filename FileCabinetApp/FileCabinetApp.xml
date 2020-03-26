@@ -116,7 +116,7 @@
              Handler for command find.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
             </summary>
@@ -179,7 +179,7 @@
              Handler for command list.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.
             </summary>
@@ -274,17 +274,6 @@
             Implements cusstom validator.
             </summary>
             <param name="recordData">User's data.</param>
-        </member>
-        <member name="T:FileCabinetApp.DefaultRecordPrinter">
-            <summary>
-            Impleaments IRecordPrinter.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
-            <summary>
-            Print record to console.
-            </summary>
-            <param name="records">Records.</param>
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
@@ -712,17 +701,6 @@
             Defragment the data file.
             </summary>
             <returns>Count of defragmented records.</returns>
-        </member>
-        <member name="T:FileCabinetApp.IRecordPrinter">
-            <summary>
-            Interface for printer.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
-            <summary>
-            Print records in some formar.
-            </summary>
-            <param name="records">Records.</param>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
