@@ -96,11 +96,12 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers(IFileCabinetService fileCabinetService)
         {
+            var recordPrinter = new DefaultRecordPrinter();
             ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
             ICommandHandler editCommandHandler = new EditCommandHandler(fileCabinetService);
             ICommandHandler removeCommandHandler = new RemoveCommandHandler(fileCabinetService);
-            ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService);
-            ICommandHandler findCommandHandler = new FindCommandHandler(fileCabinetService);
+            ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService, recordPrinter);
+            ICommandHandler findCommandHandler = new FindCommandHandler(fileCabinetService, recordPrinter);
             ICommandHandler statCommandHandler = new StatCommandHandler(fileCabinetService);
             ICommandHandler exportCommandHandler = new ExportCommandHandler();
             ICommandHandler importCommandHandler = new ImportCommandHandler(fileCabinetService);

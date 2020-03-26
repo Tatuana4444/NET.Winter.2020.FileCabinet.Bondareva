@@ -11,13 +11,17 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class FindCommandHandler : ServiceCommandHandlerBase
     {
+        private IRecordPrinter printer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service">Current service.</param>
-        public FindCommandHandler(IFileCabinetService service)
+        /// <param name="printer">Current printer.</param>
+        public FindCommandHandler(IFileCabinetService service, IRecordPrinter printer)
             : base(service)
         {
+            this.printer = printer;
         }
 
         /// <summary>
@@ -52,20 +56,20 @@ namespace FileCabinetApp.CommandHandlers
             {
                 case "FIRSTNAME":
                     {
-                        filtedList = this.service.FindByFirstName(param[1].Substring(1, param[1].Length - 2));
+                        filtedList = this.service.FindByFirstName(param[1][1..^1]);
                         break;
                     }
 
                 case "LASTNAME":
                     {
-                        filtedList = this.service.FindByLastName(param[1].Substring(1, param[1].Length - 2));
+                        filtedList = this.service.FindByLastName(param[1][1..^1]);
                         break;
                     }
 
                 case "DATEOFBIRTH":
                     {
                         DateTimeStyles styles = DateTimeStyles.None;
-                        if (DateTime.TryParse(param[1].Substring(1, param[1].Length - 2), englishUS, styles, out DateTime dateOfBirth))
+                        if (DateTime.TryParse(param[1][1..^1], englishUS, styles, out DateTime dateOfBirth))
                         {
                             filtedList = this.service.FindByDateOfBirth(dateOfBirth);
                         }
@@ -74,11 +78,7 @@ namespace FileCabinetApp.CommandHandlers
                     }
             }
 
-            foreach (FileCabinetRecord record in filtedList)
-            {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
-                $" {record.Gender}, {record.PassportId}, {record.Salary}");
-            }
+            this.printer.Print(filtedList);
         }
     }
 }

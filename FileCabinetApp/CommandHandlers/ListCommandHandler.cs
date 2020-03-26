@@ -11,13 +11,17 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class ListCommandHandler : ServiceCommandHandlerBase
     {
+        private IRecordPrinter printer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="service">Current service.</param>
-        public ListCommandHandler(IFileCabinetService service)
+        /// <param name="printer">Current printer.</param>
+        public ListCommandHandler(IFileCabinetService service, IRecordPrinter printer)
             : base(service)
         {
+            this.printer = printer;
         }
 
         /// <summary>
@@ -44,14 +48,7 @@ namespace FileCabinetApp.CommandHandlers
         private void List(string parameters)
         {
             ReadOnlyCollection<FileCabinetRecord> fileCabinetRecord = this.service.GetRecords();
-            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
-            dtfi.ShortDatePattern = "yyyy-MMM-dd";
-            foreach (FileCabinetRecord record in fileCabinetRecord)
-            {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
-                    $" {record.Gender}, {record.PassportId}, {record.Salary}");
-            }
+            this.printer.Print(fileCabinetRecord);
         }
     }
 }
