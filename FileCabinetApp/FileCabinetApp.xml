@@ -264,25 +264,20 @@
             Custom Validator.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.CustomValidator.MinSalary">
-            <summary>
-            Min salary for Belarus.
-            </summary>
-        </member>
         <member name="M:FileCabinetApp.CustomValidator.ValidateParametrs(FileCabinetApp.RecordData)">
             <summary>
             Implements cusstom validator.
             </summary>
             <param name="recordData">User's data.</param>
         </member>
+        <member name="F:FileCabinetApp.DefaultSalaryValidator.MinSalary">
+            <summary>
+            Min salary for Belarus.
+            </summary>
+        </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
             Default Validator.
-            </summary>
-        </member>
-        <member name="F:FileCabinetApp.DefaultValidator.MinSalary">
-            <summary>
-            Min salary for Belarus.
             </summary>
         </member>
         <member name="M:FileCabinetApp.DefaultValidator.ValidateParametrs(FileCabinetApp.RecordData)">
