@@ -32,7 +32,7 @@ namespace FileCabinetApp
         public IList<FileCabinetRecord> ReadAll()
         {
             List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-            var validator = new DefaultValidator();
+            var validator = new ValidatorBuilder().CreateDefault();
 
             XmlSerializer ser = new XmlSerializer(typeof(List<FileCabinetRecord>));
             list = (List<FileCabinetRecord>)ser.Deserialize(this.stream);

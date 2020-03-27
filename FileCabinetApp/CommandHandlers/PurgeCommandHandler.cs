@@ -41,9 +41,9 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Purge(string parameters)
         {
-            int purged = this.service.Purge();
+            int purged = this.Service.Purge();
             Console.WriteLine($"Data file processing is completed: {purged} of " +
-                $"{this.service.GetStat().Item1 + purged} records were purged.");
+                $"{this.Service.GetStat().Item1 + purged} records were purged.");
         }
     }
 }

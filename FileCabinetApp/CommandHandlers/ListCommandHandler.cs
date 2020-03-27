@@ -47,7 +47,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> fileCabinetRecord = this.service.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> fileCabinetRecord = this.Service.GetRecords();
             this.printer(fileCabinetRecord);
         }
     }

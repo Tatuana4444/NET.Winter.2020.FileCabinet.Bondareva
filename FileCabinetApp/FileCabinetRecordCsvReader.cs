@@ -28,7 +28,7 @@ namespace FileCabinetApp
         public IList<FileCabinetRecord> ReadAll()
         {
             List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-            var validator = new DefaultValidator();
+            var validator = new ValidatorBuilder().CreateDefault();
             string rec = this.stream.ReadLine();
             do
             {

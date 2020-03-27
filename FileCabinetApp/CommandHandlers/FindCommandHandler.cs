@@ -56,13 +56,13 @@ namespace FileCabinetApp.CommandHandlers
             {
                 case "FIRSTNAME":
                     {
-                        filtedList = this.service.FindByFirstName(param[1][1..^1]);
+                        filtedList = this.Service.FindByFirstName(param[1][1..^1]);
                         break;
                     }
 
                 case "LASTNAME":
                     {
-                        filtedList = this.service.FindByLastName(param[1][1..^1]);
+                        filtedList = this.Service.FindByLastName(param[1][1..^1]);
                         break;
                     }
 
@@ -71,7 +71,7 @@ namespace FileCabinetApp.CommandHandlers
                         DateTimeStyles styles = DateTimeStyles.None;
                         if (DateTime.TryParse(param[1][1..^1], englishUS, styles, out DateTime dateOfBirth))
                         {
-                            filtedList = this.service.FindByDateOfBirth(dateOfBirth);
+                            filtedList = this.Service.FindByDateOfBirth(dateOfBirth);
                         }
 
                         break;

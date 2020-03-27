@@ -4,18 +4,30 @@ using System.Text;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Validator for date of Bith.
+    /// </summary>
     public class DateOfBirthValidator : IRecordValidator
     {
         private DateTime from;
 
         private DateTime to;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DateOfBirthValidator"/> class.
+        /// </summary>
+        /// <param name="from">Min date.</param>
+        /// <param name="to">Max date.</param>
         public DateOfBirthValidator(DateTime from, DateTime to)
         {
             this.from = from;
             this.to = to;
         }
 
+        /// <summary>
+        /// Check date of bith from date.
+        /// </summary>
+        /// <param name="recordData">Data.</param>
         public void ValidateParametrs(RecordData recordData)
         {
             if (recordData is null)

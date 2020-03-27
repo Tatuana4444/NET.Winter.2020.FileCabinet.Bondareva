@@ -4,18 +4,30 @@ using System.Text;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Validator for gender.
+    /// </summary>
     public class GenderValidator : IRecordValidator
     {
         private char manSymbol;
 
         private char womanSymbol;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenderValidator"/> class.
+        /// </summary>
+        /// <param name="manSymbol">Symbol for man.</param>
+        /// <param name="womanSymbol">Symbol for woman.</param>
         public GenderValidator(char manSymbol, char womanSymbol)
         {
             this.manSymbol = manSymbol;
             this.womanSymbol = womanSymbol;
         }
 
+        /// <summary>
+        /// Check gender from data.
+        /// </summary>
+        /// <param name="recordData">Data.</param>
         public void ValidateParametrs(RecordData recordData)
         {
             if (recordData is null)

@@ -231,16 +231,19 @@
             Base class for command handler whith service.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.service">
-            <summary>
-            Service.
-            </summary>
-        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.#ctor(FileCabinetApp.IFileCabinetService)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase"/> class.
             </summary>
             <param name="service">Service.</param>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.Service">
+            <summary>
+            Gets or sets service.
+            </summary>
+            <value>
+            Service.
+            </value>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.StatCommandHandler">
             <summary>
@@ -259,15 +262,40 @@
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
-        <member name="T:FileCabinetApp.CustomValidator">
+        <member name="T:FileCabinetApp.CompositeValidator">
             <summary>
-            Custom Validator.
+            Check data by validators.
             </summary>
         </member>
-        <member name="T:FileCabinetApp.DefaultValidator">
+        <member name="M:FileCabinetApp.CompositeValidator.#ctor(System.Collections.Generic.List{FileCabinetApp.IRecordValidator})">
             <summary>
-            Default Validator.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CompositeValidator"/> class.
             </summary>
+            <param name="validators">Validators.</param>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Check data by validators.
+            </summary>
+            <param name="recordData">Check data.</param>
+        </member>
+        <member name="T:FileCabinetApp.DateOfBirthValidator">
+            <summary>
+            Validator for date of Bith.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DateOfBirthValidator.#ctor(System.DateTime,System.DateTime)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.DateOfBirthValidator"/> class.
+            </summary>
+            <param name="from">Min date.</param>
+            <param name="to">Max date.</param>
+        </member>
+        <member name="M:FileCabinetApp.DateOfBirthValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Check date of bith from date.
+            </summary>
+            <param name="recordData">Data.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFilesystemService">
             <summary>
@@ -609,6 +637,42 @@
             <param name="stream">Current stream.</param>
             <returns>Count loaded records.</returns>
         </member>
+        <member name="T:FileCabinetApp.FirstNameValidator">
+            <summary>
+            Validators for first name.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FirstNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FirstNameValidator"/> class.
+            </summary>
+            <param name="minLength">Min length for first name.</param>
+            <param name="maxLength">Max length for last name.</param>
+        </member>
+        <member name="M:FileCabinetApp.FirstNameValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Check first name from data.
+            </summary>
+            <param name="recordData">Data.</param>
+        </member>
+        <member name="T:FileCabinetApp.GenderValidator">
+            <summary>
+            Validator for gender.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.GenderValidator.#ctor(System.Char,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.GenderValidator"/> class.
+            </summary>
+            <param name="manSymbol">Symbol for man.</param>
+            <param name="womanSymbol">Symbol for woman.</param>
+        </member>
+        <member name="M:FileCabinetApp.GenderValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Check gender from data.
+            </summary>
+            <param name="recordData">Data.</param>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             Interface for FileCabinetService.
@@ -690,6 +754,42 @@
             Implements validator.
             </summary>
             <param name="recordData">User's data.</param>
+        </member>
+        <member name="T:FileCabinetApp.LastNameValidator">
+            <summary>
+            Validator for last name.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.LastNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.LastNameValidator"/> class.
+            </summary>
+            <param name="minLength">Min length for last name.</param>
+            <param name="maxLength">Max length for last name.</param>
+        </member>
+        <member name="M:FileCabinetApp.LastNameValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Check last name from data.
+            </summary>
+            <param name="recordData">Data.</param>
+        </member>
+        <member name="T:FileCabinetApp.PassportIdValidator">
+            <summary>
+            Validator for passport id.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.PassportIdValidator.#ctor(System.Int16,System.Int16)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.PassportIdValidator"/> class.
+            </summary>
+            <param name="minValue">Min value for passport id.</param>
+            <param name="maxValue">Max value for passport id.</param>
+        </member>
+        <member name="M:FileCabinetApp.PassportIdValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Check passport id from data.
+            </summary>
+            <param name="recordData">Data.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
@@ -773,6 +873,93 @@
             <value>
             User's salary.
             </value>
+        </member>
+        <member name="T:FileCabinetApp.SalaryValidator">
+            <summary>
+            Validator for salary.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.SalaryValidator.#ctor(System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.SalaryValidator"/> class.
+            </summary>
+            <param name="minSalary">Min value for salary.</param>
+        </member>
+        <member name="M:FileCabinetApp.SalaryValidator.ValidateParametrs(FileCabinetApp.RecordData)">
+            <summary>
+            Check salary from data.
+            </summary>
+            <param name="recordData">Data.</param>
+        </member>
+        <member name="T:FileCabinetApp.ValidatorBuilder">
+            <summary>
+            Builder for Validators.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateFirstName(System.Int32,System.Int32)">
+            <summary>
+            Set validator for first name.
+            </summary>
+            <param name="min">Min length of first name.</param>
+            <param name="max">Max length of first name.</param>
+            <returns>Current builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateLastName(System.Int32,System.Int32)">
+            <summary>
+            Set validator for last name.
+            </summary>
+            <param name="min">Min length of last name.</param>
+            <param name="max">Max length of last name.</param>
+            <returns>Current builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateDateOfBirth(System.DateTime,System.DateTime)">
+            <summary>
+            Set validator for date of birth.
+            </summary>
+            <param name="from">Min date date of birth.</param>
+            <param name="to">Max date of bith.</param>
+            <returns>Current builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateGender(System.Char,System.Char)">
+            <summary>
+            Set validator for gender.
+            </summary>
+            <param name="manSymbol">Symbol for man.</param>
+            <param name="womanSymbol">Symbol for woman.</param>
+            <returns>Current builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidatePassportId(System.Int16,System.Int16)">
+            <summary>
+            Set validator for passport Id.
+            </summary>
+            <param name="min">Min value of passport Id.</param>
+            <param name="max">Max value of passport Id.</param>
+            <returns>Current builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateSalary(System.Decimal)">
+            <summary>
+            Set validator for Salary.
+            </summary>
+            <param name="min">Min salary.</param>
+            <returns>Current builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.Create">
+            <summary>
+            Create Validator bu this builder.
+            </summary>
+            <returns>Validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateDefault">
+            <summary>
+            Create Default Validator.
+            </summary>
+            <returns>Default Validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateCustom">
+            <summary>
+            Create Custom Validator.
+            </summary>
+            <returns>Custom Validator.</returns>
         </member>
     </members>
 </doc>

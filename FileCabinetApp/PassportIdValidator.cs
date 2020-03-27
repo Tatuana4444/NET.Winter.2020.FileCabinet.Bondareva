@@ -4,18 +4,30 @@ using System.Text;
 
 namespace FileCabinetApp
 {
-    public class PassportIdValidator: IRecordValidator
+    /// <summary>
+    /// Validator for passport id.
+    /// </summary>
+    public class PassportIdValidator : IRecordValidator
     {
         private short minValue;
 
         private short maxValue;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassportIdValidator"/> class.
+        /// </summary>
+        /// <param name="minValue">Min value for passport id.</param>
+        /// <param name="maxValue">Max value for passport id.</param>
         public PassportIdValidator(short minValue, short maxValue)
         {
             this.minValue = minValue;
             this.maxValue = maxValue;
         }
 
+        /// <summary>
+        /// Check passport id from data.
+        /// </summary>
+        /// <param name="recordData">Data.</param>
         public void ValidateParametrs(RecordData recordData)
         {
             if (recordData is null)

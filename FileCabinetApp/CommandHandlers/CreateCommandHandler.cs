@@ -286,7 +286,7 @@ namespace FileCabinetApp.CommandHandlers
                 : ReadInput(DecimalConverter, SalaryValidatorCustom);
 
             RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
-            int index = this.service.CreateRecord(recordData);
+            int index = this.Service.CreateRecord(recordData);
             Console.WriteLine($"Record #{index} is created.");
         }
     }

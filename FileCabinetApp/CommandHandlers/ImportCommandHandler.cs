@@ -52,7 +52,7 @@ namespace FileCabinetApp.CommandHandlers
                         FileStream stream = new FileStream(param[1], FileMode.Open);
                         var snapshot = new FileCabinetServiceSnapshot();
                         int count = snapshot.LoadFromCsv(new StreamReader(stream));
-                        this.service.Restore(snapshot);
+                        this.Service.Restore(snapshot);
                         Console.WriteLine($"{count} records were imported from {param[1]}");
                     }
                     else
@@ -69,7 +69,7 @@ namespace FileCabinetApp.CommandHandlers
                         var snapshot = new FileCabinetServiceSnapshot();
                         using var streamReader = new StreamReader(stream);
                         int count = snapshot.LoadFromXml(streamReader);
-                        this.service.Restore(snapshot);
+                        this.Service.Restore(snapshot);
                         Console.WriteLine($"{count} records were imported from {param[1]}");
                     }
                     else

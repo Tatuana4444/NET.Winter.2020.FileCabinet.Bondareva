@@ -43,7 +43,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (int.TryParse(parameters, out int id))
             {
-                if (this.service.Remove(id))
+                if (this.Service.Remove(id))
                 {
                     Console.WriteLine($"Record #{id} is removed.");
                 }

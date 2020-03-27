@@ -262,7 +262,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Edit(string parameters)
         {
-            if (!int.TryParse(parameters, out int id) || id > this.service.GetStat().Item1)
+            if (!int.TryParse(parameters, out int id) || id > this.Service.GetStat().Item1)
             {
                 Console.WriteLine($"#{id} record is not found.");
                 return;
@@ -292,7 +292,7 @@ namespace FileCabinetApp.CommandHandlers
                 : ReadInput(DecimalConverter, SalaryValidatorCustom);
 
             RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
-            this.service.EditRecord(id, recordData);
+            this.Service.EditRecord(id, recordData);
             Console.WriteLine($"Record #{id} is updated.");
         }
     }

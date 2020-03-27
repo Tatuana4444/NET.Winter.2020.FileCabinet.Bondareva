@@ -15,7 +15,7 @@ namespace FileCabinetApp
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const string DefaultValidationMessage = "Using default validation rules.";
         private const string CustomValidationMessage = "Using custom validation rules.";
-        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
         private static bool isRunning = true;
 
         /// <summary>
@@ -148,13 +148,13 @@ namespace FileCabinetApp
             {
                 if (param[1].ToUpper(englishUS) == "MEMORY")
                 {
-                    Program.fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
+                    Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
                 }
                 else
                 {
                     File.Delete("cabinet-records.db");
                     FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
-                    Program.fileCabinetService = new FileCabinetFilesystemService(stream, new CustomValidator());
+                    Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
                 }
 
                 Program.IsDefaulRule = false;
@@ -165,13 +165,13 @@ namespace FileCabinetApp
             {
                 if (param[1].ToUpper(englishUS) == "MEMORY")
                 {
-                    Program.fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                    Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
                 }
                 else
                 {
                     File.Delete("cabinet-records.db");
                     FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
-                    Program.fileCabinetService = new FileCabinetFilesystemService(stream, new DefaultValidator());
+                    Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
                 }
 
                 Program.IsDefaulRule = true;
