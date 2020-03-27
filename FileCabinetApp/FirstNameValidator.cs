@@ -4,8 +4,18 @@ using System.Text;
 
 namespace FileCabinetApp
 {
-    public class DefaultFirstNameValidator : IRecordValidator
+    public class FirstNameValidator : IRecordValidator
     {
+        private int minLength;
+
+        private int maxLength;
+
+        public FirstNameValidator(int minLength, int maxLength)
+        {
+            this.minLength = minLength;
+            this.maxLength = maxLength;
+        }
+
         public void ValidateParametrs(RecordData recordData)
         {
             if (recordData is null)
@@ -18,9 +28,9 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "First name can't be null");
             }
 
-            if (recordData.FirstName.Length < 2 || recordData.FirstName.Length > 60)
+            if (recordData.FirstName.Length < this.minLength || recordData.FirstName.Length > this.maxLength)
             {
-                throw new ArgumentException("Length of first name can't be less than 2 and more than 60", nameof(recordData));
+                throw new ArgumentException($"Length of first name can't be less than {this.minLength} and more than {this.maxLength}", nameof(recordData));
             }
 
             if (recordData.FirstName.Trim().Length == 0)

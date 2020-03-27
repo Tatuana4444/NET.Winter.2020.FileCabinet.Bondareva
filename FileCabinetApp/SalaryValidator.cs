@@ -4,12 +4,14 @@ using System.Text;
 
 namespace FileCabinetApp
 {
-    public class DefaultSalaryValidator : IRecordValidator
+    public class SalaryValidator : IRecordValidator
     {
-        /// <summary>
-        /// Min salary for Belarus.
-        /// </summary>
-        public const int MinSalary = 375;
+        private decimal minSalary;
+
+        public SalaryValidator(decimal minSalary)
+        {
+            this.minSalary = minSalary;
+        }
 
         public void ValidateParametrs(RecordData recordData)
         {
@@ -18,9 +20,9 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            if (recordData.Salary < MinSalary)
+            if (recordData.Salary < this.minSalary)
             {
-                throw new ArgumentException($"Salary can't be less than {MinSalary}", nameof(recordData));
+                throw new ArgumentException($"Salary can't be less than {this.minSalary}", nameof(recordData));
             }
         }
     }
