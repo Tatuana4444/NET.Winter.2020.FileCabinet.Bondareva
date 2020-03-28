@@ -891,6 +891,290 @@
             </summary>
             <param name="recordData">Data.</param>
         </member>
+        <member name="T:FileCabinetApp.ServiceLogger">
+            <summary>
+            FileCabinetService with logger.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceLogger"/> class.
+            </summary>
+            <param name="service">Service that needs to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.CreateRecord(FileCabinetApp.RecordData)">
+            <summary>
+            Create a new record and print tick that it took.
+            </summary>
+            <param name="recordData">User's data.</param>
+            <returns>Id of a new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.RecordData)">
+            <summary>
+            Edit record by id and print tick that it took.
+            </summary>
+            <param name="id">User's id.</param>
+            <param name="recordData">User's data.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records by DateOfBirth and print tick that it took.
+            </summary>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <returns>Records whith sought-for date of Birth.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByFirstName(System.String)">
+            <summary>
+            Finds records by first name and print tick that it took.
+            </summary>
+            <param name="firstName">User's first name.</param>
+            <returns>Records whith sought-for firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByLastName(System.String)">
+            <summary>
+            Finds records by last name and print tick that it took.
+            </summary>
+            <param name="lastName">User's last name.</param>
+            <returns>Records whith sought-for lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetRecords">
+            <summary>
+            Gets all records and print tick that it took.
+            </summary>
+            <returns>All records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetStat">
+            <summary>
+            Gets count of records  and count of deleted records and print tick that it took.
+            </summary>
+            <returns>Count of records  and count of deleted records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Purge">
+            <summary>
+            Defragment the data file and print tick that it took.
+            </summary>
+            <returns>Count of defragmented records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Remove(System.Int32)">
+            <summary>
+            Remove record by id and print tick that it took.
+            </summary>
+            <param name="id">Id record.</param>
+            <returns>True, if record exists, otherway returns false.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restore date from snapshot and print tick that it took.
+            </summary>
+            <param name="snapshot">Snapshot.</param>
+        </member>
+        <member name="T:FileCabinetApp.ServiceMeter">
+            <summary>
+            FileCabinetService with timer.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceMeter"/> class.
+            </summary>
+            <param name="service">Service that needs to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.CreateRecord(FileCabinetApp.RecordData)">
+            <summary>
+            Create a new record and print tick that it took.
+            </summary>
+            <param name="recordData">User's data.</param>
+            <returns>Id of a new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.RecordData)">
+            <summary>
+            Edit record by id and print tick that it took.
+            </summary>
+            <param name="id">User's id.</param>
+            <param name="recordData">User's data.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records by DateOfBirth and print tick that it took.
+            </summary>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <returns>Records whith sought-for date of Birth.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByFirstName(System.String)">
+            <summary>
+            Finds records by first name and print tick that it took.
+            </summary>
+            <param name="firstName">User's first name.</param>
+            <returns>Records whith sought-for firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByLastName(System.String)">
+            <summary>
+            Finds records by last name and print tick that it took.
+            </summary>
+            <param name="lastName">User's last name.</param>
+            <returns>Records whith sought-for lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetRecords">
+            <summary>
+            Gets all records and print tick that it took.
+            </summary>
+            <returns>All records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetStat">
+            <summary>
+            Gets count of records  and count of deleted records and print tick that it took.
+            </summary>
+            <returns>Count of records  and count of deleted records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Purge">
+            <summary>
+            Defragment the data file and print tick that it took.
+            </summary>
+            <returns>Count of defragmented records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Remove(System.Int32)">
+            <summary>
+            Remove record by id and print tick that it took.
+            </summary>
+            <param name="id">Id record.</param>
+            <returns>True, if record exists, otherway returns false.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restore date from snapshot and print tick that it took.
+            </summary>
+            <param name="snapshot">Snapshot.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validation.DateFromToValues">
+            <summary>
+            Class that contains rules for date.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.DateFromToValues.From">
+            <summary>
+            Gets or sets from date rules.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.DateFromToValues.To">
+            <summary>
+            Gets or sets to date rules.
+            </summary>
+            <value>
+            to date rules.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.ManWoman">
+            <summary>
+            Class that contains rules for gender.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ManWoman.Man">
+            <summary>
+            Gets or sets from symbol for man.
+            </summary>
+            <value>
+            Symbol for man.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ManWoman.Woman">
+            <summary>
+            Gets or sets symbol for woman.
+            </summary>
+            <value>
+            Symbol for woman.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.MinMaxValues`1">
+            <summary>
+            Class that contains rules type that have min and max rules.
+            </summary>
+            <typeparam name="T">Type of values.</typeparam>
+        </member>
+        <member name="P:FileCabinetApp.Validation.MinMaxValues`1.Min">
+            <summary>
+            Gets or sets min value.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.MinMaxValues`1.Max">
+            <summary>
+            Gets or sets max value.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.MinSalary">
+            <summary>
+            Class that contains rules for salary.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.MinSalary.Min">
+            <summary>
+            Gets or sets min salary.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.ValidationRules">
+            <summary>
+            Class that contains validation rules.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.FirstName">
+            <summary>
+            Gets or sets firstName rules.
+            </summary>
+            <value>
+            FirstName rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.LastName">
+            <summary>
+            Gets or sets lastName rules.
+            </summary>
+            <value>
+            lastName rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.DateOfBirth">
+            <summary>
+            Gets or sets DateOfBirth rules.
+            </summary>
+            <value>
+            DateOfBirth rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.Gender">
+            <summary>
+            Gets or sets Gender rules.
+            </summary>
+            <value>
+            Gender rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.PassportId">
+            <summary>
+            Gets or sets PasportId rules.
+            </summary>
+            <value>
+            PassportId rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.Salary">
+            <summary>
+            Gets or sets Salary rules.
+            </summary>
+            <value>
+            Salary rules.
+            </value>
+        </member>
         <member name="T:FileCabinetApp.ValidatorBuilder">
             <summary>
             Builder for Validators.

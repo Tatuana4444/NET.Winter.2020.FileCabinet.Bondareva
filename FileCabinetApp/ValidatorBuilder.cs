@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Text;
+using FileCabinetApp.Validation;
+using Microsoft.Extensions.Configuration;
 
 namespace FileCabinetApp
 {
@@ -9,6 +13,11 @@ namespace FileCabinetApp
     /// </summary>
     public class ValidatorBuilder
     {
+        private static IConfiguration config = new ConfigurationBuilder()
+             .SetBasePath(Directory.GetCurrentDirectory())
+             .AddJsonFile("validation-rules.json")
+             .Build();
+
         private List<IRecordValidator> validators = new List<IRecordValidator>();
 
         /// <summary>
@@ -97,13 +106,9 @@ namespace FileCabinetApp
         /// <returns>Default Validator.</returns>
         public IRecordValidator CreateDefault()
         {
-            this.ValidateFirstName(2, 60);
-            this.ValidateLastName(2, 60);
-            this.ValidateDateOfBirth(new DateTime(1950, 1, 1), DateTime.Now);
-            this.ValidateGender('M', 'W');
-            this.ValidatePassportId(1000, 9999);
-            this.ValidateSalary(375);
-            return this.Create();
+            var defaultRules = config.GetSection("default")
+                .Get<ValidationRules>();
+            return this.Create(defaultRules);
         }
 
         /// <summary>
@@ -112,12 +117,24 @@ namespace FileCabinetApp
         /// <returns>Custom Validator.</returns>
         public IRecordValidator CreateCustom()
         {
-            this.ValidateFirstName(2, 100);
-            this.ValidateLastName(2, 100);
-            this.ValidateDateOfBirth(new DateTime(1900, 1, 1), DateTime.Now);
-            this.ValidateGender('M', 'W');
-            this.ValidatePassportId(0, short.MaxValue);
-            this.ValidateSalary(0);
+            var customRules = config.GetSection("custom")
+                .Get<ValidationRules>();
+            return this.Create(customRules);
+        }
+
+        private IRecordValidator Create(ValidationRules rules)
+        {
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeStyles styles = DateTimeStyles.None;
+            this.ValidateFirstName(rules.FirstName.Min, rules.FirstName.Max);
+            this.ValidateLastName(rules.LastName.Min, rules.LastName.Max);
+            DateTime.Parse(rules.DateOfBirth.From, culture, styles);
+            this.ValidateDateOfBirth(
+                DateTime.Parse(rules.DateOfBirth.From, culture, styles),
+                DateTime.Parse(rules.DateOfBirth.To, culture, styles));
+            this.ValidateGender(rules.Gender.Man, rules.Gender.Woman);
+            this.ValidatePassportId(rules.PassportId.Min, rules.PassportId.Max);
+            this.ValidateSalary(rules.Salary.Min);
             return this.Create();
         }
     }
