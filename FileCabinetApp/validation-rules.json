@@ -1,0 +1,53 @@
+{
+  "a":  "b",
+  "default": {
+    "firstName": {
+      "min": 2,
+      "max": 60
+    },
+    "lastName": {
+      "min": 2,
+      "max": 60
+    },
+    "dateOfBirth": {
+      "from": "01/01/1950",
+      "to": "01/01/2020"
+    },
+    "gender": {
+      "man": "M",
+      "woman": "W"
+    },
+    "passportId": {
+      "min": 1000,
+      "max": 9999
+    },
+    "salary": {
+      "min": 375
+    }
+  },
+  "custom": {
+    "firstName": {
+      "min": 5,
+      "max": 80
+    },
+    "lastName": {
+      "min": 5,
+      "max": 80
+    },
+    "dateOfBirth": {
+      "from": "01/01/1900",
+      "to": "01/01/2020"
+    },
+    "gender": {
+      "man": "M",
+      "woman": "W"
+    },
+    "passportId": {
+      "min": 0,
+      "max": 32767
+    },
+    "salary": {
+      "min": 0
+    }
+  }
+}

@@ -891,6 +891,136 @@
             </summary>
             <param name="recordData">Data.</param>
         </member>
+        <member name="T:FileCabinetApp.Validation.DateFromToValues">
+            <summary>
+            Class that contains rules for date.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.DateFromToValues.From">
+            <summary>
+            Gets or sets from date rules.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.DateFromToValues.To">
+            <summary>
+            Gets or sets to date rules.
+            </summary>
+            <value>
+            to date rules.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.ManWoman">
+            <summary>
+            Class that contains rules for gender.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ManWoman.Man">
+            <summary>
+            Gets or sets from symbol for man.
+            </summary>
+            <value>
+            Symbol for man.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ManWoman.Woman">
+            <summary>
+            Gets or sets symbol for woman.
+            </summary>
+            <value>
+            Symbol for woman.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.MinMaxValues`1">
+            <summary>
+            Class that contains rules type that have min and max rules.
+            </summary>
+            <typeparam name="T">Type of values.</typeparam>
+        </member>
+        <member name="P:FileCabinetApp.Validation.MinMaxValues`1.Min">
+            <summary>
+            Gets or sets min value.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.MinMaxValues`1.Max">
+            <summary>
+            Gets or sets max value.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.MinSalary">
+            <summary>
+            Class that contains rules for salary.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.MinSalary.Min">
+            <summary>
+            Gets or sets min salary.
+            </summary>
+            <value>
+            from date rules.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Validation.ValidationRules">
+            <summary>
+            Class that contains validation rules.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.FirstName">
+            <summary>
+            Gets or sets firstName rules.
+            </summary>
+            <value>
+            FirstName rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.LastName">
+            <summary>
+            Gets or sets lastName rules.
+            </summary>
+            <value>
+            lastName rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.DateOfBirth">
+            <summary>
+            Gets or sets DateOfBirth rules.
+            </summary>
+            <value>
+            DateOfBirth rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.Gender">
+            <summary>
+            Gets or sets Gender rules.
+            </summary>
+            <value>
+            Gender rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.PassportId">
+            <summary>
+            Gets or sets PasportId rules.
+            </summary>
+            <value>
+            PassportId rules.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Validation.ValidationRules.Salary">
+            <summary>
+            Gets or sets Salary rules.
+            </summary>
+            <value>
+            Salary rules.
+            </value>
+        </member>
         <member name="T:FileCabinetApp.ValidatorBuilder">
             <summary>
             Builder for Validators.
