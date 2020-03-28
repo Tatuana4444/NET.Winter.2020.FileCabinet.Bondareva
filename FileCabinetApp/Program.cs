@@ -33,7 +33,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file", "use" };
+            string[] cmdParam = new string[] { "default", "file", "logger" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -51,7 +51,12 @@ namespace FileCabinetApp
 
                     if (args[i] == "use-stopwatch")
                     {
-                        cmdParam[2] = "use";
+                        cmdParam[2] = "stopwatch";
+                    }
+
+                    if (args[i] == "use-logger")
+                    {
+                        cmdParam[2] = "logger";
                     }
 
                     string[] param = args[i].Split('=');
@@ -153,28 +158,44 @@ namespace FileCabinetApp
             {
                 if (param[1].ToUpper(englishUS) == "MEMORY")
                 {
-                    if (param[2] == "use")
+                    if (param[2] == "stopwatch")
                     {
                         var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
                         Program.fileCabinetService = new ServiceMeter(fileService);
                     }
                     else
                     {
-                        Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
+                        if (param[2] == "logger")
+                        {
+                            var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
+                            Program.fileCabinetService = new ServiceLogger(fileService);
+                        }
+                        else
+                        {
+                            Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
+                        }
                     }
                 }
                 else
                 {
                     File.Delete("cabinet-records.db");
                     FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
-                    if (param[2] == "use")
+                    if (param[2] == "stopwatch")
                     {
                         var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
                         Program.fileCabinetService = new ServiceMeter(fileService);
                     }
                     else
                     {
-                        Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
+                        if (param[2] == "logger")
+                        {
+                            var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
+                            Program.fileCabinetService = new ServiceLogger(fileService);
+                        }
+                        else
+                        {
+                            Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
+                        }
                     }
                 }
 
@@ -186,28 +207,44 @@ namespace FileCabinetApp
             {
                 if (param[1].ToUpper(englishUS) == "MEMORY")
                 {
-                    if (param[2] == "use")
+                    if (param[2] == "stopwatch")
                     {
                         var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
                         Program.fileCabinetService = new ServiceMeter(fileService);
                     }
                     else
                     {
-                        Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
+                        if (param[2] == "logger")
+                        {
+                            var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
+                            Program.fileCabinetService = new ServiceLogger(fileService);
+                        }
+                        else
+                        {
+                            Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
+                        }
                     }
                 }
                 else
                 {
                     File.Delete("cabinet-records.db");
                     FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
-                    if (param[2] == "use")
+                    if (param[2] == "stopwatch")
                     {
                         var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
                         Program.fileCabinetService = new ServiceMeter(fileService);
                     }
                     else
                     {
-                        Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
+                        if (param[2] == "logger")
+                        {
+                            var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
+                            Program.fileCabinetService = new ServiceLogger(fileService);
+                        }
+                        else
+                        {
+                            Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
+                        }
                     }
                 }
 

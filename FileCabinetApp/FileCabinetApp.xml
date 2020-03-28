@@ -891,6 +891,83 @@
             </summary>
             <param name="recordData">Data.</param>
         </member>
+        <member name="T:FileCabinetApp.ServiceLogger">
+            <summary>
+            FileCabinetService with logger.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceLogger"/> class.
+            </summary>
+            <param name="service">Service that needs to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.CreateRecord(FileCabinetApp.RecordData)">
+            <summary>
+            Create a new record and print tick that it took.
+            </summary>
+            <param name="recordData">User's data.</param>
+            <returns>Id of a new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.RecordData)">
+            <summary>
+            Edit record by id and print tick that it took.
+            </summary>
+            <param name="id">User's id.</param>
+            <param name="recordData">User's data.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records by DateOfBirth and print tick that it took.
+            </summary>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <returns>Records whith sought-for date of Birth.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByFirstName(System.String)">
+            <summary>
+            Finds records by first name and print tick that it took.
+            </summary>
+            <param name="firstName">User's first name.</param>
+            <returns>Records whith sought-for firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByLastName(System.String)">
+            <summary>
+            Finds records by last name and print tick that it took.
+            </summary>
+            <param name="lastName">User's last name.</param>
+            <returns>Records whith sought-for lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetRecords">
+            <summary>
+            Gets all records and print tick that it took.
+            </summary>
+            <returns>All records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetStat">
+            <summary>
+            Gets count of records  and count of deleted records and print tick that it took.
+            </summary>
+            <returns>Count of records  and count of deleted records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Purge">
+            <summary>
+            Defragment the data file and print tick that it took.
+            </summary>
+            <returns>Count of defragmented records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Remove(System.Int32)">
+            <summary>
+            Remove record by id and print tick that it took.
+            </summary>
+            <param name="id">Id record.</param>
+            <returns>True, if record exists, otherway returns false.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restore date from snapshot and print tick that it took.
+            </summary>
+            <param name="snapshot">Snapshot.</param>
+        </member>
         <member name="T:FileCabinetApp.ServiceMeter">
             <summary>
             FileCabinetService with timer.
