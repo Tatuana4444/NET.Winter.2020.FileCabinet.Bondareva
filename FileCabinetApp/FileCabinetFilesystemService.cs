@@ -14,6 +14,7 @@ namespace FileCabinetApp
     public class FileCabinetFilesystemService : IFileCabinetService
     {
         private readonly Dictionary<int, long> offsetById = new Dictionary<int, long>();
+
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
         private FileStream fileStream;
         private IRecordValidator validator;
