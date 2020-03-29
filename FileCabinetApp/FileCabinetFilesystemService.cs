@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FileCabinetApp.Iterator;
 
 namespace FileCabinetApp
 {
@@ -87,9 +86,14 @@ namespace FileCabinetApp
         /// <returns>Records whith sought-for date of Birth.</returns>
         public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
-            List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
-
-            return new Enumerable<FileCabinetRecord>(this.fileStream.Length, GetRecordByDate);
+            for (int i = 0; i < this.fileStream.Length / 278; i++)
+            {
+                FileCabinetRecord result = GetRecordByDate(i);
+                if (result != null)
+                {
+                    yield return result;
+                }
+            }
 
             FileCabinetRecord GetRecordByDate(int i)
             {
@@ -128,7 +132,14 @@ namespace FileCabinetApp
 
             firstName = firstName.ToUpper(this.englishUS);
 
-            return new Enumerable<FileCabinetRecord>(this.fileStream.Length, GetRecordFirstName);
+            for (int i = 0; i < this.fileStream.Length / 278; i++)
+            {
+                FileCabinetRecord result = GetRecordFirstName(i);
+                if (result != null)
+                {
+                    yield return result;
+                }
+            }
 
             FileCabinetRecord GetRecordFirstName(int i)
             {
@@ -213,7 +224,14 @@ namespace FileCabinetApp
 
             lastName = lastName.ToUpper(this.englishUS);
 
-            return new Enumerable<FileCabinetRecord>(this.fileStream.Length, GetRecordLastName);
+            for (int i = 0; i < this.fileStream.Length / 278; i++)
+            {
+                FileCabinetRecord result = GetRecordLastName(i);
+                if (result != null)
+                {
+                    yield return result;
+                }
+            }
 
             FileCabinetRecord GetRecordLastName(int i)
             {
