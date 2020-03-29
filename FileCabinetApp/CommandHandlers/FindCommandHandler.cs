@@ -11,14 +11,14 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private Action<IRecordIterator> printer;
+        private Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service">Current service.</param>
         /// <param name="printer">Current printer.</param>
-        public FindCommandHandler(IFileCabinetService service, Action<IRecordIterator> printer)
+        public FindCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(service)
         {
             this.printer = printer;
@@ -48,7 +48,7 @@ namespace FileCabinetApp.CommandHandlers
         private void Find(string parameters)
         {
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            IRecordIterator filtedList = null;
+            IEnumerable<FileCabinetRecord> filtedList = null;
             DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
             dtfi.ShortDatePattern = "yyyy-MMM-dd";
             string[] param = parameters.Split(' ');

@@ -92,7 +92,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">User's date of Birth.</param>
         /// <returns>Records whith sought-for date of Birth.</returns>
-        public IRecordIterator FindByDateOfBirth(DateTime dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             this.LogWriter($"{DateTime.Now} - Calling Find() with DateOfBirth = '{dateOfBirth.ToString(englishUS)}'");
 
@@ -100,9 +100,8 @@ namespace FileCabinetApp
             {
                 var result = this.service.FindByDateOfBirth(dateOfBirth);
                 this.LogWriter($"{DateTime.Now} - Find() by dateOfBirth returned:");
-                while (result.HasMore())
+                foreach (FileCabinetRecord r in result)
                 {
-                    FileCabinetRecord r = result.GetNext();
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
                         $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
                         $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
@@ -123,7 +122,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">User's first name.</param>
         /// <returns>Records whith sought-for firstName.</returns>
-        public IRecordIterator FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             this.LogWriter($"{DateTime.Now} - Calling Find() with FirstName = '{firstName}'");
 
@@ -131,9 +130,8 @@ namespace FileCabinetApp
             {
                 var result = this.service.FindByFirstName(firstName);
                 this.LogWriter($"{DateTime.Now} - Find() by FirstName returned:");
-                while (result.HasMore())
+                foreach (FileCabinetRecord r in result)
                 {
-                    FileCabinetRecord r = result.GetNext();
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
                         $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
                         $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
@@ -154,7 +152,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">User's last name.</param>
         /// <returns>Records whith sought-for lastName.</returns>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             this.LogWriter($"{DateTime.Now} - Calling Find() with LastName = '{lastName}'");
 
@@ -162,9 +160,8 @@ namespace FileCabinetApp
             {
                 var result = this.service.FindByLastName(lastName);
                 this.LogWriter($"{DateTime.Now} - Find() by LastName returned:");
-                while (result.HasMore())
+                foreach (FileCabinetRecord r in result)
                 {
-                    FileCabinetRecord r = result.GetNext();
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
                         $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
                         $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +

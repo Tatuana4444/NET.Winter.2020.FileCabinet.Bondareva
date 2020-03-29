@@ -85,11 +85,11 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">User's date of Birth.</param>
         /// <returns>Records whith sought-for date of Birth.</returns>
-        public IRecordIterator FindByDateOfBirth(DateTime dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
 
-            return new FilesystemIterator(this.fileStream.Length, GetRecordByDate);
+            return new Enumerable<FileCabinetRecord>(this.fileStream.Length, GetRecordByDate);
 
             FileCabinetRecord GetRecordByDate(int i)
             {
@@ -119,7 +119,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">User's first name.</param>
         /// <returns>Records whith sought-for firstName.</returns>
-        public IRecordIterator FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -128,7 +128,7 @@ namespace FileCabinetApp
 
             firstName = firstName.ToUpper(this.englishUS);
 
-            return new FilesystemIterator(this.fileStream.Length, GetRecordFirstName);
+            return new Enumerable<FileCabinetRecord>(this.fileStream.Length, GetRecordFirstName);
 
             FileCabinetRecord GetRecordFirstName(int i)
             {
@@ -204,7 +204,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">User's last name.</param>
         /// <returns>Records whith sought-for lastName.</returns>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -213,7 +213,7 @@ namespace FileCabinetApp
 
             lastName = lastName.ToUpper(this.englishUS);
 
-            return new FilesystemIterator(this.fileStream.Length, GetRecordLastName);
+            return new Enumerable<FileCabinetRecord>(this.fileStream.Length, GetRecordLastName);
 
             FileCabinetRecord GetRecordLastName(int i)
             {
