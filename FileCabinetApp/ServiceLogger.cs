@@ -10,7 +10,7 @@ namespace FileCabinetApp
     /// <summary>
     /// FileCabinetService with logger.
     /// </summary>
-    public class ServiceLogger : IFileCabinetService, IDisposable
+    public class ServiceLogger : IFileCabinetService
     {
         private static CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
         private static DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
@@ -58,11 +58,6 @@ namespace FileCabinetApp
             }
         }
 
-        public void Dispose()
-        {
-            this.writer.Close();
-        }
-
         /// <summary>
         /// Edit record by id and print tick that it took.
         /// </summary>
@@ -97,7 +92,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">User's date of Birth.</param>
         /// <returns>Records whith sought-for date of Birth.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             this.LogWriter($"{DateTime.Now} - Calling Find() with DateOfBirth = '{dateOfBirth.ToString(englishUS)}'");
 
@@ -105,7 +100,7 @@ namespace FileCabinetApp
             {
                 var result = this.service.FindByDateOfBirth(dateOfBirth);
                 this.LogWriter($"{DateTime.Now} - Find() by dateOfBirth returned:");
-                foreach (var r in result)
+                foreach (FileCabinetRecord r in result)
                 {
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
                         $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
@@ -127,7 +122,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">User's first name.</param>
         /// <returns>Records whith sought-for firstName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             this.LogWriter($"{DateTime.Now} - Calling Find() with FirstName = '{firstName}'");
 
@@ -135,7 +130,7 @@ namespace FileCabinetApp
             {
                 var result = this.service.FindByFirstName(firstName);
                 this.LogWriter($"{DateTime.Now} - Find() by FirstName returned:");
-                foreach (var r in result)
+                foreach (FileCabinetRecord r in result)
                 {
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
                         $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
@@ -157,7 +152,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">User's last name.</param>
         /// <returns>Records whith sought-for lastName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             this.LogWriter($"{DateTime.Now} - Calling Find() with LastName = '{lastName}'");
 
@@ -165,7 +160,7 @@ namespace FileCabinetApp
             {
                 var result = this.service.FindByLastName(lastName);
                 this.LogWriter($"{DateTime.Now} - Find() by LastName returned:");
-                foreach (var r in result)
+                foreach (FileCabinetRecord r in result)
                 {
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
                         $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
@@ -188,7 +183,7 @@ namespace FileCabinetApp
         /// <returns>All records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            this.LogWriter($"{DateTime.Now} - Calling GetRecords()'");
+            this.LogWriter($"{DateTime.Now} - Calling GetRecords()");
 
             try
             {
@@ -217,7 +212,7 @@ namespace FileCabinetApp
         /// <returns>Count of records  and count of deleted records.</returns>
         public Tuple<int, int> GetStat()
         {
-            this.LogWriter($"{DateTime.Now} - Calling GetStat()'");
+            this.LogWriter($"{DateTime.Now} - Calling GetStat()");
 
             try
             {
@@ -239,7 +234,7 @@ namespace FileCabinetApp
         /// <returns>Count of defragmented records.</returns>
         public int Purge()
         {
-            this.LogWriter($"{DateTime.Now} - Calling Purge()'");
+            this.LogWriter($"{DateTime.Now} - Calling Purge()");
 
             try
             {
@@ -262,7 +257,7 @@ namespace FileCabinetApp
         /// <returns>True, if record exists, otherway returns false.</returns>
         public bool Remove(int id)
         {
-            this.LogWriter($"{DateTime.Now} - Calling Remove()'");
+            this.LogWriter($"{DateTime.Now} - Calling Remove() with Id = '{id}'");
 
             try
             {
@@ -284,12 +279,29 @@ namespace FileCabinetApp
         /// <param name="snapshot">Snapshot.</param>
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
-            this.LogWriter($"{DateTime.Now} - Calling Restore()'");
+            if (snapshot is null)
+            {
+                this.LogWriter($"{DateTime.Now} - Calling Restore() with Snaphot = 'null'");
+                this.LogWriter($"{DateTime.Now} - Restore() throw Snapshot can't be null");
+                throw new ArgumentNullException(nameof(snapshot), "Snapshot can't be null");
+            }
+            else
+            {
+                this.LogWriter($"{DateTime.Now} - Calling Restore() with Snaphot: ");
+            }
+
+            foreach (var r in snapshot.Records)
+            {
+                this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
+                    $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
+                    $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
+                    $"Salary = '{r.Salary}'");
+            }
 
             try
             {
                 this.service.Restore(snapshot);
-                this.LogWriter($"{DateTime.Now} - Restore() finished.'");
+                this.LogWriter($"{DateTime.Now} - Restore() finished.");
             }
             catch (Exception ex)
             {

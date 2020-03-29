@@ -48,7 +48,7 @@ namespace FileCabinetApp.CommandHandlers
         private void Find(string parameters)
         {
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            ReadOnlyCollection<FileCabinetRecord> filtedList = new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+            IEnumerable<FileCabinetRecord> filtedList = null;
             DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
             dtfi.ShortDatePattern = "yyyy-MMM-dd";
             string[] param = parameters.Split(' ');
