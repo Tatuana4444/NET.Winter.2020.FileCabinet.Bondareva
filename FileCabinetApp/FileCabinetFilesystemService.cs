@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using FileCabinetApp.Iterator;
 
 namespace FileCabinetApp
 {
@@ -84,10 +85,13 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">User's date of Birth.</param>
         /// <returns>Records whith sought-for date of Birth.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
+        public IRecordIterator FindByDateOfBirth(DateTime dateOfBirth)
         {
             List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
-            for (int i = 0; i < this.fileStream.Length / 278; i++)
+
+            return new FilesystemIterator(this.fileStream.Length, GetRecordByDate);
+
+            FileCabinetRecord GetRecordByDate(int i)
             {
                 this.fileStream.Position = (i * 278) + 246;
                 byte[] temp = new byte[12];
@@ -103,15 +107,11 @@ namespace FileCabinetApp
                 if (year == dateOfBirth.Year && month == dateOfBirth.Month && day == dateOfBirth.Day)
                 {
                     this.fileStream.Position = i * 278;
-                    FileCabinetRecord record = this.ReadFromFile();
-                    if (record != null)
-                    {
-                        listByDateOfBirth.Add(record);
-                    }
+                    return this.ReadFromFile();
                 }
-            }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(listByDateOfBirth);
+                return null;
+            }
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">User's first name.</param>
         /// <returns>Records whith sought-for firstName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IRecordIterator FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -127,8 +127,10 @@ namespace FileCabinetApp
             }
 
             firstName = firstName.ToUpper(this.englishUS);
-            List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
-            for (int i = 0; i < this.GetStat().Item1; i++)
+
+            return new FilesystemIterator(this.fileStream.Length, GetRecordFirstName);
+
+            FileCabinetRecord GetRecordFirstName(int i)
             {
                 this.fileStream.Position = (i * 278) + 6;
                 byte[] tempForStrings = new byte[120];
@@ -145,15 +147,11 @@ namespace FileCabinetApp
                 if (currentFirstName.ToUpper(this.englishUS) == firstName)
                 {
                     this.fileStream.Position = i * 278;
-                    FileCabinetRecord record = this.ReadFromFile();
-                    if (record != null)
-                    {
-                        listByFirstName.Add(record);
-                    }
+                    return this.ReadFromFile();
                 }
-            }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(listByFirstName);
+                return null;
+            }
         }
 
         /// <summary>
@@ -206,7 +204,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">User's last name.</param>
         /// <returns>Records whith sought-for lastName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IRecordIterator FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -214,8 +212,10 @@ namespace FileCabinetApp
             }
 
             lastName = lastName.ToUpper(this.englishUS);
-            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            for (int i = 0; i < this.GetStat().Item1; i++)
+
+            return new FilesystemIterator(this.fileStream.Length, GetRecordLastName);
+
+            FileCabinetRecord GetRecordLastName(int i)
             {
                 this.fileStream.Position = (i * 278) + 126;
                 byte[] tempForStrings = new byte[120];
@@ -232,15 +232,11 @@ namespace FileCabinetApp
                 if (currentFirstName.ToUpper(this.englishUS) == lastName)
                 {
                     this.fileStream.Position = i * 278;
-                    FileCabinetRecord record = this.ReadFromFile();
-                    if (record != null)
-                    {
-                        listByLastName.Add(record);
-                    }
+                    return this.ReadFromFile();
                 }
-            }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(listByLastName);
+                return null;
+            }
         }
 
         /// <summary>

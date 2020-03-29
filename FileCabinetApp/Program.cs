@@ -150,6 +150,24 @@ namespace FileCabinetApp
             }
         }
 
+        private static void DefaultRecordPrint(IRecordIterator records)
+        {
+            if (records is null)
+            {
+                throw new ArgumentNullException(nameof(records), "Records can't be null.");
+            }
+
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
+            dtfi.ShortDatePattern = "yyyy-MMM-dd";
+            while (records.HasMore())
+            {
+                FileCabinetRecord record = records.GetNext();
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
+                $" {record.Gender}, {record.PassportId}, {record.Salary}");
+            }
+        }
+
         private static void SetValidationRules(string[] param)
         {
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
