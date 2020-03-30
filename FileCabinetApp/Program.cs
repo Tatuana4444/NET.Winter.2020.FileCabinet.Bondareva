@@ -33,7 +33,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file", "logger" };
+            string[] cmdParam = new string[] { "default", "memory", "logger" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -118,6 +118,7 @@ namespace FileCabinetApp
             ICommandHandler purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
             ICommandHandler helpCommandHandler = new HelpCommandHandler();
             ICommandHandler exitCommandHandler = new ExitCommandHandler(Existing);
+            ICommandHandler insertCommandHandler = new InsertCommandHandler(fileCabinetService);
 
             createCommandHandler.SetNext(editCommandHandler);
             editCommandHandler.SetNext(removeCommandHandler);
@@ -129,6 +130,7 @@ namespace FileCabinetApp
             importCommandHandler.SetNext(purgeCommandHandler);
             purgeCommandHandler.SetNext(helpCommandHandler);
             helpCommandHandler.SetNext(exitCommandHandler);
+            exitCommandHandler.SetNext(insertCommandHandler);
 
             return createCommandHandler;
         }

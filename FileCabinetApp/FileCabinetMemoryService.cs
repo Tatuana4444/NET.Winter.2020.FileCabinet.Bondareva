@@ -54,9 +54,21 @@ namespace FileCabinetApp
             }
 
             this.validator.ValidateParametrs(recordData);
+            int id;
+            if (recordData.Id > 0)
+            {
+                id = recordData.Id;
+                this.Remove(id);
+                this.presentIdList.Add(id, this.list.Count);
+            }
+            else
+            {
+                id = this.GetNextFreeId();
+            }
+
             var record = new FileCabinetRecord
             {
-                Id = this.GetNextFreeId(),
+                Id = id,
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
@@ -249,7 +261,7 @@ namespace FileCabinetApp
             List<FileCabinetRecord> list;
             if (dictionary.ContainsKey(name.ToUpper(this.englishUS)))
             {
-                dictionary[name.ToUpper(this.englishUS)].Add(this.list[id - 1]);
+                dictionary[name.ToUpper(this.englishUS)].Add(this.list[this.presentIdList[id]]);
             }
             else
             {
@@ -282,7 +294,7 @@ namespace FileCabinetApp
         private int FindRecord(List<FileCabinetRecord> list, int id)
         {
             int i = 0;
-            while (list[i].Id != id && i < list.Count)
+            while (i < list.Count && list[i].Id != id)
             {
                 i++;
             }

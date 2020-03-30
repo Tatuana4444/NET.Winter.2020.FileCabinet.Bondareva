@@ -53,7 +53,16 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            int id = this.GetNextFreeId();
+            int id = recordData.Id;
+            if (id < 1)
+            {
+                id = this.GetNextFreeId();
+            }
+            else
+            {
+                this.CheckId(id);
+            }
+
             this.WriteToFile(recordData, id, this.offsetById[id]);
 
             return id;
@@ -472,6 +481,20 @@ namespace FileCabinetApp
 
             this.offsetById.Add(i, this.fileStream.Length);
             return i;
+        }
+
+        private void CheckId(int id)
+        {
+            try
+            {
+                long pos = this.offsetById[id];
+                this.fileStream.Position = pos;
+            }
+            catch (KeyNotFoundException)
+            {
+                this.offsetById.Add(id, this.fileStream.Length);
+                this.fileStream.Seek(0, SeekOrigin.End);
+            }
         }
     }
 }

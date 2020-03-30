@@ -29,6 +29,35 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RecordData"/> class.
+        /// </summary>
+        /// <param name="id">User's id.</param>
+        /// <param name="firstName">User's first name.</param>
+        /// <param name="lastName">User's last name.</param>
+        /// <param name="dateOfBirth">User's date of Birth.</param>
+        /// <param name="gender">User's gender.</param>
+        /// <param name="passportId">User's passport id.</param>
+        /// <param name="salary">User's salary.</param>
+        public RecordData(int id, string firstName, string lastName, DateTime dateOfBirth, char gender, short passportId, decimal salary)
+        {
+            this.Id = id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.DateOfBirth = dateOfBirth;
+            this.Gender = gender;
+            this.PassportId = passportId;
+            this.Salary = salary;
+        }
+
+        /// <summary>
+        /// Gets user's Id.
+        /// </summary>
+        /// <value>
+        /// User's Id.
+        /// </value>
+        public int Id { get; private set; }
+
+        /// <summary>
         /// Gets user's First name.
         /// </summary>
         /// <value>
