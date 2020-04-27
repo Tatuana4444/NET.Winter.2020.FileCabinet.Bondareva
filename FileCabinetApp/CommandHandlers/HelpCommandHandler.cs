@@ -18,6 +18,7 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "edit", "edits record by id", "The 'edit' command edits record by id." },
             new string[] { "remove", "removes record by id", "The 'remove' command removes record by id." },
+            new string[] { "delete", "delete record by parameters", "The 'delete' command delete record by parameters." },
             new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
             new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },

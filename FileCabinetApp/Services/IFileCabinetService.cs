@@ -75,5 +75,12 @@ namespace FileCabinetApp
         /// </summary>
         /// <returns>Count of defragmented records.</returns>
         int Purge();
+
+        /// <summary>
+        /// Delete record by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        /// <returns>List of id recored, that was deleted.</returns>
+        IEnumerable<int> Delete(string param);
     }
 }

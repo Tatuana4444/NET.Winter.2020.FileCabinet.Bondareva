@@ -59,6 +59,33 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Delete record by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        /// <returns>List of id recored, that was deleted.</returns>
+        public IEnumerable<int> Delete(string param)
+        {
+            this.LogWriter($"{DateTime.Now} - Calling Delete() with parameters = '{param}'");
+
+            try
+            {
+                var result = this.service.Delete(param);
+                this.LogWriter($"{DateTime.Now} - Delete() returned RemovedId = '{result}'");
+                foreach (int id in result)
+                {
+                    this.LogWriter($"Id = '{id}','");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                this.LogWriter($"{DateTime.Now} - Delete() throw {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Edit record by id and print tick that it took.
         /// </summary>
         /// <param name="id">User's id.</param>

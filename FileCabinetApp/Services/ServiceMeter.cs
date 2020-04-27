@@ -38,6 +38,21 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Delete record by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        /// <returns>List of id recored, that was deleted.</returns>
+        public IEnumerable<int> Delete(string param)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var result = this.service.Delete(param);
+            stopWatch.Stop();
+            Console.WriteLine($"Delete method execution duration is {stopWatch.ElapsedTicks} ticks.");
+            return result;
+        }
+
+        /// <summary>
         /// Edit record by id and print tick that it took.
         /// </summary>
         /// <param name="id">User's id.</param>

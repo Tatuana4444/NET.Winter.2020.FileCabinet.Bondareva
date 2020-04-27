@@ -356,6 +356,34 @@ namespace FileCabinetApp
             return purgedCount + offsetCount;
         }
 
+        /// <summary>
+        /// Delete record by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        /// <returns>List of id recored, that was deleted.</returns>
+        public IEnumerable<int> Delete(string param)
+        {
+            if (param == null)
+            {
+                throw new ArgumentNullException(nameof(param));
+            }
+
+            string[] values = param.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+            values[^1] = values[^1][0..^1];
+            if (values.Length % 3 != 0)
+            {
+                throw new ArgumentException("Incorrect format", nameof(param));
+            }
+
+            List<int> foundResult = this.Find(values).ToList();
+            for (int i = 0; i < foundResult.Count; i++)
+            {
+                this.Remove(foundResult[i]);
+            }
+
+            return foundResult;
+        }
+
         private void DefragmentFile(int i, int offsetCount)
         {
             while (i < this.fileStream.Length / 278)
@@ -495,6 +523,222 @@ namespace FileCabinetApp
                 this.offsetById.Add(id, this.fileStream.Length);
                 this.fileStream.Seek(0, SeekOrigin.End);
             }
+        }
+
+        private IEnumerable<int> Find(string[] values)
+        {
+            List<int> resultList = new List<int>();
+            int j = 0;
+            this.fileStream.Position = 0;
+            while (j < this.fileStream.Length / 278)
+            {
+                FileCabinetRecord record = this.ReadFromFile();
+                bool isNeedAdd = true;
+                for (int i = 0; i < values.Length; i += 3)
+                {
+                    switch (values[i + 1].ToLower(this.englishUS))
+                    {
+                        case "id":
+                            if (!int.TryParse(values[i + 2], out int id))
+                            {
+                                throw new ArgumentException("Incorrect id", nameof(values));
+                            }
+
+                            if (record.Id == id)
+                            {
+                                if (values[i] == "or")
+                                {
+                                    isNeedAdd = true;
+                                }
+                                else
+                                {
+                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!(isNeedAdd && values[i] == "or"))
+                                {
+                                    isNeedAdd = false;
+                                }
+                            }
+
+                            break;
+                        case "firstname":
+                            if (record.FirstName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS))
+                            {
+                                if (values[i] == "or")
+                                {
+                                    isNeedAdd = true;
+                                }
+                                else
+                                {
+                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!(isNeedAdd && values[i] == "or"))
+                                {
+                                    isNeedAdd = false;
+                                }
+                            }
+
+                            break;
+                        case "lastname":
+                            if (record.LastName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS))
+                            {
+                                if (values[i] == "or")
+                                {
+                                    isNeedAdd = true;
+                                }
+                                else
+                                {
+                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!(isNeedAdd && values[i] == "or"))
+                                {
+                                    isNeedAdd = false;
+                                }
+                            }
+
+                            break;
+                        case "dateofbirth":
+                            if (record.DateOfBirth.ToString(this.englishUS) == values[i + 2])
+                            {
+                                if (values[i] == "or")
+                                {
+                                    isNeedAdd = true;
+                                }
+                                else
+                                {
+                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!(isNeedAdd && values[i] == "or"))
+                                {
+                                    isNeedAdd = false;
+                                }
+                            }
+
+                            break;
+                        case "gender":
+                            if (!char.TryParse(values[i + 2], out char gender))
+                            {
+                                throw new ArgumentException("Incorrect gender", nameof(values));
+                            }
+
+                            if (record.Gender == gender)
+                            {
+                                if (values[i] == "or")
+                                {
+                                    isNeedAdd = true;
+                                }
+                                else
+                                {
+                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!(isNeedAdd && values[i] == "or"))
+                                {
+                                    isNeedAdd = false;
+                                }
+                            }
+
+                            break;
+                        case "passportid":
+                            if (!short.TryParse(values[i + 2], out short passportId))
+                            {
+                                throw new ArgumentException("Incorrect passportId", nameof(values));
+                            }
+
+                            if (record.PassportId == passportId)
+                            {
+                                if (values[i] == "or")
+                                {
+                                    isNeedAdd = true;
+                                }
+                                else
+                                {
+                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!(isNeedAdd && values[i] == "or"))
+                                {
+                                    isNeedAdd = false;
+                                }
+                            }
+
+                            break;
+                        case "salary":
+                            if (!decimal.TryParse(values[i + 2], out decimal salary))
+                            {
+                                throw new ArgumentException("Incorrect salary", nameof(values));
+                            }
+
+                            if (record.Salary == salary)
+                            {
+                                if (values[i] == "or")
+                                {
+                                    isNeedAdd = true;
+                                }
+                                else
+                                {
+                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!(isNeedAdd && values[i] == "or"))
+                                {
+                                    isNeedAdd = false;
+                                }
+                            }
+
+                            break;
+                        default: throw new ArgumentException("Incorrect format", nameof(values));
+                    }
+                }
+
+                if (isNeedAdd)
+                {
+                    resultList.Add(record.Id);
+                }
+
+                j++;
+            }
+
+            return resultList;
         }
     }
 }
