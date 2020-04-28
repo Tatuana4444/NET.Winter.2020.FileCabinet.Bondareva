@@ -134,6 +134,19 @@
             Handler for command help.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.CommandsCount">
+            <summary>
+            Returns count of command.
+            </summary>
+            <returns>Count of command.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.GetCommandName(System.Int32)">
+            <summary>
+            Get command name by id.
+            </summary>
+            <param name="i">Command's id.</param>
+            <returns>Command name.</returns>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Help request handler.

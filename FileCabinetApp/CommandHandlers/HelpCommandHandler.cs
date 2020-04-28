@@ -16,6 +16,7 @@ namespace FileCabinetApp.CommandHandlers
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
+            new string[] { "insert", "inserts record", "The 'insert' command inserts record." },
             new string[] { "edit", "edits record by id", "The 'edit' command edits record by id." },
             new string[] { "update", "updates records by parameters", "The 'update' command updates records by parameters." },
             new string[] { "remove", "removes record by id", "The 'remove' command removes record by id." },
@@ -29,6 +30,25 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
+
+        /// <summary>
+        /// Returns count of command.
+        /// </summary>
+        /// <returns>Count of command.</returns>
+        public static int CommandsCount()
+        {
+            return helpMessages.Length;
+        }
+
+        /// <summary>
+        /// Get command name by id.
+        /// </summary>
+        /// <param name="i">Command's id.</param>
+        /// <returns>Command name.</returns>
+        public static string GetCommandName(int i)
+        {
+            return helpMessages[i][0];
+        }
 
         /// <summary>
         /// Help request handler.
