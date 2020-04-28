@@ -30,13 +30,6 @@ namespace FileCabinetApp
         public Tuple<int, int> GetStat();
 
         /// <summary>
-        /// Edit record by id.
-        /// </summary>
-        /// <param name="id">User's id.</param>
-        /// <param name="recordData">User's data.</param>
-        public void EditRecord(int id, RecordData recordData);
-
-        /// <summary>
         /// Finds records by first name.
         /// </summary>
         /// <param name="firstName">User's first name.</param>
@@ -62,13 +55,6 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
         void Restore(FileCabinetServiceSnapshot snapshot);
-
-        /// <summary>
-        /// Remove record by id.
-        /// </summary>
-        /// <param name="id">Id record.</param>
-        /// <returns>True, if record exists, otherway returns false.</returns>
-        bool Remove(int id);
 
         /// <summary>
         /// Defragment the data file.

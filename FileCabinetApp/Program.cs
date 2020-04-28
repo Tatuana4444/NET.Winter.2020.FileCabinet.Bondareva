@@ -108,9 +108,7 @@ namespace FileCabinetApp
         private static ICommandHandler CreateCommandHandlers(IFileCabinetService fileCabinetService)
         {
             ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
-            ICommandHandler editCommandHandler = new EditCommandHandler(fileCabinetService);
             ICommandHandler updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
-            ICommandHandler removeCommandHandler = new RemoveCommandHandler(fileCabinetService);
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
             ICommandHandler findCommandHandler = new FindCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
@@ -122,10 +120,8 @@ namespace FileCabinetApp
             ICommandHandler exitCommandHandler = new ExitCommandHandler(Existing);
             ICommandHandler insertCommandHandler = new InsertCommandHandler(fileCabinetService);
 
-            createCommandHandler.SetNext(editCommandHandler);
-            editCommandHandler.SetNext(updateCommandHandler);
-            updateCommandHandler.SetNext(removeCommandHandler);
-            removeCommandHandler.SetNext(deleteCommandHandler);
+            createCommandHandler.SetNext(updateCommandHandler);
+            updateCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(listCommandHandler);
             listCommandHandler.SetNext(findCommandHandler);
             findCommandHandler.SetNext(statCommandHandler);

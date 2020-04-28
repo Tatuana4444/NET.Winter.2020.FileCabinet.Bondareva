@@ -53,20 +53,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Edit record by id and print tick that it took.
-        /// </summary>
-        /// <param name="id">User's id.</param>
-        /// <param name="recordData">User's data.</param>
-        public void EditRecord(int id, RecordData recordData)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            this.service.EditRecord(id, recordData);
-            stopWatch.Stop();
-            Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
-        }
-
-        /// <summary>
         /// Finds records by DateOfBirth and print tick that it took.
         /// </summary>
         /// <param name="dateOfBirth">User's date of Birth.</param>
@@ -150,21 +136,6 @@ namespace FileCabinetApp
             var result = this.service.Purge();
             stopWatch.Stop();
             Console.WriteLine($"Purge method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return result;
-        }
-
-        /// <summary>
-        /// Remove record by id and print tick that it took.
-        /// </summary>
-        /// <param name="id">Id record.</param>
-        /// <returns>True, if record exists, otherway returns false.</returns>
-        public bool Remove(int id)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var result = this.service.Remove(id);
-            stopWatch.Stop();
-            Console.WriteLine($"Remove method execution duration is {stopWatch.ElapsedTicks} ticks.");
             return result;
         }
 

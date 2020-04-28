@@ -69,26 +69,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Edit record by id.
-        /// </summary>
-        /// <param name="id">User's id.</param>
-        /// <param name="recordData">User's data.</param>
-        /// <exception cref="KeyNotFoundException">Throws when record this id doesn't exist.</exception>
-        public void EditRecord(int id, RecordData recordData)
-        {
-            long pos = this.offsetById[id];
-
-            if (recordData is null)
-            {
-                throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
-            }
-
-            this.validator.ValidateParameters(recordData);
-
-            this.WriteToFile(recordData, id, pos);
-        }
-
-        /// <summary>
         /// Finds records by DateOfBirth.
         /// </summary>
         /// <param name="dateOfBirth">User's date of Birth.</param>
@@ -296,29 +276,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Remove record by id.
-        /// </summary>
-        /// <param name="id">Id record.</param>
-        /// <returns>True, if record exists, otherway returns false.</returns>
-        public bool Remove(int id)
-        {
-            long pos;
-            try
-            {
-                pos = this.offsetById[id];
-            }
-            catch (KeyNotFoundException)
-            {
-                return false;
-            }
-
-            this.fileStream.Position = pos + 1;
-            this.fileStream.WriteByte(0b10);
-            this.offsetById.Remove(id);
-            return true;
-        }
-
-        /// <summary>
         /// Defragment the data file.
         /// </summary>
         /// <returns>Count of defragmented records.</returns>
@@ -479,6 +436,24 @@ namespace FileCabinetApp
                     }
                 }
             }
+        }
+
+        private bool Remove(int id)
+        {
+            long pos;
+            try
+            {
+                pos = this.offsetById[id];
+            }
+            catch (KeyNotFoundException)
+            {
+                return false;
+            }
+
+            this.fileStream.Position = pos + 1;
+            this.fileStream.WriteByte(0b10);
+            this.offsetById.Remove(id);
+            return true;
         }
 
         private void DefragmentFile(int i, int offsetCount)

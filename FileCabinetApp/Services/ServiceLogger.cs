@@ -86,35 +86,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Edit record by id and print tick that it took.
-        /// </summary>
-        /// <param name="id">User's id.</param>
-        /// <param name="recordData">User's data.</param>
-        public void EditRecord(int id, RecordData recordData)
-        {
-            if (recordData is null)
-            {
-                throw new ArgumentNullException(nameof(recordData), "Record data can't be null.");
-            }
-
-            this.LogWriter($"{DateTime.Now} - Calling Edit() with id = '{id}', FirstName = '{recordData.FirstName}', " +
-                $"LastName = '{recordData.LastName}', DateOfBirth = '{recordData.DateOfBirth.ToString(englishUS)}', " +
-                $"Gender = '{recordData.Gender}', PassportId = '{recordData.PassportId}', " +
-                $"Salary = '{recordData.Salary}'");
-
-            try
-            {
-                this.service.EditRecord(id, recordData);
-                this.LogWriter($"{DateTime.Now} - Edit() finished.");
-            }
-            catch (Exception ex)
-            {
-                this.LogWriter($"{DateTime.Now} - Edit() throw {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Finds records by DateOfBirth and print tick that it took.
         /// </summary>
         /// <param name="dateOfBirth">User's date of Birth.</param>
@@ -273,29 +244,6 @@ namespace FileCabinetApp
             catch (Exception ex)
             {
                 this.LogWriter($"{DateTime.Now} - Purge() throw {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Remove record by id and print tick that it took.
-        /// </summary>
-        /// <param name="id">Id record.</param>
-        /// <returns>True, if record exists, otherway returns false.</returns>
-        public bool Remove(int id)
-        {
-            this.LogWriter($"{DateTime.Now} - Calling Remove() with Id = '{id}'");
-
-            try
-            {
-                var result = this.service.Remove(id);
-                this.LogWriter($"{DateTime.Now} - Remove() returned IsRemoved = '{result}'");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                this.LogWriter($"{DateTime.Now} - Remove() throw {ex.Message}");
                 throw;
             }
         }

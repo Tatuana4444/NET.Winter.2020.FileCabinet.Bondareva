@@ -83,23 +83,6 @@
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
-            <summary>
-             Handler for command edit.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.EditCommandHandler"/> class.
-            </summary>
-            <param name="service">Current service.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Edit request handler.
-            </summary>
-            <param name="commandRequest">Request.</param>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ExitCommandHandler">
             <summary>
             Handler for command exit.
@@ -240,23 +223,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Purge request handler.
-            </summary>
-            <param name="commandRequest">Request.</param>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
-            <summary>
-             Handler for command remove.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler"/> class.
-            </summary>
-            <param name="service">Current service.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Remove request handler.
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
@@ -613,14 +579,6 @@
             <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
-            <summary>
-            Edit record by id.
-            </summary>
-            <param name="id">User's id.</param>
-            <param name="recordData">User's data.</param>
-            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Throws when record this id doesn't exist.</exception>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByDateOfBirth(System.DateTime)">
             <summary>
             Finds records by DateOfBirth.
@@ -659,13 +617,6 @@
             Restore date from snapshot.
             </summary>
             <param name="snapshot">Snapshot.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Remove(System.Int32)">
-            <summary>
-            Remove record by id.
-            </summary>
-            <param name="id">Id record.</param>
-            <returns>True, if record exists, otherway returns false.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.Purge">
             <summary>
@@ -727,13 +678,6 @@
             </summary>
             <returns>Count of records  and 0.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
-            <summary>
-            Edit record by id.
-            </summary>
-            <param name="id">User's id.</param>
-            <param name="recordData">User's data.</param>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
             <summary>
             Finds records by first name.
@@ -760,13 +704,6 @@
             Restore data fron snapshot.
             </summary>
             <param name="snapshot">Snapshot.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.Remove(System.Int32)">
-            <summary>
-            Remove record by id.
-            </summary>
-            <param name="id">Id record.</param>
-            <returns>True, if record exists, otherway returns false.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge">
             <summary>
@@ -811,13 +748,6 @@
             </summary>
             <returns>Count of records and count of deleted records.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
-            <summary>
-            Edit record by id.
-            </summary>
-            <param name="id">User's id.</param>
-            <param name="recordData">User's data.</param>
-        </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
             <summary>
             Finds records by first name.
@@ -844,13 +774,6 @@
             Restore data from snapshot.
             </summary>
             <param name="snapshot">Snapshot.</param>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.Remove(System.Int32)">
-            <summary>
-            Remove record by id.
-            </summary>
-            <param name="id">Id record.</param>
-            <returns>True, if record exists, otherway returns false.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Purge">
             <summary>
@@ -896,13 +819,6 @@
             <param name="param">Record parameters.</param>
             <returns>List of id recored, that was deleted.</returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.RecordData)">
-            <summary>
-            Edit record by id and print tick that it took.
-            </summary>
-            <param name="id">User's id.</param>
-            <param name="recordData">User's data.</param>
-        </member>
         <member name="M:FileCabinetApp.ServiceLogger.FindByDateOfBirth(System.DateTime)">
             <summary>
             Finds records by DateOfBirth and print tick that it took.
@@ -942,13 +858,6 @@
             </summary>
             <returns>Count of defragmented records.</returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.Remove(System.Int32)">
-            <summary>
-            Remove record by id and print tick that it took.
-            </summary>
-            <param name="id">Id record.</param>
-            <returns>True, if record exists, otherway returns false.</returns>
-        </member>
         <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Restore date from snapshot and print tick that it took.
@@ -985,13 +894,6 @@
             </summary>
             <param name="param">Record parameters.</param>
             <returns>List of id recored, that was deleted.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.RecordData)">
-            <summary>
-            Edit record by id and print tick that it took.
-            </summary>
-            <param name="id">User's id.</param>
-            <param name="recordData">User's data.</param>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.FindByDateOfBirth(System.DateTime)">
             <summary>
@@ -1031,13 +933,6 @@
             Defragment the data file and print tick that it took.
             </summary>
             <returns>Count of defragmented records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.Remove(System.Int32)">
-            <summary>
-            Remove record by id and print tick that it took.
-            </summary>
-            <param name="id">Id record.</param>
-            <returns>True, if record exists, otherway returns false.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
