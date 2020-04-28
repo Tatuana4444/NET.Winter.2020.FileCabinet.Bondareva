@@ -12,6 +12,13 @@ namespace FileCabinetApp
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordData"/> class.
         /// </summary>
+        public RecordData()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordData"/> class.
+        /// </summary>
         /// <param name="firstName">User's first name.</param>
         /// <param name="lastName">User's last name.</param>
         /// <param name="dateOfBirth">User's date of Birth.</param>
@@ -50,59 +57,59 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Gets user's Id.
+        /// Gets or sets user's Id.
         /// </summary>
         /// <value>
         /// User's Id.
         /// </value>
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         /// <summary>
-        /// Gets user's First name.
+        /// Gets or sets user's First name.
         /// </summary>
         /// <value>
         /// User's First name.
         /// </value>
-        public string FirstName { get; private set; }
+        public string FirstName { get; set; }
 
         /// <summary>
-        /// Gets user's Last name.
+        /// Gets or sets user's Last name.
         /// </summary>
         /// <value>
         /// User's Last name.
         /// </value>
-        public string LastName { get; private set; }
+        public string LastName { get; set; }
 
         /// <summary>
-        /// Gets user's date of Birth.
+        /// Gets or sets user's date of Birth.
         /// </summary>
         /// <value>
         /// User's date of Birth.
         /// </value>
-        public DateTime DateOfBirth { get; private set; }
+        public DateTime DateOfBirth { get; set; }
 
         /// <summary>
-        /// Gets user's gender.
+        /// Gets or sets user's gender.
         /// </summary>
         /// <value>
         /// User's gender.
         /// </value>
-        public char Gender { get; private set; }
+        public char Gender { get; set; }
 
         /// <summary>
-        /// Gets user's passport id.
+        /// Gets or sets user's passport id.
         /// </summary>
         /// <value>
         /// User's passport id.
         /// </value>
-        public short PassportId { get; private set; }
+        public short PassportId { get; set; }
 
         /// <summary>
-        /// Gets user's salary.
+        /// Gets or sets user's salary.
         /// </summary>
         /// <value>
         /// User's salary.
         /// </value>
-        public decimal Salary { get; private set; }
+        public decimal Salary { get; set; }
     }
 }

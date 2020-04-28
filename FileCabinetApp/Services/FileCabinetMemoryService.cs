@@ -20,14 +20,14 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
         private List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-        private IRecordValidator validator;
+        private IValidator validator;
         private Dictionary<int, int> presentIdList = new Dictionary<int, int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
         /// </summary>
         /// <param name="validator">Validator for params.</param>
-        public FileCabinetMemoryService(IRecordValidator validator)
+        public FileCabinetMemoryService(IValidator validator)
         {
             this.validator = validator;
         }
@@ -53,7 +53,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            this.validator.ValidateParametrs(recordData);
+            this.validator.ValidateParameters(recordData);
             int id;
             if (recordData.Id > 0)
             {
@@ -113,7 +113,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            this.validator.ValidateParametrs(recordData);
+            this.validator.ValidateParameters(recordData);
 
             this.RemoveFromDictionary(this.firstNameDictionary, recordData.LastName, id);
             this.RemoveFromDictionary(this.lastNameDictionary, recordData.LastName, id);
@@ -288,6 +288,103 @@ namespace FileCabinetApp
             }
 
             return deletedId;
+        }
+
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        public void Update(string param)
+        {
+            if (param == null)
+            {
+                throw new ArgumentNullException(nameof(param));
+            }
+
+            int whereIndex = param.IndexOf("where", StringComparison.Ordinal);
+            if (whereIndex == -1)
+            {
+                throw new ArgumentException("Incorrect format", nameof(param));
+            }
+
+            string whereParams = param.Substring(whereIndex, param.Length - whereIndex);
+            string[] whereValues = whereParams.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+            whereValues[^1] = whereValues[^1][0..^1];
+            if (whereValues.Length % 3 != 0)
+            {
+                throw new ArgumentException("Incorrect format", nameof(param));
+            }
+
+            List<FileCabinetRecord> foundResult = this.Find(whereValues).ToList();
+
+            string setParams = param.Substring(4, whereIndex - 5);
+            string[] setValues = setParams.Split(new string[] { " = '", " ='", "= '", "='", "' , ", "', ", "'" }, StringSplitOptions.RemoveEmptyEntries);
+            if (setValues.Length % 2 != 0)
+            {
+                throw new ArgumentException("Incorrect format", nameof(param));
+            }
+
+            for (int j = 0; j < foundResult.Count; j++)
+            {
+                for (int i = 0; i < setValues.Length; i += 2)
+                {
+                    RecordData recordData;
+                    switch (setValues[i].ToLower(this.englishUS))
+                    {
+                        case "firstname":
+                            recordData = new RecordData() { FirstName = setValues[i + 1] };
+                            this.validator.ValidatePrameter("firstname", recordData);
+                            foundResult[j].FirstName = setValues[i + 1];
+                            break;
+                        case "lastname":
+                            recordData = new RecordData() { LastName = setValues[i + 1] };
+                            this.validator.ValidatePrameter("lastname", recordData);
+                            foundResult[j].LastName = setValues[i + 1];
+                            break;
+                        case "dateofbirth":
+                            if (!DateTime.TryParse(setValues[i + 1], this.englishUS, DateTimeStyles.None, out DateTime dateOfBirth))
+                            {
+                                throw new ArgumentException("Incorrect dateofbith", nameof(param));
+                            }
+
+                            recordData = new RecordData() { DateOfBirth = dateOfBirth };
+                            this.validator.ValidatePrameter("dateofbirth", recordData);
+                            foundResult[j].DateOfBirth = dateOfBirth;
+                            break;
+                        case "gender":
+                            if (!char.TryParse(setValues[i + 1], out char gender))
+                            {
+                                throw new ArgumentException("Incorrect gender", nameof(param));
+                            }
+
+                            recordData = new RecordData() { Gender = gender };
+                            this.validator.ValidatePrameter("gender", recordData);
+                            foundResult[j].Gender = gender;
+                            break;
+                        case "passportid":
+                            if (!short.TryParse(setValues[i + 1], out short passportId))
+                            {
+                                throw new ArgumentException("Incorrect passportId", nameof(param));
+                            }
+
+                            recordData = new RecordData() { PassportId = passportId };
+                            this.validator.ValidatePrameter("passportid", recordData);
+                            foundResult[j].PassportId = passportId;
+                            break;
+                        case "salary":
+                            if (!decimal.TryParse(setValues[i + 1], out decimal salary))
+                            {
+                                throw new ArgumentException("Incorrect salary", nameof(param));
+                            }
+
+                            recordData = new RecordData() { Salary = salary };
+                            this.validator.ValidatePrameter("salary", recordData);
+                            foundResult[j].Salary = salary;
+                            break;
+                        default: throw new ArgumentException("Incorrect format", nameof(param));
+                    }
+                }
+            }
         }
 
         private static IEnumerable<FileCabinetRecord> FindById(IEnumerable<FileCabinetRecord> fileCabinetRecords, int id)

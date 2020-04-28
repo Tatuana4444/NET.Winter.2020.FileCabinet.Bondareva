@@ -42,7 +42,7 @@ namespace FileCabinetApp
                 try
                 {
                     RecordData data = new RecordData(list[i].FirstName, list[i].LastName, list[i].DateOfBirth, list[i].Gender, list[i].PassportId, list[i].Salary);
-                    validator.ValidateParametrs(data);
+                    validator.ValidateParameters(data);
                     i++;
                 }
                 catch (ArgumentNullException e)

@@ -337,6 +337,31 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        public void Update(string param)
+        {
+            if (param is null)
+            {
+                throw new ArgumentNullException(nameof(param), "Record data can't be null.");
+            }
+
+            this.LogWriter($"{DateTime.Now} - Calling Update() with id = '{param}'");
+
+            try
+            {
+                this.service.Update(param);
+                this.LogWriter($"{DateTime.Now} - Update() finished.");
+            }
+            catch (Exception ex)
+            {
+                this.LogWriter($"{DateTime.Now} - Update() throw {ex.Message}");
+                throw;
+            }
+        }
+
         private void LogWriter(string text)
         {
             this.writer.WriteLine(text);

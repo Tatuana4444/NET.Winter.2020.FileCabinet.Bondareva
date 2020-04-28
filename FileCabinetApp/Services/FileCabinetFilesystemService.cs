@@ -17,7 +17,7 @@ namespace FileCabinetApp
 
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
         private FileStream fileStream;
-        private IRecordValidator validator;
+        private IValidator validator;
         private Encoding enc = Encoding.Unicode;
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="fileStream">File stream.</param>
         /// <param name="validator">Validator for params.</param>
-        public FileCabinetFilesystemService(FileStream fileStream, IRecordValidator validator)
+        public FileCabinetFilesystemService(FileStream fileStream, IValidator validator)
         {
             if (fileStream is null)
             {
@@ -83,7 +83,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            this.validator.ValidateParametrs(recordData);
+            this.validator.ValidateParameters(recordData);
 
             this.WriteToFile(recordData, id, pos);
         }
@@ -384,6 +384,103 @@ namespace FileCabinetApp
             return foundResult;
         }
 
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        public void Update(string param)
+        {
+            if (param == null)
+            {
+                throw new ArgumentNullException(nameof(param));
+            }
+
+            int whereIndex = param.IndexOf("where", StringComparison.Ordinal);
+            if (whereIndex == -1)
+            {
+                throw new ArgumentException("Incorrect format", nameof(param));
+            }
+
+            string whereParams = param.Substring(whereIndex, param.Length - whereIndex);
+            string[] whereValues = whereParams.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+            whereValues[^1] = whereValues[^1][0..^1];
+            if (whereValues.Length % 3 != 0)
+            {
+                throw new ArgumentException("Incorrect format", nameof(param));
+            }
+
+            List<int> foundResult = this.Find(whereValues).ToList();
+
+            string setParams = param.Substring(4, whereIndex - 5);
+            string[] setValues = setParams.Split(new string[] { " = '", " ='", "= '", "='", "' , ", "', ", "'" }, StringSplitOptions.RemoveEmptyEntries);
+            if (setValues.Length % 2 != 0)
+            {
+                throw new ArgumentException("Incorrect format", nameof(param));
+            }
+
+            for (int j = 0; j < foundResult.Count; j++)
+            {
+                for (int i = 0; i < setValues.Length; i += 2)
+                {
+                    RecordData recordData;
+                    switch (setValues[i].ToLower(this.englishUS))
+                    {
+                        case "firstname":
+                            recordData = new RecordData() { FirstName = setValues[i + 1] };
+                            this.validator.ValidatePrameter("firstname", recordData);
+                            this.WriteFirstName(setValues[i + 1], this.offsetById[foundResult[j]]);
+                            break;
+                        case "lastname":
+                            recordData = new RecordData() { LastName = setValues[i + 1] };
+                            this.validator.ValidatePrameter("lastname", recordData);
+                            this.WriteLastName(setValues[i + 1], this.offsetById[foundResult[j]]);
+                            break;
+                        case "dateofbirth":
+                            if (!DateTime.TryParse(setValues[i + 1], this.englishUS, DateTimeStyles.None, out DateTime dateOfBirth))
+                            {
+                                throw new ArgumentException("Incorrect dateofbith", nameof(param));
+                            }
+
+                            recordData = new RecordData() { DateOfBirth = dateOfBirth };
+                            this.validator.ValidatePrameter("dateofbirth", recordData);
+                            this.WriteDateOfBirth(dateOfBirth, this.offsetById[foundResult[j]]);
+                            break;
+                        case "gender":
+                            if (!char.TryParse(setValues[i + 1], out char gender))
+                            {
+                                throw new ArgumentException("Incorrect gender", nameof(param));
+                            }
+
+                            recordData = new RecordData() { Gender = gender };
+                            this.validator.ValidatePrameter("gender", recordData);
+                            this.WriteGender(gender, this.offsetById[foundResult[j]]);
+                            break;
+                        case "passportid":
+                            if (!short.TryParse(setValues[i + 1], out short passportId))
+                            {
+                                throw new ArgumentException("Incorrect passportId", nameof(param));
+                            }
+
+                            recordData = new RecordData() { PassportId = passportId };
+                            this.validator.ValidatePrameter("passportid", recordData);
+                            this.WritePassportId(passportId, this.offsetById[foundResult[j]]);
+                            break;
+                        case "salary":
+                            if (!decimal.TryParse(setValues[i + 1], out decimal salary))
+                            {
+                                throw new ArgumentException("Incorrect salary", nameof(param));
+                            }
+
+                            recordData = new RecordData() { Salary = salary };
+                            this.validator.ValidatePrameter("salary", recordData);
+                            this.WriteSalary(salary, this.offsetById[foundResult[j]]);
+                            break;
+                        default: throw new ArgumentException("Incorrect format", nameof(param));
+                    }
+                }
+            }
+        }
+
         private void DefragmentFile(int i, int offsetCount)
         {
             while (i < this.fileStream.Length / 278)
@@ -396,6 +493,52 @@ namespace FileCabinetApp
             }
 
             this.fileStream.SetLength(this.fileStream.Length - (offsetCount * 278));
+        }
+
+        private void WriteFirstName(string firstName, long pos)
+        {
+            this.fileStream.Position = pos + 6;
+            byte[] tempFirstName = this.enc.GetBytes(firstName);
+            Array.Resize(ref tempFirstName, 120);
+            this.fileStream.Write(tempFirstName, 0, 120);
+        }
+
+        private void WriteLastName(string lastName, long pos)
+        {
+            this.fileStream.Position = pos + 126;
+            byte[] tempLastName = this.enc.GetBytes(lastName);
+            Array.Resize(ref tempLastName, 120);
+            this.fileStream.Write(tempLastName, 0, 120);
+        }
+
+        private void WriteDateOfBirth(DateTime dateOfBirth, long pos)
+        {
+            this.fileStream.Position = pos + 246;
+            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Year), 0, 4);
+            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Month), 0, 4);
+            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Day), 0, 4);
+        }
+
+        private void WriteGender(char gender, long pos)
+        {
+            this.fileStream.Position = pos + 258;
+            this.fileStream.Write(BitConverter.GetBytes(gender), 0, 2);
+        }
+
+        private void WritePassportId(short passportId, long pos)
+        {
+            this.fileStream.Position = pos + 260;
+            this.fileStream.Write(BitConverter.GetBytes(passportId), 0, 2);
+        }
+
+        private void WriteSalary(decimal salary, long pos)
+        {
+            this.fileStream.Position = pos + 262;
+            int[] sal = decimal.GetBits(salary);
+            foreach (var s in sal)
+            {
+                this.fileStream.Write(BitConverter.GetBytes(s), 0, 4);
+            }
         }
 
         private void WriteToFile(RecordData recordData,  int id, long pos)

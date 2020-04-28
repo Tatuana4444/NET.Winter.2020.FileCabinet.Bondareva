@@ -109,6 +109,7 @@ namespace FileCabinetApp
         {
             ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
             ICommandHandler editCommandHandler = new EditCommandHandler(fileCabinetService);
+            ICommandHandler updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
             ICommandHandler removeCommandHandler = new RemoveCommandHandler(fileCabinetService);
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
@@ -122,7 +123,8 @@ namespace FileCabinetApp
             ICommandHandler insertCommandHandler = new InsertCommandHandler(fileCabinetService);
 
             createCommandHandler.SetNext(editCommandHandler);
-            editCommandHandler.SetNext(removeCommandHandler);
+            editCommandHandler.SetNext(updateCommandHandler);
+            updateCommandHandler.SetNext(removeCommandHandler);
             removeCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(listCommandHandler);
             listCommandHandler.SetNext(findCommandHandler);

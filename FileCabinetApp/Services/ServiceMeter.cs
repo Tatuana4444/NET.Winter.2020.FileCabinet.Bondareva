@@ -180,5 +180,18 @@ namespace FileCabinetApp
             stopWatch.Stop();
             Console.WriteLine($"Restore method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
+
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        public void Update(string param)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            this.service.Update(param);
+            stopWatch.Stop();
+            Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
+        }
     }
 }

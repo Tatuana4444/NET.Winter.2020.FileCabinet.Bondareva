@@ -13,6 +13,6 @@ namespace FileCabinetApp
         /// Implements validator.
         /// </summary>
         /// <param name="recordData">User's data.</param>
-        public void ValidateParametrs(RecordData recordData);
+        public void ValidateParameters(RecordData recordData);
     }
 }

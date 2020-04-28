@@ -77,10 +77,16 @@ namespace FileCabinetApp
         int Purge();
 
         /// <summary>
-        /// Delete record by parameters.
+        /// Delete records by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>
         /// <returns>List of id recored, that was deleted.</returns>
         IEnumerable<int> Delete(string param);
+
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        void Update(string param);
     }
 }
