@@ -38,17 +38,18 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Edit record by id and print tick that it took.
+        /// Delete record by parameters.
         /// </summary>
-        /// <param name="id">User's id.</param>
-        /// <param name="recordData">User's data.</param>
-        public void EditRecord(int id, RecordData recordData)
+        /// <param name="param">Record parameters.</param>
+        /// <returns>List of id recored, that was deleted.</returns>
+        public IEnumerable<int> Delete(string param)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            this.service.EditRecord(id, recordData);
+            var result = this.service.Delete(param);
             stopWatch.Stop();
-            Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
+            Console.WriteLine($"Delete method execution duration is {stopWatch.ElapsedTicks} ticks.");
+            return result;
         }
 
         /// <summary>
@@ -139,21 +140,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Remove record by id and print tick that it took.
-        /// </summary>
-        /// <param name="id">Id record.</param>
-        /// <returns>True, if record exists, otherway returns false.</returns>
-        public bool Remove(int id)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var result = this.service.Remove(id);
-            stopWatch.Stop();
-            Console.WriteLine($"Remove method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return result;
-        }
-
-        /// <summary>
         /// Restore date from snapshot and print tick that it took.
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
@@ -164,6 +150,19 @@ namespace FileCabinetApp
             this.service.Restore(snapshot);
             stopWatch.Stop();
             Console.WriteLine($"Restore method execution duration is {stopWatch.ElapsedTicks} ticks.");
+        }
+
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        public void Update(string param)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            this.service.Update(param);
+            stopWatch.Stop();
+            Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
     }
 }

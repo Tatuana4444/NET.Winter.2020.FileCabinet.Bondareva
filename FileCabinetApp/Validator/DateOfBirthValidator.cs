@@ -28,7 +28,7 @@ namespace FileCabinetApp
         /// Check date of bith from date.
         /// </summary>
         /// <param name="recordData">Data.</param>
-        public void ValidateParametrs(RecordData recordData)
+        public void ValidateParameters(RecordData recordData)
         {
             if (recordData is null)
             {

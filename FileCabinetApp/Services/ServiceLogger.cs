@@ -59,30 +59,28 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Edit record by id and print tick that it took.
+        /// Delete record by parameters.
         /// </summary>
-        /// <param name="id">User's id.</param>
-        /// <param name="recordData">User's data.</param>
-        public void EditRecord(int id, RecordData recordData)
+        /// <param name="param">Record parameters.</param>
+        /// <returns>List of id recored, that was deleted.</returns>
+        public IEnumerable<int> Delete(string param)
         {
-            if (recordData is null)
-            {
-                throw new ArgumentNullException(nameof(recordData), "Record data can't be null.");
-            }
-
-            this.LogWriter($"{DateTime.Now} - Calling Edit() with id = '{id}', FirstName = '{recordData.FirstName}', " +
-                $"LastName = '{recordData.LastName}', DateOfBirth = '{recordData.DateOfBirth.ToString(englishUS)}', " +
-                $"Gender = '{recordData.Gender}', PassportId = '{recordData.PassportId}', " +
-                $"Salary = '{recordData.Salary}'");
+            this.LogWriter($"{DateTime.Now} - Calling Delete() with parameters = '{param}'");
 
             try
             {
-                this.service.EditRecord(id, recordData);
-                this.LogWriter($"{DateTime.Now} - Edit() finished.");
+                var result = this.service.Delete(param);
+                this.LogWriter($"{DateTime.Now} - Delete() returned RemovedId = '{result}'");
+                foreach (int id in result)
+                {
+                    this.LogWriter($"Id = '{id}','");
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
-                this.LogWriter($"{DateTime.Now} - Edit() throw {ex.Message}");
+                this.LogWriter($"{DateTime.Now} - Delete() throw {ex.Message}");
                 throw;
             }
         }
@@ -251,29 +249,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Remove record by id and print tick that it took.
-        /// </summary>
-        /// <param name="id">Id record.</param>
-        /// <returns>True, if record exists, otherway returns false.</returns>
-        public bool Remove(int id)
-        {
-            this.LogWriter($"{DateTime.Now} - Calling Remove() with Id = '{id}'");
-
-            try
-            {
-                var result = this.service.Remove(id);
-                this.LogWriter($"{DateTime.Now} - Remove() returned IsRemoved = '{result}'");
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                this.LogWriter($"{DateTime.Now} - Remove() throw {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Restore date from snapshot and print tick that it took.
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
@@ -306,6 +281,31 @@ namespace FileCabinetApp
             catch (Exception ex)
             {
                 this.LogWriter($"{DateTime.Now} - Restore() throw {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        public void Update(string param)
+        {
+            if (param is null)
+            {
+                throw new ArgumentNullException(nameof(param), "Record data can't be null.");
+            }
+
+            this.LogWriter($"{DateTime.Now} - Calling Update() with id = '{param}'");
+
+            try
+            {
+                this.service.Update(param);
+                this.LogWriter($"{DateTime.Now} - Update() finished.");
+            }
+            catch (Exception ex)
+            {
+                this.LogWriter($"{DateTime.Now} - Update() throw {ex.Message}");
                 throw;
             }
         }

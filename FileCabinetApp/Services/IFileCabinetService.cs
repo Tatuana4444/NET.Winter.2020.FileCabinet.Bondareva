@@ -30,13 +30,6 @@ namespace FileCabinetApp
         public Tuple<int, int> GetStat();
 
         /// <summary>
-        /// Edit record by id.
-        /// </summary>
-        /// <param name="id">User's id.</param>
-        /// <param name="recordData">User's data.</param>
-        public void EditRecord(int id, RecordData recordData);
-
-        /// <summary>
         /// Finds records by first name.
         /// </summary>
         /// <param name="firstName">User's first name.</param>
@@ -64,16 +57,22 @@ namespace FileCabinetApp
         void Restore(FileCabinetServiceSnapshot snapshot);
 
         /// <summary>
-        /// Remove record by id.
-        /// </summary>
-        /// <param name="id">Id record.</param>
-        /// <returns>True, if record exists, otherway returns false.</returns>
-        bool Remove(int id);
-
-        /// <summary>
         /// Defragment the data file.
         /// </summary>
         /// <returns>Count of defragmented records.</returns>
         int Purge();
+
+        /// <summary>
+        /// Delete records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        /// <returns>List of id recored, that was deleted.</returns>
+        IEnumerable<int> Delete(string param);
+
+        /// <summary>
+        /// Update records by parameters.
+        /// </summary>
+        /// <param name="param">Record parameters.</param>
+        void Update(string param);
     }
 }

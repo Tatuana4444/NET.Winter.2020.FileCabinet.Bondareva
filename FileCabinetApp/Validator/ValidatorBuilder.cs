@@ -18,7 +18,7 @@ namespace FileCabinetApp
              .AddJsonFile("validation-rules.json")
              .Build();
 
-        private List<IRecordValidator> validators = new List<IRecordValidator>();
+        private Dictionary<string, IRecordValidator> validators = new Dictionary<string, IRecordValidator>();
 
         /// <summary>
         /// Set validator for first name.
@@ -28,7 +28,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateFirstName(int min, int max)
         {
-            this.validators.Add(new FirstNameValidator(min, max));
+            this.validators.Add("firstname", new FirstNameValidator(min, max));
             return this;
         }
 
@@ -40,7 +40,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateLastName(int min, int max)
         {
-            this.validators.Add(new LastNameValidator(min, max));
+            this.validators.Add("lastname", new LastNameValidator(min, max));
             return this;
         }
 
@@ -52,7 +52,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateDateOfBirth(DateTime from, DateTime to)
         {
-            this.validators.Add(new DateOfBirthValidator(from, to));
+            this.validators.Add("dateofbirth", new DateOfBirthValidator(from, to));
             return this;
         }
 
@@ -64,7 +64,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateGender(char manSymbol, char womanSymbol)
         {
-            this.validators.Add(new GenderValidator(manSymbol, womanSymbol));
+            this.validators.Add("gender", new GenderValidator(manSymbol, womanSymbol));
             return this;
         }
 
@@ -76,7 +76,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidatePassportId(short min, short max)
         {
-            this.validators.Add(new PassportIdValidator(min, max));
+            this.validators.Add("passportid", new PassportIdValidator(min, max));
             return this;
         }
 
@@ -87,7 +87,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateSalary(decimal min)
         {
-            this.validators.Add(new SalaryValidator(min));
+            this.validators.Add("salary", new SalaryValidator(min));
             return this;
         }
 
@@ -95,7 +95,7 @@ namespace FileCabinetApp
         /// Create Validator bu this builder.
         /// </summary>
         /// <returns>Validator.</returns>
-        public IRecordValidator Create()
+        public IValidator Create()
         {
             return new CompositeValidator(this.validators);
         }
@@ -104,7 +104,7 @@ namespace FileCabinetApp
         /// Create Default Validator.
         /// </summary>
         /// <returns>Default Validator.</returns>
-        public IRecordValidator CreateDefault()
+        public IValidator CreateDefault()
         {
             var defaultRules = config.GetSection("default")
                 .Get<ValidationRules>();
@@ -115,14 +115,14 @@ namespace FileCabinetApp
         /// Create Custom Validator.
         /// </summary>
         /// <returns>Custom Validator.</returns>
-        public IRecordValidator CreateCustom()
+        public IValidator CreateCustom()
         {
             var customRules = config.GetSection("custom")
                 .Get<ValidationRules>();
             return this.Create(customRules);
         }
 
-        private IRecordValidator Create(ValidationRules rules)
+        private IValidator Create(ValidationRules rules)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeStyles styles = DateTimeStyles.None;

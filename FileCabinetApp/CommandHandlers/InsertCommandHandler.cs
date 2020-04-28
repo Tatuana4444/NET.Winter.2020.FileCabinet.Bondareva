@@ -6,21 +6,21 @@ using System.Text;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>
-    ///  Handler for command edit.
+    ///  Handler for command insert.
     /// </summary>
-    public class EditCommandHandler : ServiceCommandHandlerBase
+    public class InsertCommandHandler : ServiceCommandHandlerBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="InsertCommandHandler"/> class.
         /// </summary>
         /// <param name="service">Current service.</param>
-        public EditCommandHandler(IFileCabinetService service)
+        public InsertCommandHandler(IFileCabinetService service)
             : base(service)
         {
         }
 
         /// <summary>
-        /// Edit request handler.
+        /// Create request handler.
         /// </summary>
         /// <param name="commandRequest">Request.</param>
         public override void Handle(AppCommandRequest commandRequest)
@@ -30,19 +30,14 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "edit")
+            if (commandRequest.Command == "insert")
             {
-                this.Edit(commandRequest.Parameters);
+                this.Insert(commandRequest.Parameters);
             }
             else
             {
                 base.Handle(commandRequest);
             }
-        }
-
-        private static Tuple<bool, string, string> StringConverter(string data)
-        {
-            return new Tuple<bool, string, string>(true, string.Empty, data);
         }
 
         private static Tuple<bool, string, DateTime> DateConverter(string data)
@@ -231,69 +226,170 @@ namespace FileCabinetApp.CommandHandlers
             return new Tuple<bool, string>(true, string.Empty);
         }
 
-        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        private void Insert(string parameters)
         {
-            do
+            string[] parametersName = { "id", "firstName", "lastname", "dateofbirth", "gender", "passportid", "salary" };
+            bool[] isHere = new bool[7];
+            string[] data = parameters.Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            if (data.Length != 15 || data[7].Trim() != "values")
             {
-                T value;
-
-                var input = Console.ReadLine();
-                var conversionResult = converter(input);
-
-                if (!conversionResult.Item1)
-                {
-                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
-                    continue;
-                }
-
-                value = conversionResult.Item3;
-
-                var validationResult = validator(value);
-                if (!validationResult.Item1)
-                {
-                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
-                    continue;
-                }
-
-                return value;
-            }
-            while (true);
-        }
-
-        private void Edit(string parameters)
-        {
-            if (!int.TryParse(parameters, out int id) || id > this.Service.GetStat().Item1)
-            {
-                Console.WriteLine($"#{id} record is not found.");
-                return;
+                throw new FormatException("Uncorrect format of insert.");
             }
 
-            Console.Write("First name: ");
-            var firstName = Program.IsDefaulRule ? ReadInput(StringConverter, FirstNameValidatorDefault)
-                : ReadInput(StringConverter, FirstNameValidatorCustom);
+            for (int i = 8; i < 15; i++)
+            {
+                string temp = data[i].Trim();
+                data[i] = temp[1..^1];
+            }
 
-            Console.Write("Last name: ");
-            var lastName = Program.IsDefaulRule ? ReadInput(StringConverter, LastNameValidatorDefault)
-                : ReadInput(StringConverter, LastNameValidatorCustom);
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            int id = default;
+            string firstName = string.Empty, lastName = string.Empty;
+            DateTime dateOfBirth = default;
+            char gender = default;
+            short passportId = default;
+            decimal salary = default;
+            for (int i = 0; i < 7; i++)
+            {
+                switch (data[i].Trim().ToLower(culture))
+                {
+                    case "id":
+                        isHere[0] = true;
+                        if (!int.TryParse(data[i + 8], out id) || id <= 0)
+                        {
+                            throw new ArgumentException("Error, id should be integer and more than 0.");
+                        }
 
-            Console.Write("Date of birth: ");
-            var dateOfBirth = Program.IsDefaulRule ? ReadInput(DateConverter, DateOfBirthValidatorDefault)
-                : ReadInput(DateConverter, DateOfBirthValidatorCustom);
+                        break;
+                    case "firstname":
+                        isHere[1] = true;
+                        var valideFirstName = Program.IsDefaulRule ? FirstNameValidatorDefault(data[i + 8])
+                                : FirstNameValidatorCustom(data[i + 8]);
+                        if (valideFirstName.Item1)
+                        {
+                            firstName = data[i + 8];
+                        }
+                        else
+                        {
+                            throw new ArgumentException(valideFirstName.Item2, nameof(parameters));
+                        }
 
-            Console.Write("Gender: ");
-            var gender = ReadInput(CharConverter, GenderValidator);
+                        break;
+                    case "lastname":
+                        isHere[2] = true;
+                        var valideLastName = Program.IsDefaulRule ? LastNameValidatorDefault(data[i + 8])
+                                : LastNameValidatorCustom(data[i + 8]);
+                        if (valideLastName.Item1)
+                        {
+                            lastName = data[i + 8];
+                        }
+                        else
+                        {
+                            throw new ArgumentException(valideLastName.Item2, nameof(parameters));
+                        }
 
-            Console.Write("Passport ID: ");
-            var passportId = Program.IsDefaulRule ? ReadInput(ShortConverter, PassportIdValidatorDefault)
-                : ReadInput(ShortConverter, PassportIdValidatorCustom);
+                        break;
+                    case "dateofbirth":
+                        isHere[3] = true;
+                        var concertingDate = DateConverter(data[i + 8]);
+                        if (concertingDate.Item1)
+                        {
+                            var valideDate = Program.IsDefaulRule ? DateOfBirthValidatorDefault(concertingDate.Item3)
+                                : DateOfBirthValidatorCustom(concertingDate.Item3);
+                            if (valideDate.Item1)
+                            {
+                                dateOfBirth = concertingDate.Item3;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(valideDate.Item2, nameof(parameters));
+                            }
+                        }
+                        else
+                        {
+                            throw new FormatException(concertingDate.Item2);
+                        }
 
-            Console.Write("Salary: ");
-            var salary = Program.IsDefaulRule ? ReadInput(DecimalConverter, SalaryValidatorDefault)
-                : ReadInput(DecimalConverter, SalaryValidatorCustom);
+                        break;
+                    case "gender":
+                        isHere[4] = true;
+                        var convertingGender = CharConverter(data[i + 8]);
+                        if (convertingGender.Item1)
+                        {
+                            var valideGender = GenderValidator(convertingGender.Item3);
+                            if (valideGender.Item1)
+                            {
+                                gender = convertingGender.Item3;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(valideGender.Item2, nameof(parameters));
+                            }
+                        }
+                        else
+                        {
+                            throw new FormatException(convertingGender.Item2);
+                        }
 
-            RecordData recordData = new RecordData(firstName, lastName, dateOfBirth, gender, passportId, salary);
-            this.Service.EditRecord(id, recordData);
-            Console.WriteLine($"Record #{id} is updated.");
+                        break;
+                    case "passportid":
+                        isHere[5] = true;
+                        var convertingPassportId = ShortConverter(data[i + 8]);
+                        if (convertingPassportId.Item1)
+                        {
+                            var validePassportId = Program.IsDefaulRule ? PassportIdValidatorDefault(convertingPassportId.Item3)
+                                : PassportIdValidatorCustom(convertingPassportId.Item3);
+                            if (validePassportId.Item1)
+                            {
+                                passportId = convertingPassportId.Item3;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(validePassportId.Item2, nameof(parameters));
+                            }
+                        }
+                        else
+                        {
+                            throw new FormatException(convertingPassportId.Item2);
+                        }
+
+                        break;
+                    case "salary":
+                        isHere[6] = true;
+                        var convertingSalaty = DecimalConverter(data[i + 8]);
+                        if (convertingSalaty.Item1)
+                        {
+                            var valideSalary = Program.IsDefaulRule ? SalaryValidatorDefault(convertingSalaty.Item3)
+                                : SalaryValidatorCustom(convertingSalaty.Item3);
+                            if (valideSalary.Item1)
+                            {
+                                salary = convertingSalaty.Item3;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(valideSalary.Item2, nameof(parameters));
+                            }
+                        }
+                        else
+                        {
+                            throw new FormatException(convertingSalaty.Item2);
+                        }
+
+                        break;
+                }
+            }
+
+            for (int i = 0; i < 7; i++)
+            {
+                if (!isHere[i])
+                {
+                    throw new ArgumentException($"Missing parameter {parametersName[i]}.", nameof(parameters));
+                }
+            }
+
+            RecordData recordData = new RecordData(id, firstName, lastName, dateOfBirth, gender, passportId, salary);
+            int index = this.Service.CreateRecord(recordData);
+            Console.WriteLine($"Record #{index} is inserted.");
         }
     }
 }
