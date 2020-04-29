@@ -111,24 +111,6 @@
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.FindCommandHandler">
-            <summary>
-             Handler for command find.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
-            </summary>
-            <param name="service">Current service.</param>
-            <param name="printer">Current printer.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Find request handler.
-            </summary>
-            <param name="commandRequest">Request.</param>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.HelpCommandHandler">
             <summary>
             Handler for command help.
@@ -201,24 +183,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.InsertCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Create request handler.
-            </summary>
-            <param name="commandRequest">Request.</param>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
-            <summary>
-             Handler for command list.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="service">Current service.</param>
-            <param name="printer">Current printer.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            List request handler.
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
@@ -610,26 +574,6 @@
             <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByDateOfBirth(System.DateTime)">
-            <summary>
-            Finds records by DateOfBirth.
-            </summary>
-            <param name="dateOfBirth">User's date of Birth.</param>
-            <returns>Records whith sought-for date of Birth.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByFirstName(System.String)">
-            <summary>
-            Finds records by first name.
-            </summary>
-            <param name="firstName">User's first name.</param>
-            <returns>Records whith sought-for firstName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetRecords">
-            <summary>
-            Returns all records.
-            </summary>
-            <returns>All records.</returns>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.SelectRecords(System.String)">
             <summary>
             Returns records.
@@ -642,13 +586,6 @@
             Returns count of records  and count of deleted records.
             </summary>
             <returns>Count of records  and count of deleted records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByLastName(System.String)">
-            <summary>
-            Finds records by last name.
-            </summary>
-            <param name="lastName">User's last name.</param>
-            <returns>Records whith sought-for lastName.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
@@ -704,12 +641,6 @@
             <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetRecords">
-            <summary>
-            Returns all records.
-            </summary>
-            <returns>All records.</returns>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.SelectRecords(System.String)">
             <summary>
             Returns records.
@@ -722,27 +653,6 @@
             Returns count of records and count of deleted records.
             </summary>
             <returns>Count of records  and 0.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
-            <summary>
-            Finds records by first name.
-            </summary>
-            <param name="firstName">User's first name.</param>
-            <returns>Records whith sought-for firstName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByLastName(System.String)">
-            <summary>
-            Finds records by last name.
-            </summary>
-            <param name="lastName">User's last name.</param>
-            <returns>Records whith sought-for lastName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByDateOfBirth(System.DateTime)">
-            <summary>
-            Finds records by DateOfBirth.
-            </summary>
-            <param name="dateOfBirth">User's date of Birth.</param>
-            <returns>Records whith sought-for date of Birth.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
@@ -781,12 +691,6 @@
             <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
-            <summary>
-            Returns all records.
-            </summary>
-            <returns>All records.</returns>
-        </member>
         <member name="M:FileCabinetApp.IFileCabinetService.SelectRecords(System.String)">
             <summary>
             Returns records.
@@ -799,27 +703,6 @@
             Returns count of records.
             </summary>
             <returns>Count of records and count of deleted records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
-            <summary>
-            Finds records by first name.
-            </summary>
-            <param name="firstName">User's first name.</param>
-            <returns>Records whith sought-for firstName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
-            <summary>
-            Finds records by last name.
-            </summary>
-            <param name="lastName">User's last name.</param>
-            <returns>Records whith sought-for lastName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.DateTime)">
-            <summary>
-            Finds records by DateOfBirth.
-            </summary>
-            <param name="dateOfBirth">User's date of Birth.</param>
-            <returns>Records whith sought-for date of Birth.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
@@ -870,33 +753,6 @@
             </summary>
             <param name="param">Record parameters.</param>
             <returns>List of id recored, that was deleted.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceLogger.FindByDateOfBirth(System.DateTime)">
-            <summary>
-            Finds records by DateOfBirth and print tick that it took.
-            </summary>
-            <param name="dateOfBirth">User's date of Birth.</param>
-            <returns>Records whith sought-for date of Birth.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceLogger.FindByFirstName(System.String)">
-            <summary>
-            Finds records by first name and print tick that it took.
-            </summary>
-            <param name="firstName">User's first name.</param>
-            <returns>Records whith sought-for firstName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceLogger.FindByLastName(System.String)">
-            <summary>
-            Finds records by last name and print tick that it took.
-            </summary>
-            <param name="lastName">User's last name.</param>
-            <returns>Records whith sought-for lastName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceLogger.GetRecords">
-            <summary>
-            Gets all records and print tick that it took.
-            </summary>
-            <returns>All records.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceLogger.GetStat">
             <summary>
@@ -953,33 +809,6 @@
             </summary>
             <param name="param">Record parameters.</param>
             <returns>List of id recored, that was deleted.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.FindByDateOfBirth(System.DateTime)">
-            <summary>
-            Finds records by DateOfBirth and print tick that it took.
-            </summary>
-            <param name="dateOfBirth">User's date of Birth.</param>
-            <returns>Records whith sought-for date of Birth.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.FindByFirstName(System.String)">
-            <summary>
-            Finds records by first name and print tick that it took.
-            </summary>
-            <param name="firstName">User's first name.</param>
-            <returns>Records whith sought-for firstName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.FindByLastName(System.String)">
-            <summary>
-            Finds records by last name and print tick that it took.
-            </summary>
-            <param name="lastName">User's last name.</param>
-            <returns>Records whith sought-for lastName.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.GetRecords">
-            <summary>
-            Gets all records and print tick that it took.
-            </summary>
-            <returns>All records.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.GetStat">
             <summary>

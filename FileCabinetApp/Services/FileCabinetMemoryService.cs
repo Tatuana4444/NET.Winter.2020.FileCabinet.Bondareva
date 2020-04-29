@@ -84,15 +84,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Returns all records.
-        /// </summary>
-        /// <returns>All records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
-        {
-            return new ReadOnlyCollection<FileCabinetRecord>(this.list);
-        }
-
-        /// <summary>
         /// Returns records.
         /// </summary>
         /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
@@ -123,66 +114,6 @@ namespace FileCabinetApp
         public Tuple<int, int> GetStat()
         {
             return new Tuple<int, int>(this.list.Count, 0);
-        }
-
-        /// <summary>
-        /// Finds records by first name.
-        /// </summary>
-        /// <param name="firstName">User's first name.</param>
-        /// <returns>Records whith sought-for firstName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            if (firstName == null)
-            {
-                throw new ArgumentNullException(nameof(firstName), "Firstname can't be null");
-            }
-
-            firstName = firstName.ToUpper(this.englishUS);
-            List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
-            if (this.firstNameDictionary.ContainsKey(firstName.ToUpper(this.englishUS)))
-            {
-                listByFirstName = this.firstNameDictionary[firstName.ToUpper(this.englishUS)];
-            }
-
-            return listByFirstName;
-        }
-
-        /// <summary>
-        /// Finds records by last name.
-        /// </summary>
-        /// <param name="lastName">User's last name.</param>
-        /// <returns>Records whith sought-for lastName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            if (lastName == null)
-            {
-                throw new ArgumentNullException(nameof(lastName), "Lastname can't be null");
-            }
-
-            lastName = lastName.ToUpper(this.englishUS);
-            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            if (this.lastNameDictionary.ContainsKey(lastName.ToUpper(this.englishUS)))
-            {
-                listByLastName = this.lastNameDictionary[lastName.ToUpper(this.englishUS)];
-            }
-
-            return listByLastName;
-        }
-
-        /// <summary>
-        /// Finds records by DateOfBirth.
-        /// </summary>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <returns>Records whith sought-for date of Birth.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
-        {
-            List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
-            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth.ToString(this.englishUS)))
-            {
-                listByDateOfBirth = this.dateOfBirthDictionary[dateOfBirth.ToString(this.englishUS)];
-            }
-
-            return listByDateOfBirth;
         }
 
         /// <summary>

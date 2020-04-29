@@ -111,8 +111,6 @@ namespace FileCabinetApp
             ICommandHandler updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             ICommandHandler selectCommand = new SelectCommandHandler(fileCabinetService, Program.PrinterByFilter);
-            ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
-            ICommandHandler findCommandHandler = new FindCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
             ICommandHandler statCommandHandler = new StatCommandHandler(fileCabinetService);
             ICommandHandler exportCommandHandler = new ExportCommandHandler();
             ICommandHandler importCommandHandler = new ImportCommandHandler(fileCabinetService);
@@ -124,9 +122,7 @@ namespace FileCabinetApp
             createCommandHandler.SetNext(updateCommandHandler);
             updateCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(selectCommand);
-            selectCommand.SetNext(listCommandHandler);
-            listCommandHandler.SetNext(findCommandHandler);
-            findCommandHandler.SetNext(statCommandHandler);
+            selectCommand.SetNext(statCommandHandler);
             statCommandHandler.SetNext(exportCommandHandler);
             exportCommandHandler.SetNext(importCommandHandler);
             importCommandHandler.SetNext(purgeCommandHandler);
@@ -135,23 +131,6 @@ namespace FileCabinetApp
             exitCommandHandler.SetNext(insertCommandHandler);
 
             return createCommandHandler;
-        }
-
-        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
-        {
-            if (records is null)
-            {
-                throw new ArgumentNullException(nameof(records), "Records can't be null.");
-            }
-
-            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
-            dtfi.ShortDatePattern = "yyyy-MMM-dd";
-            foreach (FileCabinetRecord record in records)
-            {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
-                $" {record.Gender}, {record.PassportId}, {record.Salary}");
-            }
         }
 
         private static void PrinterByFilter(IEnumerable<FileCabinetRecord> records, string filter)

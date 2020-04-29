@@ -53,65 +53,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Finds records by DateOfBirth and print tick that it took.
-        /// </summary>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <returns>Records whith sought-for date of Birth.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var result = this.service.FindByDateOfBirth(dateOfBirth);
-            stopWatch.Stop();
-            Console.WriteLine($"Find by date of birth method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return result;
-        }
-
-        /// <summary>
-        /// Finds records by first name and print tick that it took.
-        /// </summary>
-        /// <param name="firstName">User's first name.</param>
-        /// <returns>Records whith sought-for firstName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var result = this.service.FindByFirstName(firstName);
-            stopWatch.Stop();
-            Console.WriteLine($"Find by first name method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return result;
-        }
-
-        /// <summary>
-        /// Finds records by last name and print tick that it took.
-        /// </summary>
-        /// <param name="lastName">User's last name.</param>
-        /// <returns>Records whith sought-for lastName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var result = this.service.FindByFirstName(lastName);
-            stopWatch.Stop();
-            Console.WriteLine($"Find by last name method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return result;
-        }
-
-        /// <summary>
-        /// Gets all records and print tick that it took.
-        /// </summary>
-        /// <returns>All records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var result = this.service.GetRecords();
-            stopWatch.Stop();
-            Console.WriteLine($"Get records method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return result;
-        }
-
-        /// <summary>
         /// Gets count of records  and count of deleted records and print tick that it took.
         /// </summary>
         /// <returns>Count of records  and count of deleted records.</returns>
