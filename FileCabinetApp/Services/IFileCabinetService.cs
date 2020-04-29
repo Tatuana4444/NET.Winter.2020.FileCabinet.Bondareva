@@ -24,6 +24,13 @@ namespace FileCabinetApp
         public ReadOnlyCollection<FileCabinetRecord> GetRecords();
 
         /// <summary>
+        /// Returns records.
+        /// </summary>
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter);
+
+        /// <summary>
         /// Returns count of records.
         /// </summary>
         /// <returns>Count of records and count of deleted records.</returns>

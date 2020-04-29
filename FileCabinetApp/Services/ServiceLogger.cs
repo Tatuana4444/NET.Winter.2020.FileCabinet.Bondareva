@@ -286,6 +286,36 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Returns records.
+        /// </summary>
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
+        {
+            this.LogWriter($"{DateTime.Now} - Calling SelectRecords()");
+
+            try
+            {
+                var result = this.service.GetRecords();
+                this.LogWriter($"{DateTime.Now} - SelectRecords() returned: ");
+                foreach (var r in result)
+                {
+                    this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
+                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
+                        $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
+                        $"Salary = '{r.Salary}'");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                this.LogWriter($"{DateTime.Now} - SelectRecords() throw {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Update records by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>

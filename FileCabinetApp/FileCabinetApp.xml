@@ -239,6 +239,24 @@
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.SelectCommandHandler">
+            <summary>
+             Handler for command list.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord},System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.SelectCommandHandler"/> class.
+            </summary>
+            <param name="service">Current service.</param>
+            <param name="printer">Current printer.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            List request handler.
+            </summary>
+            <param name="commandRequest">Request.</param>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
             <summary>
             Base class for command handler whith service.
@@ -612,6 +630,13 @@
             </summary>
             <returns>All records.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.SelectRecords(System.String)">
+            <summary>
+            Returns records.
+            </summary>
+            <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+            <returns>Records by filret.</returns>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
             <summary>
             Returns count of records  and count of deleted records.
@@ -685,6 +710,13 @@
             </summary>
             <returns>All records.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.SelectRecords(System.String)">
+            <summary>
+            Returns records.
+            </summary>
+            <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+            <returns>Records by filret.</returns>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat">
             <summary>
             Returns count of records and count of deleted records.
@@ -754,6 +786,13 @@
             Returns all records.
             </summary>
             <returns>All records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.SelectRecords(System.String)">
+            <summary>
+            Returns records.
+            </summary>
+            <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+            <returns>Records by filret.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
             <summary>
@@ -877,6 +916,13 @@
             </summary>
             <param name="snapshot">Snapshot.</param>
         </member>
+        <member name="M:FileCabinetApp.ServiceLogger.SelectRecords(System.String)">
+            <summary>
+            Returns records.
+            </summary>
+            <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+            <returns>Records by filret.</returns>
+        </member>
         <member name="M:FileCabinetApp.ServiceLogger.Update(System.String)">
             <summary>
             Update records by parameters.
@@ -953,11 +999,35 @@
             </summary>
             <param name="snapshot">Snapshot.</param>
         </member>
+        <member name="M:FileCabinetApp.ServiceMeter.SelectRecords(System.String)">
+            <summary>
+            Returns records.
+            </summary>
+            <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+            <returns>Records by filret.</returns>
+        </member>
         <member name="M:FileCabinetApp.ServiceMeter.Update(System.String)">
             <summary>
             Update records by parameters.
             </summary>
             <param name="param">Record parameters.</param>
+        </member>
+        <member name="T:FileCabinetApp.TWriter">
+            <summary>
+            Writer for type T.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.TWriter.WriteToTextSream``1(System.Collections.Generic.IEnumerable{``0},System.IO.TextWriter,System.String[],System.Globalization.CultureInfo)">
+            <summary>
+            Write IEnumerable T to text stream.
+            </summary>
+            <typeparam name="T">Type of records.</typeparam>
+            <param name="records">Rcords.</param>
+            <param name="stream">Text Stream.</param>
+            <param name="values">Name of colums that need to print.</param>
+            <param name="culture">Culture for strings..</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when records, stream, values or culture is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when records is empty.</exception>
         </member>
         <member name="T:FileCabinetApp.Validation.DateFromToValues">
             <summary>

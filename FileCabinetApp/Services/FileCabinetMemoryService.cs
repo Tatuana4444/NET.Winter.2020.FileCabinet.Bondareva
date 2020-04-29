@@ -93,6 +93,30 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Returns records.
+        /// </summary>
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+            values[^1] = values[^1][0..^1];
+            if (values.Length % 3 != 0)
+            {
+                throw new ArgumentException("Incorrect format", nameof(filter));
+            }
+
+            List<FileCabinetRecord> foundResult = this.Find(values).ToList();
+
+            return new ReadOnlyCollection<FileCabinetRecord>(foundResult);
+        }
+
+        /// <summary>
         /// Returns count of records and count of deleted records.
         /// </summary>
         /// <returns>Count of records  and 0.</returns>

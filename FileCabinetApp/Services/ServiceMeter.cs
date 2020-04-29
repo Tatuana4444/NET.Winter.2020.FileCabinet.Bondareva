@@ -153,6 +153,21 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Returns records.
+        /// </summary>
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var result = this.service.SelectRecords(filter);
+            stopWatch.Stop();
+            Console.WriteLine($"Select method execution duration is {stopWatch.ElapsedTicks} ticks.");
+            return result;
+        }
+
+        /// <summary>
         /// Update records by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>

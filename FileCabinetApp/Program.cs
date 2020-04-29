@@ -110,6 +110,7 @@ namespace FileCabinetApp
             ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
             ICommandHandler updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
+            ICommandHandler selectCommand = new SelectCommandHandler(fileCabinetService, Program.PrinterByFilter);
             ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
             ICommandHandler findCommandHandler = new FindCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
             ICommandHandler statCommandHandler = new StatCommandHandler(fileCabinetService);
@@ -122,7 +123,8 @@ namespace FileCabinetApp
 
             createCommandHandler.SetNext(updateCommandHandler);
             updateCommandHandler.SetNext(deleteCommandHandler);
-            deleteCommandHandler.SetNext(listCommandHandler);
+            deleteCommandHandler.SetNext(selectCommand);
+            selectCommand.SetNext(listCommandHandler);
             listCommandHandler.SetNext(findCommandHandler);
             findCommandHandler.SetNext(statCommandHandler);
             statCommandHandler.SetNext(exportCommandHandler);
@@ -150,6 +152,16 @@ namespace FileCabinetApp
                 Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
                 $" {record.Gender}, {record.PassportId}, {record.Salary}");
             }
+        }
+
+        private static void PrinterByFilter(IEnumerable<FileCabinetRecord> records, string filter)
+        {
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
+            dtfi.ShortDatePattern = "yyyy-MMM-dd";
+            string[] values = filter.Split(new string[] { ", ", "," }, StringSplitOptions.None);
+
+            TWriter.WriteToTextSream(records, Console.Out, values, englishUS);
         }
 
         private static void SetValidationRules(string[] param)
