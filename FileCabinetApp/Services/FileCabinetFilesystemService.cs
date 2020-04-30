@@ -13,6 +13,15 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetFilesystemService : IFileCabinetService
     {
+        private const int StringLength = 120;
+        private const int OffsetId = sizeof(short);
+        private const int OffsetFirstName = OffsetId + sizeof(int);
+        private const int OffsetLastName = OffsetFirstName + StringLength;
+        private const int OffsetDateOfBirth = OffsetLastName + StringLength;
+        private const int OffsetGender = OffsetDateOfBirth + (3 * sizeof(int));
+        private const int OffsetPassportId = OffsetGender + sizeof(char);
+        private const int OffsetSalary = OffsetPassportId + sizeof(short);
+        private const int RecordLength = OffsetSalary + sizeof(decimal);
         private readonly Dictionary<int, long> offsetById = new Dictionary<int, long>();
 
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
@@ -80,14 +89,22 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(filter));
             }
 
-            string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
-            values[^1] = values[^1][0..^1];
-            if (values.Length % 3 != 0)
+            List<int> foundResult;
+            if (filter.Length != 0)
             {
-                throw new ArgumentException("Incorrect format", nameof(filter));
-            }
+                string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+                values[^1] = values[^1][0..^1];
+                if (values.Length % 3 != 0)
+                {
+                    throw new ArgumentException("Incorrect format", nameof(filter));
+                }
 
-            List<int> foundResult = this.Find(values).ToList();
+                foundResult = this.Find(values).ToList();
+            }
+            else
+            {
+                foundResult = this.offsetById.Keys.ToList();
+            }
 
             List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
@@ -113,9 +130,9 @@ namespace FileCabinetApp
             long pos = this.fileStream.Position;
             int deletedCount = 0;
             int i = 0;
-            while (i < this.fileStream.Length / 278)
+            while (i < this.fileStream.Length / RecordLength)
             {
-                this.fileStream.Position = (i * 278) + 1;
+                this.fileStream.Position = (i * RecordLength) + 1;
                 int b = this.fileStream.ReadByte();
                 if ((b & 2) == 2)
                 {
@@ -126,7 +143,7 @@ namespace FileCabinetApp
             }
 
             this.fileStream.Position = pos;
-            return new Tuple<int, int>((int)(this.fileStream.Length / 278), deletedCount);
+            return new Tuple<int, int>((int)(this.fileStream.Length / RecordLength), deletedCount);
         }
 
         /// <summary>
@@ -166,9 +183,9 @@ namespace FileCabinetApp
         {
             int purgedCount = 0;
             int i = 0, offsetCount = 0;
-            while (i < this.fileStream.Length / 278)
+            while (i < this.fileStream.Length / RecordLength)
             {
-                this.fileStream.Position = (i * 278) + 1;
+                this.fileStream.Position = (i * RecordLength) + 1;
                 int b = this.fileStream.ReadByte();
                 if ((b & 2) == 2)
                 {
@@ -191,7 +208,7 @@ namespace FileCabinetApp
                 }
             }
 
-            this.fileStream.SetLength(this.fileStream.Length - (offsetCount * 278));
+            this.fileStream.SetLength(this.fileStream.Length - (offsetCount * RecordLength));
 
             return purgedCount + offsetCount;
         }
@@ -346,61 +363,61 @@ namespace FileCabinetApp
 
         private void DefragmentFile(int i, int offsetCount)
         {
-            while (i < this.fileStream.Length / 278)
+            while (i < this.fileStream.Length / RecordLength)
             {
-                this.fileStream.Position = i * 278;
+                this.fileStream.Position = i * RecordLength;
                 FileCabinetRecord record = this.ReadFromFile();
                 RecordData recordData = new RecordData(record.FirstName, record.LastName, record.DateOfBirth, record.Gender, record.PassportId, record.Salary);
-                this.WriteToFile(recordData, record.Id, (i - offsetCount) * 278);
+                this.WriteToFile(recordData, record.Id, (i - offsetCount) * RecordLength);
                 i++;
             }
 
-            this.fileStream.SetLength(this.fileStream.Length - (offsetCount * 278));
+            this.fileStream.SetLength(this.fileStream.Length - (offsetCount * RecordLength));
         }
 
         private void WriteFirstName(string firstName, long pos)
         {
-            this.fileStream.Position = pos + 6;
+            this.fileStream.Position = pos + OffsetFirstName;
             byte[] tempFirstName = this.enc.GetBytes(firstName);
-            Array.Resize(ref tempFirstName, 120);
-            this.fileStream.Write(tempFirstName, 0, 120);
+            Array.Resize(ref tempFirstName, StringLength);
+            this.fileStream.Write(tempFirstName, 0, StringLength);
         }
 
         private void WriteLastName(string lastName, long pos)
         {
-            this.fileStream.Position = pos + 126;
+            this.fileStream.Position = pos + OffsetLastName;
             byte[] tempLastName = this.enc.GetBytes(lastName);
-            Array.Resize(ref tempLastName, 120);
-            this.fileStream.Write(tempLastName, 0, 120);
+            Array.Resize(ref tempLastName, StringLength);
+            this.fileStream.Write(tempLastName, 0, StringLength);
         }
 
         private void WriteDateOfBirth(DateTime dateOfBirth, long pos)
         {
-            this.fileStream.Position = pos + 246;
-            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Year), 0, 4);
-            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Month), 0, 4);
-            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Day), 0, 4);
+            this.fileStream.Position = pos + OffsetDateOfBirth;
+            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Year), 0, sizeof(int));
+            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Month), 0, sizeof(int));
+            this.fileStream.Write(BitConverter.GetBytes(dateOfBirth.Day), 0, sizeof(int));
         }
 
         private void WriteGender(char gender, long pos)
         {
-            this.fileStream.Position = pos + 258;
-            this.fileStream.Write(BitConverter.GetBytes(gender), 0, 2);
+            this.fileStream.Position = pos + OffsetGender;
+            this.fileStream.Write(BitConverter.GetBytes(gender), 0, sizeof(char));
         }
 
         private void WritePassportId(short passportId, long pos)
         {
-            this.fileStream.Position = pos + 260;
-            this.fileStream.Write(BitConverter.GetBytes(passportId), 0, 2);
+            this.fileStream.Position = pos + OffsetPassportId;
+            this.fileStream.Write(BitConverter.GetBytes(passportId), 0, sizeof(short));
         }
 
         private void WriteSalary(decimal salary, long pos)
         {
-            this.fileStream.Position = pos + 262;
+            this.fileStream.Position = pos + OffsetSalary;
             int[] sal = decimal.GetBits(salary);
             foreach (var s in sal)
             {
-                this.fileStream.Write(BitConverter.GetBytes(s), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(s), 0, sizeof(int));
             }
         }
 
@@ -408,23 +425,23 @@ namespace FileCabinetApp
         {
             this.fileStream.Position = pos;
 
-            this.fileStream.Write(BitConverter.GetBytes(0), 0, 2);
-            this.fileStream.Write(BitConverter.GetBytes(id), 0, 4);
+            this.fileStream.Write(BitConverter.GetBytes(0), 0, sizeof(short));
+            this.fileStream.Write(BitConverter.GetBytes(id), 0, sizeof(int));
             byte[] tempFirstName = this.enc.GetBytes(recordData.FirstName);
             this.fileStream.Write(tempFirstName, 0, tempFirstName.Length);
-            this.fileStream.Position += 120 - tempFirstName.Length;
+            this.fileStream.Position += StringLength - tempFirstName.Length;
             byte[] tempLastName = this.enc.GetBytes(recordData.LastName);
             this.fileStream.Write(tempLastName, 0, tempLastName.Length);
-            this.fileStream.Position += 120 - tempLastName.Length;
-            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, 4);
-            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, 4);
-            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Day), 0, 4);
-            this.fileStream.Write(BitConverter.GetBytes(recordData.Gender), 0, 2);
-            this.fileStream.Write(BitConverter.GetBytes(recordData.PassportId), 0, 2);
+            this.fileStream.Position += StringLength - tempLastName.Length;
+            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, sizeof(int));
+            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, sizeof(int));
+            this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Day), 0, sizeof(int));
+            this.fileStream.Write(BitConverter.GetBytes(recordData.Gender), 0, sizeof(char));
+            this.fileStream.Write(BitConverter.GetBytes(recordData.PassportId), 0, sizeof(short));
             int[] sal = decimal.GetBits(recordData.Salary);
             foreach (var s in sal)
             {
-                this.fileStream.Write(BitConverter.GetBytes(s), 0, 4);
+                this.fileStream.Write(BitConverter.GetBytes(s), 0, sizeof(int));
             }
 
             this.fileStream.Flush();
@@ -432,21 +449,21 @@ namespace FileCabinetApp
 
         private FileCabinetRecord ReadFromFile()
         {
-            byte[] temp = new byte[38];
+            byte[] temp = new byte[RecordLength - (2 * StringLength)];
             FileCabinetRecord record = new FileCabinetRecord();
 
-            this.fileStream.Read(temp, 0, 2);
+            this.fileStream.Read(temp, 0, sizeof(short));
             if ((temp[1] & 2) == 2)
             {
-                this.fileStream.Position += 276;
+                this.fileStream.Position += RecordLength;
                 return null;
             }
 
-            this.fileStream.Read(temp, 2, 4);
-            record.Id = BitConverter.ToInt32(temp, 2);
+            this.fileStream.Read(temp, OffsetId, sizeof(int));
+            record.Id = BitConverter.ToInt32(temp, OffsetId);
 
-            byte[] tempForStrings = new byte[120];
-            this.fileStream.Read(tempForStrings, 0, 120);
+            byte[] tempForStrings = new byte[StringLength];
+            this.fileStream.Read(tempForStrings, 0, StringLength);
             int end = 0;
             while (tempForStrings[end] != '\0' || tempForStrings[end + 1] != '\0')
             {
@@ -456,8 +473,8 @@ namespace FileCabinetApp
             Array.Resize(ref tempForStrings, end);
             record.FirstName = this.enc.GetString(tempForStrings);
 
-            tempForStrings = new byte[120];
-            this.fileStream.Read(tempForStrings, 0, 120);
+            tempForStrings = new byte[StringLength];
+            this.fileStream.Read(tempForStrings, 0, StringLength);
             end = 0;
             while (tempForStrings[end] != '\0' || tempForStrings[end + 1] != '\0')
             {
@@ -467,28 +484,28 @@ namespace FileCabinetApp
             Array.Resize(ref tempForStrings, end);
             record.LastName = this.enc.GetString(tempForStrings);
 
-            this.fileStream.Read(temp, 6, 4);
+            this.fileStream.Read(temp, OffsetDateOfBirth - (2 * StringLength), sizeof(int));
             int year = BitConverter.ToInt32(temp, 6);
 
-            this.fileStream.Read(temp, 10, 4);
+            this.fileStream.Read(temp, OffsetDateOfBirth - (2 * StringLength) + sizeof(int), sizeof(int));
             int month = BitConverter.ToInt32(temp, 10);
 
-            this.fileStream.Read(temp, 14, 4);
+            this.fileStream.Read(temp, OffsetDateOfBirth - (2 * StringLength) + (2 * sizeof(int)), sizeof(int));
             int day = BitConverter.ToInt32(temp, 14);
 
             record.DateOfBirth = new DateTime(year, month, day);
 
-            this.fileStream.Read(temp, 18, 2);
+            this.fileStream.Read(temp, OffsetGender - (2 * StringLength), sizeof(char));
             record.Gender = BitConverter.ToChar(temp, 18);
 
-            this.fileStream.Read(temp, 20, 2);
+            this.fileStream.Read(temp, OffsetPassportId - (2 * StringLength), sizeof(short));
             record.PassportId = BitConverter.ToInt16(temp, 20);
 
             int[] bytes = new int[4];
             for (int j = 0; j < 4; j++)
             {
-                this.fileStream.Read(temp, 22 + (j * 4), 4);
-                bytes[j] = BitConverter.ToInt32(temp, 22 + (j * 4));
+                this.fileStream.Read(temp, OffsetSalary - (2 * StringLength) + (j * sizeof(int)), sizeof(int));
+                bytes[j] = BitConverter.ToInt32(temp, OffsetSalary - (2 * StringLength) + (j * sizeof(int)));
             }
 
             record.Salary = new decimal(bytes);
@@ -536,7 +553,7 @@ namespace FileCabinetApp
             List<int> resultList = new List<int>();
             int j = 0;
             this.fileStream.Position = 0;
-            while (j < this.fileStream.Length / 278)
+            while (j < this.fileStream.Length / RecordLength)
             {
                 FileCabinetRecord record = this.ReadFromFile();
                 bool isNeedAdd = true;

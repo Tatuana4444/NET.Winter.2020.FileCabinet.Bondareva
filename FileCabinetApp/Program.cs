@@ -33,7 +33,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "memory", "logger" };
+            string[] cmdParam = new string[] { "default", "file", "" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -107,7 +107,6 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers(IFileCabinetService fileCabinetService)
         {
-            ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
             ICommandHandler updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             ICommandHandler selectCommand = new SelectCommandHandler(fileCabinetService, Program.PrinterByFilter);
@@ -119,7 +118,6 @@ namespace FileCabinetApp
             ICommandHandler exitCommandHandler = new ExitCommandHandler(Existing);
             ICommandHandler insertCommandHandler = new InsertCommandHandler(fileCabinetService);
 
-            createCommandHandler.SetNext(updateCommandHandler);
             updateCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(selectCommand);
             selectCommand.SetNext(statCommandHandler);
@@ -130,7 +128,7 @@ namespace FileCabinetApp
             helpCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(insertCommandHandler);
 
-            return createCommandHandler;
+            return updateCommandHandler;
         }
 
         private static void PrinterByFilter(IEnumerable<FileCabinetRecord> records, string filter)

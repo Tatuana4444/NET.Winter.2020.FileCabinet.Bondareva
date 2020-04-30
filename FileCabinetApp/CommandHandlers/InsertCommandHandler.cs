@@ -155,11 +155,6 @@ namespace FileCabinetApp.CommandHandlers
 
         private static Tuple<bool, string> SalaryValidatorDefault(decimal salary)
         {
-            if (salary < FileCabinetMemoryService.MinSalary)
-            {
-                return new Tuple<bool, string>(false, $"Error, Salary can't be less than {FileCabinetMemoryService.MinSalary}. Try again, please");
-            }
-
             return new Tuple<bool, string>(true, string.Empty);
         }
 

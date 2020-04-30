@@ -617,11 +617,6 @@
             Service for File Cabinet.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.FileCabinetMemoryService.MinSalary">
-            <summary>
-            Min salary for Belarus.
-            </summary>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.#ctor(FileCabinetApp.IValidator)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> class.

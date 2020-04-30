@@ -52,12 +52,17 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             int whereIndex = parameters.IndexOf("where", StringComparison.Ordinal);
+            string whereParams;
             if (whereIndex == -1)
             {
-                throw new ArgumentException("Incorrect format", nameof(parameters));
+                whereIndex = parameters.Length + 1;
+                whereParams = string.Empty;
+            }
+            else
+            {
+                whereParams = parameters[whereIndex..];
             }
 
-            string whereParams = parameters.Substring(whereIndex, parameters.Length - whereIndex);
             ReadOnlyCollection<FileCabinetRecord> fileCabinetRecords = this.Service.SelectRecords(whereParams);
 
             this.printer(fileCabinetRecords, parameters.Substring(0, whereIndex - 1));
