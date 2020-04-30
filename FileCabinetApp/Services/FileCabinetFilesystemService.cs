@@ -69,101 +69,31 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Finds records by DateOfBirth.
+        /// Returns records.
         /// </summary>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <returns>Records whith sought-for date of Birth.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
         {
-            for (int i = 0; i < this.fileStream.Length / 278; i++)
+            if (filter == null)
             {
-                FileCabinetRecord result = GetRecordByDate(i);
-                if (result != null)
-                {
-                    yield return result;
-                }
+                throw new ArgumentNullException(nameof(filter));
             }
 
-            FileCabinetRecord GetRecordByDate(int i)
+            string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+            values[^1] = values[^1][0..^1];
+            if (values.Length % 3 != 0)
             {
-                this.fileStream.Position = (i * 278) + 246;
-                byte[] temp = new byte[12];
-                this.fileStream.Read(temp, 0, 4);
-                int year = BitConverter.ToInt32(temp, 0);
-
-                this.fileStream.Read(temp, 4, 4);
-                int month = BitConverter.ToInt32(temp, 4);
-
-                this.fileStream.Read(temp, 8, 4);
-                int day = BitConverter.ToInt32(temp, 8);
-
-                if (year == dateOfBirth.Year && month == dateOfBirth.Month && day == dateOfBirth.Day)
-                {
-                    this.fileStream.Position = i * 278;
-                    return this.ReadFromFile();
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Finds records by first name.
-        /// </summary>
-        /// <param name="firstName">User's first name.</param>
-        /// <returns>Records whith sought-for firstName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            if (firstName == null)
-            {
-                throw new ArgumentNullException(nameof(firstName), "Firstname can't be null");
+                throw new ArgumentException("Incorrect format", nameof(filter));
             }
 
-            firstName = firstName.ToUpper(this.englishUS);
+            List<int> foundResult = this.Find(values).ToList();
 
-            for (int i = 0; i < this.fileStream.Length / 278; i++)
-            {
-                FileCabinetRecord result = GetRecordFirstName(i);
-                if (result != null)
-                {
-                    yield return result;
-                }
-            }
-
-            FileCabinetRecord GetRecordFirstName(int i)
-            {
-                this.fileStream.Position = (i * 278) + 6;
-                byte[] tempForStrings = new byte[120];
-                this.fileStream.Read(tempForStrings, 0, 120);
-                int end = 0;
-                while (tempForStrings[end] != '\0' || tempForStrings[end + 1] != '\0')
-                {
-                    end += 2;
-                }
-
-                Array.Resize(ref tempForStrings, end);
-                string currentFirstName = this.enc.GetString(tempForStrings);
-
-                if (currentFirstName.ToUpper(this.englishUS) == firstName)
-                {
-                    this.fileStream.Position = i * 278;
-                    return this.ReadFromFile();
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Returns all records.
-        /// </summary>
-        /// <returns>All records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
-        {
             List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-            this.fileStream.Position = 0;
-            for (long i = 0; i < this.GetStat().Item1; i++)
+
+            for (int i = 0; i < foundResult.Count; i++)
             {
+                this.fileStream.Position = this.offsetById[foundResult[i]];
                 FileCabinetRecord record = this.ReadFromFile();
                 if (record != null)
                 {
@@ -197,53 +127,6 @@ namespace FileCabinetApp
 
             this.fileStream.Position = pos;
             return new Tuple<int, int>((int)(this.fileStream.Length / 278), deletedCount);
-        }
-
-        /// <summary>
-        /// Finds records by last name.
-        /// </summary>
-        /// <param name="lastName">User's last name.</param>
-        /// <returns>Records whith sought-for lastName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            if (lastName == null)
-            {
-                throw new ArgumentNullException(nameof(lastName), "Lastname can't be null");
-            }
-
-            lastName = lastName.ToUpper(this.englishUS);
-
-            for (int i = 0; i < this.fileStream.Length / 278; i++)
-            {
-                FileCabinetRecord result = GetRecordLastName(i);
-                if (result != null)
-                {
-                    yield return result;
-                }
-            }
-
-            FileCabinetRecord GetRecordLastName(int i)
-            {
-                this.fileStream.Position = (i * 278) + 126;
-                byte[] tempForStrings = new byte[120];
-                this.fileStream.Read(tempForStrings, 0, 120);
-                int end = 0;
-                while (tempForStrings[end] != '\0' || tempForStrings[end + 1] != '\0')
-                {
-                    end += 2;
-                }
-
-                Array.Resize(ref tempForStrings, end);
-                string currentFirstName = this.enc.GetString(tempForStrings);
-
-                if (currentFirstName.ToUpper(this.englishUS) == lastName)
-                {
-                    this.fileStream.Position = i * 278;
-                    return this.ReadFromFile();
-                }
-
-                return null;
-            }
         }
 
         /// <summary>

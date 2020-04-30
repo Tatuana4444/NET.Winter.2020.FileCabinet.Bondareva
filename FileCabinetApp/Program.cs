@@ -33,7 +33,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file", "logger" };
+            string[] cmdParam = new string[] { "default", "memory", "logger" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -110,8 +110,7 @@ namespace FileCabinetApp
             ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
             ICommandHandler updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
-            ICommandHandler listCommandHandler = new ListCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
-            ICommandHandler findCommandHandler = new FindCommandHandler(fileCabinetService, Program.DefaultRecordPrint);
+            ICommandHandler selectCommand = new SelectCommandHandler(fileCabinetService, Program.PrinterByFilter);
             ICommandHandler statCommandHandler = new StatCommandHandler(fileCabinetService);
             ICommandHandler exportCommandHandler = new ExportCommandHandler();
             ICommandHandler importCommandHandler = new ImportCommandHandler(fileCabinetService);
@@ -122,9 +121,8 @@ namespace FileCabinetApp
 
             createCommandHandler.SetNext(updateCommandHandler);
             updateCommandHandler.SetNext(deleteCommandHandler);
-            deleteCommandHandler.SetNext(listCommandHandler);
-            listCommandHandler.SetNext(findCommandHandler);
-            findCommandHandler.SetNext(statCommandHandler);
+            deleteCommandHandler.SetNext(selectCommand);
+            selectCommand.SetNext(statCommandHandler);
             statCommandHandler.SetNext(exportCommandHandler);
             exportCommandHandler.SetNext(importCommandHandler);
             importCommandHandler.SetNext(purgeCommandHandler);
@@ -135,21 +133,14 @@ namespace FileCabinetApp
             return createCommandHandler;
         }
 
-        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
+        private static void PrinterByFilter(IEnumerable<FileCabinetRecord> records, string filter)
         {
-            if (records is null)
-            {
-                throw new ArgumentNullException(nameof(records), "Records can't be null.");
-            }
-
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
             dtfi.ShortDatePattern = "yyyy-MMM-dd";
-            foreach (FileCabinetRecord record in records)
-            {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", englishUS)}," +
-                $" {record.Gender}, {record.PassportId}, {record.Salary}");
-            }
+            string[] values = filter.Split(new string[] { ", ", "," }, StringSplitOptions.None);
+
+            TWriter.WriteToTextSream(records, Console.Out, values, englishUS);
         }
 
         private static void SetValidationRules(string[] param)

@@ -86,125 +86,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Finds records by DateOfBirth and print tick that it took.
-        /// </summary>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <returns>Records whith sought-for date of Birth.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
-        {
-            this.LogWriter($"{DateTime.Now} - Calling Find() with DateOfBirth = '{dateOfBirth.ToString(englishUS)}'");
-
-            try
-            {
-                var result = this.service.FindByDateOfBirth(dateOfBirth);
-                this.LogWriter($"{DateTime.Now} - Find() by dateOfBirth returned:");
-                foreach (FileCabinetRecord r in result)
-                {
-                    this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
-                        $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
-                        $"Salary = '{r.Salary}'");
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                this.LogWriter($"{DateTime.Now} - Find() by dateOfBirth throw {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Finds records by first name and print tick that it took.
-        /// </summary>
-        /// <param name="firstName">User's first name.</param>
-        /// <returns>Records whith sought-for firstName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            this.LogWriter($"{DateTime.Now} - Calling Find() with FirstName = '{firstName}'");
-
-            try
-            {
-                var result = this.service.FindByFirstName(firstName);
-                this.LogWriter($"{DateTime.Now} - Find() by FirstName returned:");
-                foreach (FileCabinetRecord r in result)
-                {
-                    this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
-                        $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
-                        $"Salary = '{r.Salary}'");
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                this.LogWriter($"{DateTime.Now} - Find() by FirstName throw {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Finds records by last name and print tick that it took.
-        /// </summary>
-        /// <param name="lastName">User's last name.</param>
-        /// <returns>Records whith sought-for lastName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            this.LogWriter($"{DateTime.Now} - Calling Find() with LastName = '{lastName}'");
-
-            try
-            {
-                var result = this.service.FindByLastName(lastName);
-                this.LogWriter($"{DateTime.Now} - Find() by LastName returned:");
-                foreach (FileCabinetRecord r in result)
-                {
-                    this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
-                        $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
-                        $"Salary = '{r.Salary}'");
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                this.LogWriter($"{DateTime.Now} - Find() by LastName throw {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Gets all records and print tick that it took.
-        /// </summary>
-        /// <returns>All records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
-        {
-            this.LogWriter($"{DateTime.Now} - Calling GetRecords()");
-
-            try
-            {
-                var result = this.service.GetRecords();
-                this.LogWriter($"{DateTime.Now} - GetRecords() returned: ");
-                foreach (var r in result)
-                {
-                    this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
-                        $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
-                        $"Salary = '{r.Salary}'");
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                this.LogWriter($"{DateTime.Now} - GetRecords() throw {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Gets count of records  and count of deleted records and print tick that it took.
         /// </summary>
         /// <returns>Count of records  and count of deleted records.</returns>
@@ -281,6 +162,36 @@ namespace FileCabinetApp
             catch (Exception ex)
             {
                 this.LogWriter($"{DateTime.Now} - Restore() throw {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Returns records.
+        /// </summary>
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
+        {
+            this.LogWriter($"{DateTime.Now} - Calling SelectRecords()");
+
+            try
+            {
+                var result = this.service.SelectRecords(filter);
+                this.LogWriter($"{DateTime.Now} - SelectRecords() returned: ");
+                foreach (var r in result)
+                {
+                    this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
+                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
+                        $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
+                        $"Salary = '{r.Salary}'");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                this.LogWriter($"{DateTime.Now} - SelectRecords() throw {ex.Message}");
                 throw;
             }
         }

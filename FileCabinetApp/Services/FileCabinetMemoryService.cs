@@ -18,6 +18,7 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> cache = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
         private List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private IValidator validator;
@@ -80,16 +81,43 @@ namespace FileCabinetApp
             this.AddToDictionary(this.firstNameDictionary, recordData.FirstName.ToUpper(this.englishUS), record.Id);
             this.AddToDictionary(this.lastNameDictionary, recordData.LastName.ToUpper(this.englishUS), record.Id);
             this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.englishUS), record.Id);
+            this.cache.Clear();
             return record.Id;
         }
 
         /// <summary>
-        /// Returns all records.
+        /// Returns records.
         /// </summary>
-        /// <returns>All records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
         {
-            return new ReadOnlyCollection<FileCabinetRecord>(this.list);
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+            values[^1] = values[^1][0..^1];
+            if (values.Length % 3 != 0)
+            {
+                throw new ArgumentException("Incorrect format", nameof(filter));
+            }
+
+            string filterString = this.GetFilterString(values);
+            List<FileCabinetRecord> foundResult;
+
+            if (this.cache.ContainsKey(filterString))
+            {
+                foundResult = this.cache[filterString];
+            }
+            else
+            {
+                foundResult = this.Find(values).ToList();
+                this.cache.Add(filterString, foundResult);
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(foundResult);
         }
 
         /// <summary>
@@ -99,66 +127,6 @@ namespace FileCabinetApp
         public Tuple<int, int> GetStat()
         {
             return new Tuple<int, int>(this.list.Count, 0);
-        }
-
-        /// <summary>
-        /// Finds records by first name.
-        /// </summary>
-        /// <param name="firstName">User's first name.</param>
-        /// <returns>Records whith sought-for firstName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            if (firstName == null)
-            {
-                throw new ArgumentNullException(nameof(firstName), "Firstname can't be null");
-            }
-
-            firstName = firstName.ToUpper(this.englishUS);
-            List<FileCabinetRecord> listByFirstName = new List<FileCabinetRecord>();
-            if (this.firstNameDictionary.ContainsKey(firstName.ToUpper(this.englishUS)))
-            {
-                listByFirstName = this.firstNameDictionary[firstName.ToUpper(this.englishUS)];
-            }
-
-            return listByFirstName;
-        }
-
-        /// <summary>
-        /// Finds records by last name.
-        /// </summary>
-        /// <param name="lastName">User's last name.</param>
-        /// <returns>Records whith sought-for lastName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            if (lastName == null)
-            {
-                throw new ArgumentNullException(nameof(lastName), "Lastname can't be null");
-            }
-
-            lastName = lastName.ToUpper(this.englishUS);
-            List<FileCabinetRecord> listByLastName = new List<FileCabinetRecord>();
-            if (this.lastNameDictionary.ContainsKey(lastName.ToUpper(this.englishUS)))
-            {
-                listByLastName = this.lastNameDictionary[lastName.ToUpper(this.englishUS)];
-            }
-
-            return listByLastName;
-        }
-
-        /// <summary>
-        /// Finds records by DateOfBirth.
-        /// </summary>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <returns>Records whith sought-for date of Birth.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
-        {
-            List<FileCabinetRecord> listByDateOfBirth = new List<FileCabinetRecord>();
-            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth.ToString(this.englishUS)))
-            {
-                listByDateOfBirth = this.dateOfBirthDictionary[dateOfBirth.ToString(this.englishUS)];
-            }
-
-            return listByDateOfBirth;
         }
 
         /// <summary>
@@ -233,6 +201,7 @@ namespace FileCabinetApp
                 this.list.Remove(foundResult[i]);
             }
 
+            this.cache.Clear();
             return deletedId;
         }
 
@@ -331,6 +300,8 @@ namespace FileCabinetApp
                     }
                 }
             }
+
+            this.cache.Clear();
         }
 
         private static IEnumerable<FileCabinetRecord> FindById(IEnumerable<FileCabinetRecord> fileCabinetRecords, int id)
@@ -418,6 +389,17 @@ namespace FileCabinetApp
             }
 
             return i;
+        }
+
+        private string GetFilterString(string[] values)
+        {
+            string filterString = string.Empty;
+            for (int i = 0; i < values.Length; i++)
+            {
+                filterString += values[i];
+            }
+
+            return filterString.ToLower(this.englishUS);
         }
 
         private bool Remove(int id)

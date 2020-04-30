@@ -18,37 +18,17 @@ namespace FileCabinetApp
         public int CreateRecord(RecordData recordData);
 
         /// <summary>
-        /// Returns all records.
+        /// Returns records.
         /// </summary>
-        /// <returns>All records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords();
+        /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <returns>Records by filret.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter);
 
         /// <summary>
         /// Returns count of records.
         /// </summary>
         /// <returns>Count of records and count of deleted records.</returns>
         public Tuple<int, int> GetStat();
-
-        /// <summary>
-        /// Finds records by first name.
-        /// </summary>
-        /// <param name="firstName">User's first name.</param>
-        /// <returns>Records whith sought-for firstName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
-
-        /// <summary>
-        /// Finds records by last name.
-        /// </summary>
-        /// <param name="lastName">User's last name.</param>
-        /// <returns>Records whith sought-for lastName.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
-
-        /// <summary>
-        /// Finds records by DateOfBirth.
-        /// </summary>
-        /// <param name="dateOfBirth">User's date of Birth.</param>
-        /// <returns>Records whith sought-for date of Birth.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth);
 
         /// <summary>
         /// Restore data from snapshot.
