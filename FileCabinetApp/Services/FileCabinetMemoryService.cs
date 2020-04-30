@@ -18,6 +18,7 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> cache = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
         private List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private IValidator validator;
@@ -80,6 +81,7 @@ namespace FileCabinetApp
             this.AddToDictionary(this.firstNameDictionary, recordData.FirstName.ToUpper(this.englishUS), record.Id);
             this.AddToDictionary(this.lastNameDictionary, recordData.LastName.ToUpper(this.englishUS), record.Id);
             this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.englishUS), record.Id);
+            this.cache.Clear();
             return record.Id;
         }
 
@@ -102,7 +104,18 @@ namespace FileCabinetApp
                 throw new ArgumentException("Incorrect format", nameof(filter));
             }
 
-            List<FileCabinetRecord> foundResult = this.Find(values).ToList();
+            string filterString = this.GetFilterString(values);
+            List<FileCabinetRecord> foundResult;
+
+            if (this.cache.ContainsKey(filterString))
+            {
+                foundResult = this.cache[filterString];
+            }
+            else
+            {
+                foundResult = this.Find(values).ToList();
+                this.cache.Add(filterString, foundResult);
+            }
 
             return new ReadOnlyCollection<FileCabinetRecord>(foundResult);
         }
@@ -188,6 +201,7 @@ namespace FileCabinetApp
                 this.list.Remove(foundResult[i]);
             }
 
+            this.cache.Clear();
             return deletedId;
         }
 
@@ -286,6 +300,8 @@ namespace FileCabinetApp
                     }
                 }
             }
+
+            this.cache.Clear();
         }
 
         private static IEnumerable<FileCabinetRecord> FindById(IEnumerable<FileCabinetRecord> fileCabinetRecords, int id)
@@ -373,6 +389,17 @@ namespace FileCabinetApp
             }
 
             return i;
+        }
+
+        private string GetFilterString(string[] values)
+        {
+            string filterString = string.Empty;
+            for (int i = 0; i < values.Length; i++)
+            {
+                filterString += values[i];
+            }
+
+            return filterString.ToLower(this.englishUS);
         }
 
         private bool Remove(int id)
