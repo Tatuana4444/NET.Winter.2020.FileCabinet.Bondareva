@@ -227,7 +227,7 @@ namespace FileCabinetApp
         /// <summary>
         /// Update records by parameters.
         /// </summary>
-        /// <param name="param">Record parameters.</param>
+        /// <param name="param">Record parameters. Filter start from 'where' and can contain 'and' and 'or'.</param>
         public void Update(string param)
         {
             if (param == null)
@@ -258,6 +258,11 @@ namespace FileCabinetApp
                 throw new ArgumentException("Incorrect format", nameof(param));
             }
 
+            this.UpdateRecords(foundResult, setValues);
+        }
+
+        private void UpdateRecords(List<int> foundResult, string[] setValues)
+        {
             for (int j = 0; j < foundResult.Count; j++)
             {
                 for (int i = 0; i < setValues.Length; i += 2)
@@ -278,7 +283,7 @@ namespace FileCabinetApp
                         case "dateofbirth":
                             if (!DateTime.TryParse(setValues[i + 1], this.englishUS, DateTimeStyles.None, out DateTime dateOfBirth))
                             {
-                                throw new ArgumentException("Incorrect dateofbith", nameof(param));
+                                throw new ArgumentException("Incorrect dateofbith", nameof(setValues));
                             }
 
                             recordData = new RecordData() { DateOfBirth = dateOfBirth };
@@ -288,7 +293,7 @@ namespace FileCabinetApp
                         case "gender":
                             if (!char.TryParse(setValues[i + 1], out char gender))
                             {
-                                throw new ArgumentException("Incorrect gender", nameof(param));
+                                throw new ArgumentException("Incorrect gender", nameof(setValues));
                             }
 
                             recordData = new RecordData() { Gender = gender };
@@ -298,7 +303,7 @@ namespace FileCabinetApp
                         case "passportid":
                             if (!short.TryParse(setValues[i + 1], out short passportId))
                             {
-                                throw new ArgumentException("Incorrect passportId", nameof(param));
+                                throw new ArgumentException("Incorrect passportId", nameof(setValues));
                             }
 
                             recordData = new RecordData() { PassportId = passportId };
@@ -308,14 +313,14 @@ namespace FileCabinetApp
                         case "salary":
                             if (!decimal.TryParse(setValues[i + 1], out decimal salary))
                             {
-                                throw new ArgumentException("Incorrect salary", nameof(param));
+                                throw new ArgumentException("Incorrect salary", nameof(setValues));
                             }
 
                             recordData = new RecordData() { Salary = salary };
                             this.validator.ValidatePrameter("salary", recordData);
                             this.WriteSalary(salary, this.offsetById[foundResult[j]]);
                             break;
-                        default: throw new ArgumentException("Incorrect format", nameof(param));
+                        default: throw new ArgumentException("Incorrect format", nameof(setValues));
                     }
                 }
             }
@@ -545,100 +550,28 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect id", nameof(values));
                             }
 
-                            if (record.Id == id)
-                            {
-                                if (values[i] == "or")
-                                {
-                                    isNeedAdd = true;
-                                }
-                                else
-                                {
-                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
-                                    {
-                                        throw new ArgumentException("Incorrect format", nameof(values));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!(isNeedAdd && values[i] == "or"))
-                                {
-                                    isNeedAdd = false;
-                                }
-                            }
-
+                            isNeedAdd = this.CheckOperator(values[i], record.Id == id, isNeedAdd, i);
                             break;
                         case "firstname":
-                            if (record.FirstName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS))
-                            {
-                                if (values[i] == "or")
-                                {
-                                    isNeedAdd = true;
-                                }
-                                else
-                                {
-                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
-                                    {
-                                        throw new ArgumentException("Incorrect format", nameof(values));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!(isNeedAdd && values[i] == "or"))
-                                {
-                                    isNeedAdd = false;
-                                }
-                            }
-
+                            isNeedAdd = this.CheckOperator(
+                                values[i],
+                                record.FirstName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS),
+                                isNeedAdd,
+                                i);
                             break;
                         case "lastname":
-                            if (record.LastName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS))
-                            {
-                                if (values[i] == "or")
-                                {
-                                    isNeedAdd = true;
-                                }
-                                else
-                                {
-                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
-                                    {
-                                        throw new ArgumentException("Incorrect format", nameof(values));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!(isNeedAdd && values[i] == "or"))
-                                {
-                                    isNeedAdd = false;
-                                }
-                            }
-
+                            isNeedAdd = this.CheckOperator(
+                                values[i],
+                                record.LastName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS),
+                                isNeedAdd,
+                                i);
                             break;
                         case "dateofbirth":
-                            if (record.DateOfBirth.ToString(this.englishUS) == values[i + 2])
-                            {
-                                if (values[i] == "or")
-                                {
-                                    isNeedAdd = true;
-                                }
-                                else
-                                {
-                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
-                                    {
-                                        throw new ArgumentException("Incorrect format", nameof(values));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!(isNeedAdd && values[i] == "or"))
-                                {
-                                    isNeedAdd = false;
-                                }
-                            }
-
+                            isNeedAdd = this.CheckOperator(
+                                values[i],
+                                record.DateOfBirth.ToString(this.englishUS) == values[i + 2],
+                                isNeedAdd,
+                                i);
                             break;
                         case "gender":
                             if (!char.TryParse(values[i + 2], out char gender))
@@ -646,28 +579,11 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect gender", nameof(values));
                             }
 
-                            if (record.Gender == gender)
-                            {
-                                if (values[i] == "or")
-                                {
-                                    isNeedAdd = true;
-                                }
-                                else
-                                {
-                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
-                                    {
-                                        throw new ArgumentException("Incorrect format", nameof(values));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!(isNeedAdd && values[i] == "or"))
-                                {
-                                    isNeedAdd = false;
-                                }
-                            }
-
+                            isNeedAdd = this.CheckOperator(
+                                values[i],
+                                record.Gender == gender,
+                                isNeedAdd,
+                                i);
                             break;
                         case "passportid":
                             if (!short.TryParse(values[i + 2], out short passportId))
@@ -675,28 +591,11 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect passportId", nameof(values));
                             }
 
-                            if (record.PassportId == passportId)
-                            {
-                                if (values[i] == "or")
-                                {
-                                    isNeedAdd = true;
-                                }
-                                else
-                                {
-                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
-                                    {
-                                        throw new ArgumentException("Incorrect format", nameof(values));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!(isNeedAdd && values[i] == "or"))
-                                {
-                                    isNeedAdd = false;
-                                }
-                            }
-
+                            isNeedAdd = this.CheckOperator(
+                                values[i],
+                                record.PassportId == passportId,
+                                isNeedAdd,
+                                i);
                             break;
                         case "salary":
                             if (!decimal.TryParse(values[i + 2], out decimal salary))
@@ -704,28 +603,11 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect salary", nameof(values));
                             }
 
-                            if (record.Salary == salary)
-                            {
-                                if (values[i] == "or")
-                                {
-                                    isNeedAdd = true;
-                                }
-                                else
-                                {
-                                    if (values[i] != "and" && !(i == 0 && values[i] == "where"))
-                                    {
-                                        throw new ArgumentException("Incorrect format", nameof(values));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!(isNeedAdd && values[i] == "or"))
-                                {
-                                    isNeedAdd = false;
-                                }
-                            }
-
+                            isNeedAdd = this.CheckOperator(
+                                values[i],
+                                record.Salary == salary,
+                                isNeedAdd,
+                                i);
                             break;
                         default: throw new ArgumentException("Incorrect format", nameof(values));
                     }
@@ -740,6 +622,33 @@ namespace FileCabinetApp
             }
 
             return resultList;
+        }
+
+        private bool CheckOperator(string operatorSring, bool isEqual, bool isNeedAdd, int index)
+        {
+            if (isEqual)
+            {
+                if (operatorSring == "or")
+                {
+                    isNeedAdd = true;
+                }
+                else
+                {
+                    if (operatorSring != "and" && !(index == 0 && operatorSring == "where"))
+                    {
+                        throw new ArgumentException("Incorrect format", nameof(operatorSring));
+                    }
+                }
+            }
+            else
+            {
+                if (!(isNeedAdd && operatorSring == "or"))
+                {
+                    isNeedAdd = false;
+                }
+            }
+
+            return isNeedAdd;
         }
     }
 }

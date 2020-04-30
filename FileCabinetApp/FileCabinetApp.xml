@@ -610,7 +610,7 @@
             <summary>
             Update records by parameters.
             </summary>
-            <param name="param">Record parameters.</param>
+            <param name="param">Record parameters. Filter start from 'where' and can contain 'and' and 'or'.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
