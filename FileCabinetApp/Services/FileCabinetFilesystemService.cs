@@ -25,15 +25,16 @@ namespace FileCabinetApp
         private readonly Dictionary<int, long> offsetById = new Dictionary<int, long>();
 
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-        private FileStream fileStream;
-        private IValidator validator;
-        private Encoding enc = Encoding.Unicode;
+        private readonly FileStream fileStream;
+        private readonly IValidator validator;
+        private readonly Encoding enc = Encoding.Unicode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
         /// </summary>
         /// <param name="fileStream">File stream.</param>
         /// <param name="validator">Validator for params.</param>
+        /// <exception cref="ArgumentNullException">Throw when fileStream or validator is null.</exception>
         public FileCabinetFilesystemService(FileStream fileStream, IValidator validator)
         {
             if (fileStream is null)
@@ -55,6 +56,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="recordData">User's data.</param>
         /// <returns>Id of a new record.</returns>
+        /// <exception cref="ArgumentNullException">Throw when recordData is null.</exception>
         public int CreateRecord(RecordData recordData)
         {
             if (recordData is null)
@@ -84,6 +86,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
         /// <returns>Records by filret.</returns>
+        /// <exception cref="ArgumentNullException">Throw when filter is null.</exception>
         public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
         {
             if (filter == null)
@@ -152,6 +155,7 @@ namespace FileCabinetApp
         /// Restore date from snapshot.
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
+        /// <exception cref="ArgumentNullException">Throw when snapshot is null.</exception>
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
             if (snapshot is null)
@@ -220,6 +224,8 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="param">Record parameters.</param>
         /// <returns>List of id recored, that was deleted.</returns>
+        /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
+        /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public IEnumerable<int> Delete(string param)
         {
             if (param == null)
@@ -247,6 +253,8 @@ namespace FileCabinetApp
         /// Update records by parameters.
         /// </summary>
         /// <param name="param">Record parameters. Filter start from 'where' and can contain 'and' and 'or'.</param>
+        /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
+        /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public void Update(string param)
         {
             if (param == null)
@@ -260,7 +268,7 @@ namespace FileCabinetApp
                 throw new ArgumentException("Incorrect format", nameof(param));
             }
 
-            string whereParams = param.Substring(whereIndex, param.Length - whereIndex);
+            string whereParams = param[whereIndex..];
             string[] whereValues = whereParams.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
             whereValues[^1] = whereValues[^1][0..^1];
             if (whereValues.Length % 3 != 0)

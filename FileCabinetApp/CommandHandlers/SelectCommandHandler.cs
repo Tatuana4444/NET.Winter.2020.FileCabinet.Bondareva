@@ -10,7 +10,7 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class SelectCommandHandler : ServiceCommandHandlerBase
     {
-        private Action<IEnumerable<FileCabinetRecord>, string> printer;
+        private readonly Action<IEnumerable<FileCabinetRecord>, string> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectCommandHandler"/> class.

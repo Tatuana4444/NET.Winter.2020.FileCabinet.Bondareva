@@ -16,9 +16,9 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> cache = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-        private List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-        private IValidator validator;
-        private Dictionary<int, int> presentIdList = new Dictionary<int, int>();
+        private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly IValidator validator;
+        private readonly Dictionary<int, int> presentIdList = new Dictionary<int, int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
@@ -43,6 +43,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="recordData">User's data.</param>
         /// <returns>Id of a new record.</returns>
+        /// <exception cref="ArgumentNullException">Throw when recordData is null.</exception>
         public int CreateRecord(RecordData recordData)
         {
             if (recordData is null)
@@ -86,6 +87,8 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
         /// <returns>Records by filret.</returns>
+        /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
+        /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
         {
             if (filter == null)
@@ -129,6 +132,7 @@ namespace FileCabinetApp
         /// Restore data fron snapshot.
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
+        /// <exception cref="ArgumentNullException">Throw when snapshot is null.</exception>
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
             if (snapshot is null)
@@ -171,6 +175,8 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="param">Record parameters.</param>
         /// <returns>List of id recored, that was deleted.</returns>
+        /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
+        /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public IEnumerable<int> Delete(string param)
         {
             if (param == null)
@@ -205,6 +211,8 @@ namespace FileCabinetApp
         /// Update records by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>
+        /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
+        /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public void Update(string param)
         {
             if (param == null)
@@ -218,7 +226,7 @@ namespace FileCabinetApp
                 throw new ArgumentException("Incorrect format", nameof(param));
             }
 
-            string whereParams = param.Substring(whereIndex, param.Length - whereIndex);
+            string whereParams = param[whereIndex..];
             string[] whereValues = whereParams.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
             whereValues[^1] = whereValues[^1][0..^1];
             if (whereValues.Length % 3 != 0)
@@ -430,8 +438,10 @@ namespace FileCabinetApp
             }
             else
             {
-                list = new List<FileCabinetRecord>();
-                list.Add(this.list[this.presentIdList[id]]);
+                list = new List<FileCabinetRecord>
+                {
+                    this.list[this.presentIdList[id]],
+                };
                 dictionary.Add(name.ToUpper(this.englishUS), list);
             }
         }

@@ -13,7 +13,7 @@ namespace FileCabinetApp.CommandHandlers
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
-        private static string[][] helpMessages = new string[][]
+        private static readonly string[][] HelpMessages = new string[][]
         {
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "insert", "inserts record", "The 'insert' command inserts record." },
@@ -34,7 +34,7 @@ namespace FileCabinetApp.CommandHandlers
         /// <returns>Count of command.</returns>
         public static int CommandsCount()
         {
-            return helpMessages.Length;
+            return HelpMessages.Length;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace FileCabinetApp.CommandHandlers
         /// <returns>Command name.</returns>
         public static string GetCommandName(int i)
         {
-            return helpMessages[i][0];
+            return HelpMessages[i][0];
         }
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[HelpCommandHandler.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(HelpMessages, 0, HelpMessages.Length, i => string.Equals(i[HelpCommandHandler.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
-                    Console.WriteLine(helpMessages[index][HelpCommandHandler.ExplanationHelpIndex]);
+                    Console.WriteLine(HelpMessages[index][HelpCommandHandler.ExplanationHelpIndex]);
                 }
                 else
                 {
@@ -86,7 +86,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 Console.WriteLine("Available commands:");
 
-                foreach (var helpMessage in helpMessages)
+                foreach (var helpMessage in HelpMessages)
                 {
                     Console.WriteLine("\t{0}\t- {1}", helpMessage[HelpCommandHandler.CommandHelpIndex], helpMessage[HelpCommandHandler.DescriptionHelpIndex]);
                 }

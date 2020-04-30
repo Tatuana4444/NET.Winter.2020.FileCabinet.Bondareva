@@ -549,6 +549,7 @@
             </summary>
             <param name="fileStream">File stream.</param>
             <param name="validator">Validator for params.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when fileStream or validator is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.RecordData)">
             <summary>
@@ -556,6 +557,7 @@
             </summary>
             <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.SelectRecords(System.String)">
             <summary>
@@ -563,6 +565,7 @@
             </summary>
             <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
             <returns>Records by filret.</returns>
+            <exception cref="T:System.ArgumentNullException">Throw when filter is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
             <summary>
@@ -575,6 +578,7 @@
             Restore date from snapshot.
             </summary>
             <param name="snapshot">Snapshot.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when snapshot is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.Purge">
             <summary>
@@ -588,12 +592,16 @@
             </summary>
             <param name="param">Record parameters.</param>
             <returns>List of id recored, that was deleted.</returns>
+            <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.Update(System.String)">
             <summary>
             Update records by parameters.
             </summary>
             <param name="param">Record parameters. Filter start from 'where' and can contain 'and' and 'or'.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
@@ -618,6 +626,7 @@
             </summary>
             <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.SelectRecords(System.String)">
             <summary>
@@ -625,6 +634,8 @@
             </summary>
             <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
             <returns>Records by filret.</returns>
+            <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat">
             <summary>
@@ -637,6 +648,7 @@
             Restore data fron snapshot.
             </summary>
             <param name="snapshot">Snapshot.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when snapshot is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge">
             <summary>
@@ -650,12 +662,16 @@
             </summary>
             <param name="param">Record parameters.</param>
             <returns>List of id recored, that was deleted.</returns>
+            <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.Update(System.String)">
             <summary>
             Update records by parameters.
             </summary>
             <param name="param">Record parameters.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
