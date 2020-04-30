@@ -20,8 +20,6 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "update", "updates records by parameters", "The 'update' command updates records by parameters." },
             new string[] { "delete", "deletes records by parameters", "The 'delete' command deletes records by parameters." },
             new string[] { "select", "selects records by parameters", "The 'select' command selects records by parameters." },
-            new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
-            new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
             new string[] { "export", "exports records", "The 'export' command expords records." },
             new string[] { "import", "imports records", "The 'import' command imports records." },

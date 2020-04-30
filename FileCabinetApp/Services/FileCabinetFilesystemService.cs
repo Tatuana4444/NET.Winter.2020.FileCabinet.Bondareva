@@ -62,6 +62,8 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
+            this.validator.ValidateParameters(recordData);
+
             int id = recordData.Id;
             if (id < 1)
             {
@@ -276,6 +278,33 @@ namespace FileCabinetApp
             }
 
             this.UpdateRecords(foundResult, setValues);
+        }
+
+        private static bool CheckOperator(string operatorSring, bool isEqual, bool isNeedAdd, int index)
+        {
+            if (isEqual)
+            {
+                if (operatorSring == "or")
+                {
+                    isNeedAdd = true;
+                }
+                else
+                {
+                    if (operatorSring != "and" && !(index == 0 && operatorSring == "where"))
+                    {
+                        throw new ArgumentException("Incorrect format", nameof(operatorSring));
+                    }
+                }
+            }
+            else
+            {
+                if (!(isNeedAdd && operatorSring == "or"))
+                {
+                    isNeedAdd = false;
+                }
+            }
+
+            return isNeedAdd;
         }
 
         private void UpdateRecords(List<int> foundResult, string[] setValues)
@@ -567,24 +596,24 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect id", nameof(values));
                             }
 
-                            isNeedAdd = this.CheckOperator(values[i], record.Id == id, isNeedAdd, i);
+                            isNeedAdd = CheckOperator(values[i], record.Id == id, isNeedAdd, i);
                             break;
                         case "firstname":
-                            isNeedAdd = this.CheckOperator(
+                            isNeedAdd = CheckOperator(
                                 values[i],
                                 record.FirstName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS),
                                 isNeedAdd,
                                 i);
                             break;
                         case "lastname":
-                            isNeedAdd = this.CheckOperator(
+                            isNeedAdd = CheckOperator(
                                 values[i],
                                 record.LastName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS),
                                 isNeedAdd,
                                 i);
                             break;
                         case "dateofbirth":
-                            isNeedAdd = this.CheckOperator(
+                            isNeedAdd = CheckOperator(
                                 values[i],
                                 record.DateOfBirth.ToString(this.englishUS) == values[i + 2],
                                 isNeedAdd,
@@ -596,7 +625,7 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect gender", nameof(values));
                             }
 
-                            isNeedAdd = this.CheckOperator(
+                            isNeedAdd = CheckOperator(
                                 values[i],
                                 record.Gender == gender,
                                 isNeedAdd,
@@ -608,7 +637,7 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect passportId", nameof(values));
                             }
 
-                            isNeedAdd = this.CheckOperator(
+                            isNeedAdd = CheckOperator(
                                 values[i],
                                 record.PassportId == passportId,
                                 isNeedAdd,
@@ -620,7 +649,7 @@ namespace FileCabinetApp
                                 throw new ArgumentException("Incorrect salary", nameof(values));
                             }
 
-                            isNeedAdd = this.CheckOperator(
+                            isNeedAdd = CheckOperator(
                                 values[i],
                                 record.Salary == salary,
                                 isNeedAdd,
@@ -639,33 +668,6 @@ namespace FileCabinetApp
             }
 
             return resultList;
-        }
-
-        private bool CheckOperator(string operatorSring, bool isEqual, bool isNeedAdd, int index)
-        {
-            if (isEqual)
-            {
-                if (operatorSring == "or")
-                {
-                    isNeedAdd = true;
-                }
-                else
-                {
-                    if (operatorSring != "and" && !(index == 0 && operatorSring == "where"))
-                    {
-                        throw new ArgumentException("Incorrect format", nameof(operatorSring));
-                    }
-                }
-            }
-            else
-            {
-                if (!(isNeedAdd && operatorSring == "or"))
-                {
-                    isNeedAdd = false;
-                }
-            }
-
-            return isNeedAdd;
         }
     }
 }

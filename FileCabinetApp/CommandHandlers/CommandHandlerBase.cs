@@ -83,7 +83,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private static void PrintMissedCommandInfo(string command)
         {
-            Console.WriteLine($"There is no '{command}' command.");
+            Console.WriteLine($"There is no '{command}' command. See 'help'.");
             Console.WriteLine();
         }
 

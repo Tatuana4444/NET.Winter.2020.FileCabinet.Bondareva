@@ -49,23 +49,6 @@
             </summary>
             <param name="handler">Handler.</param>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.CreateCommandHandler">
-            <summary>
-             Handler for command create.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.CreateCommandHandler"/> class.
-            </summary>
-            <param name="service">Current service.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Create request handler.
-            </summary>
-            <param name="commandRequest">Request.</param>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.DeleteCommandHandler">
             <summary>
             Handler for command delete.

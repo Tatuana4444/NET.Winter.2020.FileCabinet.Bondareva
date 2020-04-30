@@ -64,7 +64,6 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             ReadOnlyCollection<FileCabinetRecord> fileCabinetRecords = this.Service.SelectRecords(whereParams);
-
             this.printer(fileCabinetRecords, parameters.Substring(0, whereIndex - 1));
         }
     }

@@ -42,27 +42,20 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Delete(string parameters)
         {
-            try
+            List<int> deletedId = this.Service.Delete(parameters).ToList();
+            if (deletedId.Count > 0)
             {
-                List<int> deletedId = this.Service.Delete(parameters).ToList();
-                if (deletedId.Count > 0)
+                Console.Write("Record ");
+                for (int i = 0; i < deletedId.Count - 1; i++)
                 {
-                    Console.Write("Record ");
-                    for (int i = 0; i < deletedId.Count - 1; i++)
-                    {
-                        Console.Write($"#{deletedId[i]}, ");
-                    }
+                    Console.Write($"#{deletedId[i]}, ");
+                }
 
-                    Console.WriteLine($"#{deletedId[deletedId.Count - 1]} is deleted.");
-                }
-                else
-                {
-                    Console.WriteLine($"Record with such parameters doesn't exists.");
-                }
+                Console.WriteLine($"#{deletedId[deletedId.Count - 1]} is deleted.");
             }
-            catch (ArgumentException ex)
+            else
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Record with such parameters doesn't exists.");
             }
         }
     }

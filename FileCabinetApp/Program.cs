@@ -33,7 +33,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file", "" };
+            string[] cmdParam = new string[] { "default", "file", "logger" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -95,7 +95,18 @@ namespace FileCabinetApp
 
                 const int parametersIndex = 1;
                 var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
-                commandHandler.Handle(new AppCommandRequest(command,  parameters));
+                try
+                {
+                    commandHandler.Handle(new AppCommandRequest(command, parameters));
+                }
+                catch (ArgumentNullException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             while (isRunning);
         }
