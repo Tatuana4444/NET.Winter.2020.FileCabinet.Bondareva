@@ -13,15 +13,13 @@ namespace FileCabinetApp.CommandHandlers
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
-        private static string[][] helpMessages = new string[][]
+        private static readonly string[][] HelpMessages = new string[][]
         {
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "insert", "inserts record", "The 'insert' command inserts record." },
             new string[] { "update", "updates records by parameters", "The 'update' command updates records by parameters." },
             new string[] { "delete", "deletes records by parameters", "The 'delete' command deletes records by parameters." },
             new string[] { "select", "selects records by parameters", "The 'select' command selects records by parameters." },
-            new string[] { "list", "prints list of records", "The 'create' command prints list of records." },
-            new string[] { "find", "finds records by creterion", "The 'find' command finds records by creterion." },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records." },
             new string[] { "export", "exports records", "The 'export' command expords records." },
             new string[] { "import", "imports records", "The 'import' command imports records." },
@@ -36,7 +34,7 @@ namespace FileCabinetApp.CommandHandlers
         /// <returns>Count of command.</returns>
         public static int CommandsCount()
         {
-            return helpMessages.Length;
+            return HelpMessages.Length;
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace FileCabinetApp.CommandHandlers
         /// <returns>Command name.</returns>
         public static string GetCommandName(int i)
         {
-            return helpMessages[i][0];
+            return HelpMessages[i][0];
         }
 
         /// <summary>
@@ -74,10 +72,10 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[HelpCommandHandler.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(HelpMessages, 0, HelpMessages.Length, i => string.Equals(i[HelpCommandHandler.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
-                    Console.WriteLine(helpMessages[index][HelpCommandHandler.ExplanationHelpIndex]);
+                    Console.WriteLine(HelpMessages[index][HelpCommandHandler.ExplanationHelpIndex]);
                 }
                 else
                 {
@@ -88,7 +86,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 Console.WriteLine("Available commands:");
 
-                foreach (var helpMessage in helpMessages)
+                foreach (var helpMessage in HelpMessages)
                 {
                     Console.WriteLine("\t{0}\t- {1}", helpMessage[HelpCommandHandler.CommandHelpIndex], helpMessage[HelpCommandHandler.DescriptionHelpIndex]);
                 }

@@ -10,7 +10,7 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class SelectCommandHandler : ServiceCommandHandlerBase
     {
-        private Action<IEnumerable<FileCabinetRecord>, string> printer;
+        private readonly Action<IEnumerable<FileCabinetRecord>, string> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectCommandHandler"/> class.
@@ -52,14 +52,18 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             int whereIndex = parameters.IndexOf("where", StringComparison.Ordinal);
+            string whereParams;
             if (whereIndex == -1)
             {
-                throw new ArgumentException("Incorrect format", nameof(parameters));
+                whereIndex = parameters.Length + 1;
+                whereParams = string.Empty;
+            }
+            else
+            {
+                whereParams = parameters[whereIndex..];
             }
 
-            string whereParams = parameters.Substring(whereIndex, parameters.Length - whereIndex);
             ReadOnlyCollection<FileCabinetRecord> fileCabinetRecords = this.Service.SelectRecords(whereParams);
-
             this.printer(fileCabinetRecords, parameters.Substring(0, whereIndex - 1));
         }
     }

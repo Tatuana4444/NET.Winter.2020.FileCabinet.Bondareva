@@ -31,7 +31,14 @@ namespace FileCabinetApp.CommandHandlers
 
             if (commandRequest.Command == "purge")
             {
-                this.Purge(commandRequest.Parameters);
+                if (commandRequest.Parameters.Length == 0)
+                {
+                    this.Purge();
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameters.");
+                }
             }
             else
             {
@@ -39,7 +46,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private void Purge(string parameters)
+        private void Purge()
         {
             int purged = this.Service.Purge();
             Console.WriteLine($"Data file processing is completed: {purged} of " +

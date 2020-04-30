@@ -31,7 +31,14 @@ namespace FileCabinetApp.CommandHandlers
 
             if (commandRequest.Command == "stat")
             {
-                this.Stat(commandRequest.Parameters);
+                if (commandRequest.Parameters.Length == 0)
+                {
+                    this.Stat();
+                }
+                else
+                {
+                    throw new ArgumentException("Incorrect parameter.");
+                }
             }
             else
             {
@@ -39,7 +46,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private void Stat(string parameters)
+        private void Stat()
         {
             var recordsCount = this.Service.GetStat();
             Console.WriteLine($"{recordsCount.Item1} record(s) and {recordsCount.Item2} deleted record(s).");
