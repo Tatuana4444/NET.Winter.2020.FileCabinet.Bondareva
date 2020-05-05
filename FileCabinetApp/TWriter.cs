@@ -143,8 +143,8 @@ namespace FileCabinetApp
                     }
                     else
                     {
-                        stream.Write(fieldsToPrint[i][j]);
                         stream.Write(PrintSimbol(fieldMaxLength[j] - fieldsToPrint[i][j].Length, ' '));
+                        stream.Write(fieldsToPrint[i][j]);
                     }
                 }
 
