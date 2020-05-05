@@ -19,14 +19,6 @@ namespace FileCabinetApp
         private static bool isRunning = true;
 
         /// <summary>
-        /// Gets a value indicating whether defaulRule.
-        /// </summary>
-        /// <value>
-        /// A value indicating whether defaulRule.
-        /// </value>
-        public static bool IsDefaulRule { get; private set; }
-
-        /// <summary>
         /// Gets command and calls their methods.
         /// </summary>
         /// <param name="args">Arguments from console runs.</param>
@@ -118,6 +110,7 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers(IFileCabinetService fileCabinetService)
         {
+            ICommandHandler createCommandHandler = new CreateCommandHandler(fileCabinetService);
             ICommandHandler updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             ICommandHandler selectCommand = new SelectCommandHandler(fileCabinetService, Program.PrinterByFilter);
@@ -129,6 +122,7 @@ namespace FileCabinetApp
             ICommandHandler exitCommandHandler = new ExitCommandHandler(Existing);
             ICommandHandler insertCommandHandler = new InsertCommandHandler(fileCabinetService);
 
+            createCommandHandler.SetNext(updateCommandHandler);
             updateCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(selectCommand);
             selectCommand.SetNext(statCommandHandler);
@@ -139,7 +133,7 @@ namespace FileCabinetApp
             helpCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(insertCommandHandler);
 
-            return updateCommandHandler;
+            return createCommandHandler;
         }
 
         private static void PrinterByFilter(IEnumerable<FileCabinetRecord> records, string filter)
@@ -201,7 +195,6 @@ namespace FileCabinetApp
                     }
                 }
 
-                Program.IsDefaulRule = false;
                 Console.WriteLine(CustomValidationMessage);
             }
 
@@ -250,7 +243,6 @@ namespace FileCabinetApp
                     }
                 }
 
-                Program.IsDefaulRule = true;
                 Console.WriteLine(DefaultValidationMessage);
             }
         }
