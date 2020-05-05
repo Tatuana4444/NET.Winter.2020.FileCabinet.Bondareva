@@ -25,9 +25,9 @@ namespace FileCabinetGenerator
                 switch (param[0])
                 {
                     case "-t":
-                        if (args[++i] == "xml")
+                        if (args[++i] == "csv")
                         {
-                            isCsv = false;
+                            isCsv = true;
                         }
                         break;
                     case "-o":
@@ -40,9 +40,9 @@ namespace FileCabinetGenerator
                         startId = int.Parse(args[++i]);
                         break;
                     case "--output-type":
-                        if (param[1] == "xml")
+                        if (param[1] == "csv")
                         {
-                            isCsv = false;
+                            isCsv = true;
                         }
                         break;
                     case "--output":
@@ -75,10 +75,7 @@ namespace FileCabinetGenerator
             else
             {
                 XmlSerializer ser = new XmlSerializer(typeof(List<FileCabinetRecord>));
-                //foreach (var record in list)
-                //{
                     ser.Serialize(writer, list);
-                //}
 
             }
         }
