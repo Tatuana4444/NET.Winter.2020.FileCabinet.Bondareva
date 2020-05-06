@@ -15,6 +15,10 @@ namespace FileCabinetApp
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const string DefaultValidationMessage = "Using default validation rules.";
         private const string CustomValidationMessage = "Using custom validation rules.";
+        private const string LoggerMessage = "Using Logger.";
+        private const string StopwatchMessage = "Using Meter.";
+        private const string FileMessage = "Using filesystem storage.";
+        private const string MemoryMessage = "Using memory storage.";
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
         private static bool isRunning = true;
 
@@ -25,7 +29,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "memory", "stopwatch", "logger" };
+            string[] cmdParam = new string[] { "default", "memory", string.Empty, string.Empty };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -146,103 +150,67 @@ namespace FileCabinetApp
             TWriter.WriteToTextSream(records, Console.Out, values, englishUS);
         }
 
+        private static void SetDecorators(string[] param, IFileCabinetService service)
+        {
+            if (param[2] == "stopwatch" && param[3] == "logger")
+            {
+                Program.fileCabinetService = new ServiceLogger(new ServiceMeter(service));
+                Console.WriteLine(LoggerMessage);
+                Console.WriteLine(StopwatchMessage);
+            }
+            else
+            {
+                if (param[3] == "logger")
+                {
+                    Program.fileCabinetService = new ServiceLogger(service);
+                    Console.WriteLine(LoggerMessage);
+                }
+                else
+                {
+                    if (param[2] == "stopwatch")
+                    {
+                        Program.fileCabinetService = new ServiceMeter(service);
+                        Console.WriteLine(StopwatchMessage);
+                    }
+                    else
+                    {
+                        Program.fileCabinetService = service;
+                    }
+                }
+            }
+        }
+
+        private static void SetStorage(string[] param, IValidator validator)
+        {
+            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+
+            if (param[1].ToUpper(englishUS) == "MEMORY")
+            {
+                SetDecorators(param, new FileCabinetMemoryService(validator));
+                Console.WriteLine(MemoryMessage);
+            }
+            else
+            {
+                File.Delete("cabinet-records.db");
+                FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
+                SetDecorators(param, new FileCabinetFilesystemService(stream, validator));
+                Console.WriteLine(FileMessage);
+            }
+        }
+
         private static void SetValidationRules(string[] param)
         {
             CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
 
             if (param[0].ToUpper(englishUS) == "CUSTOM")
             {
-                if (param[1].ToUpper(englishUS) == "MEMORY")
-                {
-                    if (param[2] == "stopwatch")
-                    {
-                        var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
-                        Program.fileCabinetService = new ServiceMeter(fileService);
-                    }
-                    else
-                    {
-                        if (param[2] == "logger")
-                        {
-                            var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
-                            Program.fileCabinetService = new ServiceLogger(fileService);
-                        }
-                        else
-                        {
-                            Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateCustom());
-                        }
-                    }
-                }
-                else
-                {
-                    File.Delete("cabinet-records.db");
-                    FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
-                    if (param[2] == "stopwatch")
-                    {
-                        var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
-                        Program.fileCabinetService = new ServiceMeter(fileService);
-                    }
-                    else
-                    {
-                        if (param[2] == "logger")
-                        {
-                            var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
-                            Program.fileCabinetService = new ServiceLogger(fileService);
-                        }
-                        else
-                        {
-                            Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateCustom());
-                        }
-                    }
-                }
-
+                SetStorage(param, new ValidatorBuilder().CreateCustom());
                 Console.WriteLine(CustomValidationMessage);
             }
 
             if (param[0].ToUpper(englishUS) == "DEFAULT")
             {
-                if (param[1].ToUpper(englishUS) == "MEMORY")
-                {
-                    if (param[2] == "stopwatch")
-                    {
-                        var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
-                        Program.fileCabinetService = new ServiceMeter(fileService);
-                    }
-                    else
-                    {
-                        if (param[2] == "logger")
-                        {
-                            var fileService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
-                            Program.fileCabinetService = new ServiceLogger(fileService);
-                        }
-                        else
-                        {
-                            Program.fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
-                        }
-                    }
-                }
-                else
-                {
-                    File.Delete("cabinet-records.db");
-                    FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
-                    if (param[2] == "stopwatch")
-                    {
-                        var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
-                        Program.fileCabinetService = new ServiceMeter(fileService);
-                    }
-                    else
-                    {
-                        if (param[2] == "logger")
-                        {
-                            var fileService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
-                            Program.fileCabinetService = new ServiceLogger(fileService);
-                        }
-                        else
-                        {
-                            Program.fileCabinetService = new FileCabinetFilesystemService(stream, new ValidatorBuilder().CreateDefault());
-                        }
-                    }
-                }
-
+                SetStorage(param, new ValidatorBuilder().CreateDefault());
                 Console.WriteLine(DefaultValidationMessage);
             }
         }
