@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
@@ -16,8 +17,18 @@ namespace FileCabinetApp.CommandHandlers
         /// <param name="parameters">Command's parameters.</param>
         public AppCommandRequest(string command, string parameters)
         {
-            this.Command = command;
-            this.Parameters = parameters;
+            if (command is null)
+            {
+                throw new ArgumentNullException(nameof(command), "Command can't be null.");
+            }
+
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters), "Parameters can't be null.");
+            }
+
+            this.Command = command.Trim().ToLower(CultureInfo.CreateSpecificCulture("en-US"));
+            this.Parameters = parameters.Trim();
         }
 
         /// <summary>
