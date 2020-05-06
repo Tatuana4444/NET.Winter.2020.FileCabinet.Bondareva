@@ -12,7 +12,7 @@ namespace FileCabinetApp
     public class FileCabinetRecordXmlWriter
     {
         private readonly XmlWriter writer;
-        private readonly CultureInfo englishUS;
+        private readonly CultureInfo culture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordXmlWriter"/> class.
@@ -28,9 +28,7 @@ namespace FileCabinetApp
             this.writer = writer;
             this.writer.WriteStartDocument();
             this.writer.WriteStartElement("records");
-            this.englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeFormatInfo dtfi = this.englishUS.DateTimeFormat;
-            dtfi.ShortDatePattern = "yyyy-MMM-dd";
+            this.culture = CultureInfo.InvariantCulture;
         }
 
         /// <summary>
@@ -45,15 +43,15 @@ namespace FileCabinetApp
             }
 
             this.writer.WriteStartElement("record");
-            this.writer.WriteAttributeString("id", record.Id.ToString(this.englishUS));
+            this.writer.WriteAttributeString("id", record.Id.ToString(this.culture));
             this.writer.WriteStartElement("name");
             this.writer.WriteAttributeString("first", record.FirstName);
             this.writer.WriteAttributeString("last", record.LastName);
             this.writer.WriteEndElement();
-            this.writer.WriteElementString("dateOfBirth", record.DateOfBirth.ToString("yyyy-MM-dd", this.englishUS));
-            this.writer.WriteElementString("gender", record.Gender.ToString(this.englishUS));
-            this.writer.WriteElementString("passportId", record.PassportId.ToString(this.englishUS));
-            this.writer.WriteElementString("salary", record.Salary.ToString(this.englishUS));
+            this.writer.WriteElementString("dateOfBirth", record.DateOfBirth.ToString("yyyy-MM-dd", this.culture));
+            this.writer.WriteElementString("gender", record.Gender.ToString(this.culture));
+            this.writer.WriteElementString("passportId", record.PassportId.ToString(this.culture));
+            this.writer.WriteElementString("salary", record.Salary.ToString(this.culture));
             this.writer.WriteEndElement();
         }
 

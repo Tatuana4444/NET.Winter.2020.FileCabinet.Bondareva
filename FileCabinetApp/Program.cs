@@ -29,7 +29,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "memory", string.Empty, string.Empty };
+            string[] cmdParam = new string[] { "DEFAULT", "MEMORY", string.Empty, string.Empty };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -47,12 +47,12 @@ namespace FileCabinetApp
 
                     if (args[i] == "use-stopwatch")
                     {
-                        cmdParam[2] = "stopwatch";
+                        cmdParam[2] = "STOPWATCH";
                     }
 
                     if (args[i] == "use-logger")
                     {
-                        cmdParam[3] = "logger";
+                        cmdParam[3] = "LOGGER";
                     }
 
                     string[] param = args[i].Split('=');
@@ -142,17 +142,15 @@ namespace FileCabinetApp
 
         private static void PrinterByFilter(IEnumerable<FileCabinetRecord> records, string filter)
         {
-            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
-            dtfi.ShortDatePattern = "yyyy-MMM-dd";
             string[] values = filter.Split(new string[] { ", ", "," }, StringSplitOptions.None);
 
-            TWriter.WriteToTextSream(records, Console.Out, values, englishUS);
+            TWriter.WriteToTextSream(records, Console.Out, values);
         }
 
         private static void SetDecorators(string[] param, IFileCabinetService service)
         {
-            if (param[2] == "stopwatch" && param[3] == "logger")
+            if (string.Equals(param[2], "STOPWATCH", StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(param[3], "LOGGER", StringComparison.InvariantCultureIgnoreCase))
             {
                 Program.fileCabinetService = new ServiceLogger(new ServiceMeter(service));
                 Console.WriteLine(LoggerMessage);
@@ -160,14 +158,14 @@ namespace FileCabinetApp
             }
             else
             {
-                if (param[3] == "logger")
+                if (string.Equals(param[3], "LOGGER", StringComparison.InvariantCultureIgnoreCase))
                 {
                     Program.fileCabinetService = new ServiceLogger(service);
                     Console.WriteLine(LoggerMessage);
                 }
                 else
                 {
-                    if (param[2] == "stopwatch")
+                    if (string.Equals(param[2], "STOPWATCH", StringComparison.InvariantCultureIgnoreCase))
                     {
                         Program.fileCabinetService = new ServiceMeter(service);
                         Console.WriteLine(StopwatchMessage);
@@ -182,9 +180,7 @@ namespace FileCabinetApp
 
         private static void SetStorage(string[] param, IValidator validator)
         {
-            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-
-            if (param[1].ToUpper(englishUS) == "MEMORY")
+            if (string.Equals(param[1], "MEMORY", StringComparison.InvariantCultureIgnoreCase))
             {
                 SetDecorators(param, new FileCabinetMemoryService(validator));
                 Console.WriteLine(MemoryMessage);
@@ -200,15 +196,13 @@ namespace FileCabinetApp
 
         private static void SetValidationRules(string[] param)
         {
-            CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-
-            if (param[0].ToUpper(englishUS) == "CUSTOM")
+            if (string.Equals(param[0], "CUSTOM", StringComparison.InvariantCultureIgnoreCase))
             {
                 SetStorage(param, new ValidatorBuilder().CreateCustom());
                 Console.WriteLine(CustomValidationMessage);
             }
 
-            if (param[0].ToUpper(englishUS) == "DEFAULT")
+            if (string.Equals(param[0], "DEFAULT", StringComparison.InvariantCultureIgnoreCase))
             {
                 SetStorage(param, new ValidatorBuilder().CreateDefault());
                 Console.WriteLine(DefaultValidationMessage);

@@ -30,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "export")
+            if (commandRequest.Command == "EXPORT")
             {
                 this.Export(commandRequest.Parameters);
             }

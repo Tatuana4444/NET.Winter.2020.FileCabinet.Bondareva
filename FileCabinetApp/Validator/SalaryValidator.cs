@@ -9,7 +9,7 @@ namespace FileCabinetApp
     /// </summary>
     public class SalaryValidator : IRecordValidator
     {
-        private decimal minSalary;
+        private readonly decimal minSalary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SalaryValidator"/> class.

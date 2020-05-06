@@ -27,7 +27,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(parameters), "Parameters can't be null.");
             }
 
-            this.Command = command.Trim().ToLower(CultureInfo.CreateSpecificCulture("en-US"));
+            this.Command = command.Trim().ToUpperInvariant();
             this.Parameters = parameters.Trim();
         }
 

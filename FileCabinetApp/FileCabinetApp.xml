@@ -280,79 +280,6 @@
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
-            <summary>
-            Reader for csv.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.
-            </summary>
-            <param name="stream">Current Stream.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
-            <summary>
-            Read all records from stream.
-            </summary>
-            <returns>List of records.</returns>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
-            <summary>
-            Serializes records to csv file.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.#ctor(System.IO.TextWriter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvWriter"/> class.
-            </summary>
-            <param name="writer">Writer for text.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Writes records to csv file.
-            </summary>
-            <param name="record">Record.</param>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
-            <summary>
-            Reader for xml files.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
-            </summary>
-            <param name="stream">Current Stream.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
-            <summary>
-            Read all records from stream.
-            </summary>
-            <returns>List of records.</returns>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
-            <summary>
-            Serializes records to xml file.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
-            </summary>
-            <param name="writer">Writer for text.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Writes records to xml file.
-            </summary>
-            <param name="record">Record.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.EndSaving">
-            <summary>
-            End saving to the file.
-            </summary>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
             <summary>
             Snapshot.
@@ -413,6 +340,40 @@
             Gets command and calls their methods.
             </summary>
             <param name="args">Arguments from console runs.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
+            <summary>
+            Reader for csv.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="stream">Current Stream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            Read all records from stream.
+            </summary>
+            <returns>List of records.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>
+            Reader for xml files.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="stream">Current Stream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            Read all records from stream.
+            </summary>
+            <returns>List of records.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -1009,23 +970,6 @@
             </summary>
             <param name="param">Record parameters.</param>
         </member>
-        <member name="T:FileCabinetApp.TWriter">
-            <summary>
-            Writer for type T.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.TWriter.WriteToTextSream``1(System.Collections.Generic.IEnumerable{``0},System.IO.TextWriter,System.String[],System.Globalization.CultureInfo)">
-            <summary>
-            Write IEnumerable T to text stream.
-            </summary>
-            <typeparam name="T">Type of records.</typeparam>
-            <param name="records">Rcords.</param>
-            <param name="stream">Text Stream.</param>
-            <param name="values">Name of colums that need to print.</param>
-            <param name="culture">Culture for strings..</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when records, stream, values or culture is null.</exception>
-            <exception cref="T:System.ArgumentException">Thrown when records is empty.</exception>
-        </member>
         <member name="T:FileCabinetApp.Validation.DateFromToValues">
             <summary>
             Class that contains rules for date.
@@ -1379,6 +1323,61 @@
             Create Custom Validator.
             </summary>
             <returns>Custom Validator.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
+            <summary>
+            Serializes records to csv file.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.#ctor(System.IO.TextWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvWriter"/> class.
+            </summary>
+            <param name="writer">Writer for text.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Writes records to csv file.
+            </summary>
+            <param name="record">Record.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>
+            Serializes records to xml file.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="writer">Writer for text.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Writes records to xml file.
+            </summary>
+            <param name="record">Record.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.EndSaving">
+            <summary>
+            End saving to the file.
+            </summary>
+        </member>
+        <member name="T:FileCabinetApp.TWriter">
+            <summary>
+            Writer for type T.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.TWriter.WriteToTextSream``1(System.Collections.Generic.IEnumerable{``0},System.IO.TextWriter,System.String[])">
+            <summary>
+            Write IEnumerable T to text stream.
+            </summary>
+            <typeparam name="T">Type of records.</typeparam>
+            <param name="records">Rcords.</param>
+            <param name="stream">Text Stream.</param>
+            <param name="values">Name of colums that need to print.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when records, stream, values or culture is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when records is empty.</exception>
         </member>
     </members>
 </doc>

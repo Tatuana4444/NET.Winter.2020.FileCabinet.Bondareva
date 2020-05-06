@@ -24,7 +24,7 @@ namespace FileCabinetApp
         private const int RecordLength = OffsetSalary + sizeof(decimal);
         private readonly Dictionary<int, long> offsetById = new Dictionary<int, long>();
 
-        private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+        private readonly CultureInfo culture = CultureInfo.InvariantCulture;
         private readonly FileStream fileStream;
         private readonly IValidator validator;
         private readonly Encoding enc = Encoding.Unicode;
@@ -343,20 +343,20 @@ namespace FileCabinetApp
                 for (int i = 0; i < setValues.Length; i += 2)
                 {
                     RecordData recordData;
-                    switch (setValues[i].ToLower(this.englishUS))
+                    switch (setValues[i].ToUpperInvariant())
                     {
-                        case "firstname":
+                        case "FIRSTNAME":
                             recordData = new RecordData() { FirstName = setValues[i + 1] };
                             this.validator.ValidatePrameter("firstname", recordData);
                             this.WriteFirstName(setValues[i + 1], this.offsetById[foundResult[j]]);
                             break;
-                        case "lastname":
+                        case "LASTNAME":
                             recordData = new RecordData() { LastName = setValues[i + 1] };
                             this.validator.ValidatePrameter("lastname", recordData);
                             this.WriteLastName(setValues[i + 1], this.offsetById[foundResult[j]]);
                             break;
-                        case "dateofbirth":
-                            if (!DateTime.TryParse(setValues[i + 1], this.englishUS, DateTimeStyles.None, out DateTime dateOfBirth))
+                        case "DATEOFBIRTH":
+                            if (!DateTime.TryParse(setValues[i + 1], this.culture, DateTimeStyles.None, out DateTime dateOfBirth))
                             {
                                 throw new ArgumentException("Incorrect dateofbith", nameof(setValues));
                             }
@@ -365,7 +365,7 @@ namespace FileCabinetApp
                             this.validator.ValidatePrameter("dateofbirth", recordData);
                             this.WriteDateOfBirth(dateOfBirth, this.offsetById[foundResult[j]]);
                             break;
-                        case "gender":
+                        case "GENDER":
                             if (!char.TryParse(setValues[i + 1], out char gender))
                             {
                                 throw new ArgumentException("Incorrect gender", nameof(setValues));
@@ -375,7 +375,7 @@ namespace FileCabinetApp
                             this.validator.ValidatePrameter("gender", recordData);
                             this.WriteGender(gender, this.offsetById[foundResult[j]]);
                             break;
-                        case "passportid":
+                        case "PASSPORTID":
                             if (!short.TryParse(setValues[i + 1], out short passportId))
                             {
                                 throw new ArgumentException("Incorrect passportId", nameof(setValues));
@@ -385,7 +385,7 @@ namespace FileCabinetApp
                             this.validator.ValidatePrameter("passportid", recordData);
                             this.WritePassportId(passportId, this.offsetById[foundResult[j]]);
                             break;
-                        case "salary":
+                        case "SALARY":
                             if (!decimal.TryParse(setValues[i + 1], out decimal salary))
                             {
                                 throw new ArgumentException("Incorrect salary", nameof(setValues));
@@ -617,7 +617,7 @@ namespace FileCabinetApp
                 bool isNeedAdd = true;
                 for (int i = 0; i < values.Length; i += 3)
                 {
-                    switch (values[i + 1].ToLower(this.englishUS))
+                    switch (values[i + 1].ToUpperInvariant())
                     {
                         case "id":
                             if (!int.TryParse(values[i + 2], out int id))
@@ -627,28 +627,28 @@ namespace FileCabinetApp
 
                             isNeedAdd = CheckOperator(values[i], record.Id == id, isNeedAdd, i);
                             break;
-                        case "firstname":
+                        case "FIRSTNAME":
                             isNeedAdd = CheckOperator(
                                 values[i],
-                                record.FirstName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS),
+                                string.Equals(record.FirstName, values[i + 2], StringComparison.InvariantCultureIgnoreCase),
                                 isNeedAdd,
                                 i);
                             break;
-                        case "lastname":
+                        case "LASTNAME":
                             isNeedAdd = CheckOperator(
                                 values[i],
-                                record.LastName.ToLower(this.englishUS) == values[i + 2].ToLower(this.englishUS),
+                                string.Equals(record.LastName, values[i + 2], StringComparison.InvariantCultureIgnoreCase),
                                 isNeedAdd,
                                 i);
                             break;
-                        case "dateofbirth":
+                        case "DATEOFBIRTH":
                             isNeedAdd = CheckOperator(
                                 values[i],
-                                record.DateOfBirth.ToString(this.englishUS) == values[i + 2],
+                                string.Equals(record.DateOfBirth.ToString(this.culture), values[i + 2], StringComparison.InvariantCultureIgnoreCase),
                                 isNeedAdd,
                                 i);
                             break;
-                        case "gender":
+                        case "GENDER":
                             if (!char.TryParse(values[i + 2], out char gender))
                             {
                                 throw new ArgumentException("Incorrect gender", nameof(values));
@@ -656,11 +656,11 @@ namespace FileCabinetApp
 
                             isNeedAdd = CheckOperator(
                                 values[i],
-                                record.Gender == gender,
+                                string.Equals(record.Gender.ToString(this.culture), gender.ToString(this.culture), StringComparison.InvariantCultureIgnoreCase),
                                 isNeedAdd,
                                 i);
                             break;
-                        case "passportid":
+                        case "PASSPORTID":
                             if (!short.TryParse(values[i + 2], out short passportId))
                             {
                                 throw new ArgumentException("Incorrect passportId", nameof(values));
@@ -672,7 +672,7 @@ namespace FileCabinetApp
                                 isNeedAdd,
                                 i);
                             break;
-                        case "salary":
+                        case "SALARY":
                             if (!decimal.TryParse(values[i + 2], out decimal salary))
                             {
                                 throw new ArgumentException("Incorrect salary", nameof(values));

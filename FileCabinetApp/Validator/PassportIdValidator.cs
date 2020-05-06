@@ -9,9 +9,9 @@ namespace FileCabinetApp
     /// </summary>
     public class PassportIdValidator : IRecordValidator
     {
-        private short minValue;
+        private readonly short minValue;
 
-        private short maxValue;
+        private readonly short maxValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PassportIdValidator"/> class.

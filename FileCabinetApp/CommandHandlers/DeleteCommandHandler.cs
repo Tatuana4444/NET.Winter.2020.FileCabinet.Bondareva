@@ -30,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "delete")
+            if (commandRequest.Command == "DELETE")
             {
                 this.Delete(commandRequest.Parameters);
             }

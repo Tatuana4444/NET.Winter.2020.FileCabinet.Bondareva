@@ -75,8 +75,8 @@ namespace FileCabinetApp
         [Browsable(false)]
         public string DateOfBirthString
         {
-            get { return this.DateOfBirth.ToString("yyyy-MM-dd", CultureInfo.CreateSpecificCulture("en-US")); }
-            set { this.DateOfBirth = Convert.ToDateTime(value, CultureInfo.CreateSpecificCulture("en-US")); }
+            get { return this.DateOfBirth.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+            set { this.DateOfBirth = Convert.ToDateTime(value, CultureInfo.InvariantCulture); }
         }
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace FileCabinetApp
         [Browsable(false)]
         public string GenderString
         {
-            get { return this.Gender.ToString(CultureInfo.CreateSpecificCulture("en-US")); }
-            set { this.Gender = Convert.ToChar(value, CultureInfo.CreateSpecificCulture("en-US")); }
+            get { return this.Gender.ToString(CultureInfo.InvariantCulture); }
+            set { this.Gender = Convert.ToChar(value, CultureInfo.InvariantCulture); }
         }
 
         /// <summary>

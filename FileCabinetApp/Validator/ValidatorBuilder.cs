@@ -13,12 +13,12 @@ namespace FileCabinetApp
     /// </summary>
     public class ValidatorBuilder
     {
-        private static IConfiguration config = new ConfigurationBuilder()
+        private static readonly IConfiguration Config = new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())
              .AddJsonFile("validation-rules.json")
              .Build();
 
-        private Dictionary<string, IRecordValidator> validators = new Dictionary<string, IRecordValidator>();
+        private readonly Dictionary<string, IRecordValidator> validators = new Dictionary<string, IRecordValidator>();
 
         /// <summary>
         /// Set validator for first name.
@@ -28,7 +28,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateFirstName(int min, int max)
         {
-            this.validators.Add("firstname", new FirstNameValidator(min, max));
+            this.validators.Add("FIRSTNAME", new FirstNameValidator(min, max));
             return this;
         }
 
@@ -40,7 +40,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateLastName(int min, int max)
         {
-            this.validators.Add("lastname", new LastNameValidator(min, max));
+            this.validators.Add("LASTNAME", new LastNameValidator(min, max));
             return this;
         }
 
@@ -52,7 +52,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateDateOfBirth(DateTime from, DateTime to)
         {
-            this.validators.Add("dateofbirth", new DateOfBirthValidator(from, to));
+            this.validators.Add("DATEOFBIRTH", new DateOfBirthValidator(from, to));
             return this;
         }
 
@@ -64,7 +64,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateGender(char manSymbol, char womanSymbol)
         {
-            this.validators.Add("gender", new GenderValidator(manSymbol, womanSymbol));
+            this.validators.Add("GENDER", new GenderValidator(manSymbol, womanSymbol));
             return this;
         }
 
@@ -76,7 +76,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidatePassportId(short min, short max)
         {
-            this.validators.Add("passportid", new PassportIdValidator(min, max));
+            this.validators.Add("PASSPORTID", new PassportIdValidator(min, max));
             return this;
         }
 
@@ -87,7 +87,7 @@ namespace FileCabinetApp
         /// <returns>Current builder.</returns>
         public ValidatorBuilder ValidateSalary(decimal min)
         {
-            this.validators.Add("salary", new SalaryValidator(min));
+            this.validators.Add("SALARY", new SalaryValidator(min));
             return this;
         }
 
@@ -106,7 +106,7 @@ namespace FileCabinetApp
         /// <returns>Default Validator.</returns>
         public IValidator CreateDefault()
         {
-            var defaultRules = config.GetSection("default")
+            var defaultRules = Config.GetSection("default")
                 .Get<ValidationRules>();
             return this.Create(defaultRules);
         }
@@ -117,14 +117,14 @@ namespace FileCabinetApp
         /// <returns>Custom Validator.</returns>
         public IValidator CreateCustom()
         {
-            var customRules = config.GetSection("custom")
+            var customRules = Config.GetSection("custom")
                 .Get<ValidationRules>();
             return this.Create(customRules);
         }
 
         private IValidator Create(ValidationRules rules)
         {
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            CultureInfo culture = CultureInfo.InvariantCulture;
             DateTimeStyles styles = DateTimeStyles.None;
             this.ValidateFirstName(rules.FirstName.Min, rules.FirstName.Max);
             this.ValidateLastName(rules.LastName.Min, rules.LastName.Max);

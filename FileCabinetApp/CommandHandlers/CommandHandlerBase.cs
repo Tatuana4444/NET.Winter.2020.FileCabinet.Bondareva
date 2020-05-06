@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
@@ -83,7 +84,8 @@ namespace FileCabinetApp.CommandHandlers
 
         private static void PrintMissedCommandInfo(string command)
         {
-            Console.WriteLine($"There is no '{command}' command. See 'help'.");
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            Console.WriteLine($"There is no '{command.ToLower(culture)}' command. See 'help'.");
             Console.WriteLine();
         }
 
@@ -117,7 +119,7 @@ namespace FileCabinetApp.CommandHandlers
             for (int i = 0; i < HelpCommandHandler.CommandsCount(); i++)
             {
                 string command = HelpCommandHandler.GetCommandName(i);
-                if (LevenshteinDistance(parameter, command) <= SimilarCoefficient)
+                if (LevenshteinDistance(parameter.ToUpperInvariant(), command.ToUpperInvariant()) <= SimilarCoefficient)
                 {
                     similarCommands.Add(command);
                 }

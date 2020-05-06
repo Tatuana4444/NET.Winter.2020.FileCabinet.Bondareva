@@ -29,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "purge")
+            if (commandRequest.Command == "PURGE")
             {
                 if (commandRequest.Parameters.Length == 0)
                 {

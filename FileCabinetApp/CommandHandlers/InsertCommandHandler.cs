@@ -30,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "insert")
+            if (commandRequest.Command == "INSERT")
             {
                 this.Insert(commandRequest.Parameters);
             }
@@ -43,6 +43,7 @@ namespace FileCabinetApp.CommandHandlers
         private static Tuple<bool, string, DateTime> DateConverter(string data)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            culture.DateTimeFormat.ShortDatePattern = "MMM/dd/yyyy";
             DateTimeStyles styles = DateTimeStyles.None;
             if (DateTime.TryParse(data, culture, styles, out DateTime date))
             {
@@ -106,7 +107,6 @@ namespace FileCabinetApp.CommandHandlers
                 data[i] = temp[1..^1];
             }
 
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             int id = default;
             string firstName = string.Empty, lastName = string.Empty;
             DateTime dateOfBirth = default;
@@ -115,9 +115,9 @@ namespace FileCabinetApp.CommandHandlers
             decimal salary = default;
             for (int i = 0; i < 7; i++)
             {
-                switch (data[i].Trim().ToLower(culture))
+                switch (data[i].Trim().ToUpperInvariant())
                 {
-                    case "id":
+                    case "ID":
                         isHere[0] = true;
                         if (!int.TryParse(data[i + 8], out id) || id <= 0)
                         {
@@ -125,30 +125,30 @@ namespace FileCabinetApp.CommandHandlers
                         }
 
                         break;
-                    case "firstname":
+                    case "FIRSTNAME":
                         isHere[1] = true;
                         firstName = data[i + 8];
                         break;
-                    case "lastname":
+                    case "LASTNAME":
                         isHere[2] = true;
                         lastName = data[i + 8];
                         break;
-                    case "dateofbirth":
+                    case "DATEOFBIRTH":
                         isHere[3] = true;
                         var concertingDate = DateConverter(data[i + 8]);
                         dateOfBirth = concertingDate.Item3;
                         break;
-                    case "gender":
+                    case "GENDER":
                         isHere[4] = true;
                         var convertingGender = CharConverter(data[i + 8]);
                         gender = convertingGender.Item3;
                         break;
-                    case "passportid":
+                    case "PASPORTID":
                         isHere[5] = true;
                         var convertingPassportId = ShortConverter(data[i + 8]);
                         passportId = convertingPassportId.Item3;
                         break;
-                    case "salary":
+                    case "SALARY":
                         isHere[6] = true;
                         var convertingSalaty = DecimalConverter(data[i + 8]);
                         salary = convertingSalaty.Item3;

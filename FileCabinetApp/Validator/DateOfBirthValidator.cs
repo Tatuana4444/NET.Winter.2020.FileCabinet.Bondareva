@@ -9,9 +9,9 @@ namespace FileCabinetApp
     /// </summary>
     public class DateOfBirthValidator : IRecordValidator
     {
-        private DateTime from;
+        private readonly DateTime from;
 
-        private DateTime to;
+        private readonly DateTime to;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DateOfBirthValidator"/> class.

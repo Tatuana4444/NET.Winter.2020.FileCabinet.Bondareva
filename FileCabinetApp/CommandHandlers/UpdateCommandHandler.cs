@@ -29,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "update")
+            if (commandRequest.Command == "UPDATE")
             {
                 this.Update(commandRequest.Parameters);
             }

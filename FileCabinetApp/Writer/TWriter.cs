@@ -20,10 +20,9 @@ namespace FileCabinetApp
         /// <param name="records">Rcords.</param>
         /// <param name="stream">Text Stream.</param>
         /// <param name="values">Name of colums that need to print.</param>
-        /// <param name="culture">Culture for strings..</param>
         /// <exception cref="ArgumentNullException">Thrown when records, stream, values or culture is null.</exception>
         /// <exception cref="ArgumentException">Thrown when records is empty.</exception>
-        public static void WriteToTextSream<T>(IEnumerable<T> records, TextWriter stream, string[] values, CultureInfo culture)
+        public static void WriteToTextSream<T>(IEnumerable<T> records, TextWriter stream, string[] values)
         {
             if (records is null)
             {
@@ -44,7 +43,7 @@ namespace FileCabinetApp
 
             if (list.Count == 0)
             {
-                throw new ArgumentException("Records can't be empty.", nameof(records));
+                throw new ArgumentException("Records are empty.", nameof(records));
             }
 
             Type recordType = list[0].GetType();
@@ -59,10 +58,9 @@ namespace FileCabinetApp
                 for (int i = 0; i < values.Length; i++)
                 {
                     bool hasGot = false;
-                    string foundedName = values[i].ToLower(culture);
                     foreach (var f in fields)
                     {
-                        if (foundedName == f.Name.ToLower(culture))
+                        if (string.Equals(values[i], f.Name, StringComparison.InvariantCultureIgnoreCase))
                         {
                             neededFields.Add(f);
                             hasGot = true;
@@ -102,7 +100,7 @@ namespace FileCabinetApp
                 fieldsToPrint[0][i] = neededFields[i].Name;
                 if (isDate)
                 {
-                    fieldsToPrint[1][i] = ((DateTime)firstField).ToString("d", culture);
+                    fieldsToPrint[1][i] = ((DateTime)firstField).ToString("yyyy - MMM - dd", CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -114,7 +112,7 @@ namespace FileCabinetApp
                 {
                     if (isDate)
                     {
-                        fieldsToPrint[j + 1][i] = ((DateTime)neededFields[i].GetValue(list[j])).ToString("d", culture);
+                        fieldsToPrint[j + 1][i] = ((DateTime)neededFields[i].GetValue(list[j])).ToString("yyyy - MMM - dd", CultureInfo.InvariantCulture);
                     }
                     else
                     {

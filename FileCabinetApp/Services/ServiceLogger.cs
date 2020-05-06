@@ -12,8 +12,7 @@ namespace FileCabinetApp
     /// </summary>
     public class ServiceLogger : IFileCabinetService
     {
-        private static readonly CultureInfo EnglishUS = CultureInfo.CreateSpecificCulture("en-US");
-        private static readonly DateTimeFormatInfo Dtfi = EnglishUS.DateTimeFormat;
+        private static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
         private readonly IFileCabinetService service;
         private readonly TextWriter writer;
 
@@ -24,7 +23,6 @@ namespace FileCabinetApp
         public ServiceLogger(IFileCabinetService service)
         {
             this.service = new ServiceMeter(service);
-            Dtfi.ShortDatePattern = "yyyy-MMM-dd";
             this.writer = File.CreateText("log.txt");
         }
 
@@ -41,7 +39,7 @@ namespace FileCabinetApp
             }
 
             this.LogWriter($"{DateTime.Now} - Calling Create() with FirstName = '{recordData.FirstName}', " +
-                $"LastName = '{recordData.LastName}', DateOfBirth = '{recordData.DateOfBirth.ToString(EnglishUS)}', " +
+                $"LastName = '{recordData.LastName}', DateOfBirth = '{recordData.DateOfBirth.ToString("yyyy - MMM - dd", Culture)}', " +
                 $"Gender = '{recordData.Gender}', PassportId = '{recordData.PassportId}', " +
                 $"Salary = '{recordData.Salary}'");
 
@@ -122,7 +120,7 @@ namespace FileCabinetApp
                 foreach (var r in result.Records)
                 {
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(EnglishUS)}', " +
+                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString("yyyy - MMM - dd", Culture)}', " +
                         $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
                         $"Salary = '{r.Salary}'");
                 }
@@ -178,7 +176,7 @@ namespace FileCabinetApp
             foreach (var r in snapshot.Records)
             {
                 this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                    $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(EnglishUS)}', " +
+                    $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString("yyyy - MMM - dd", Culture)}', " +
                     $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
                     $"Salary = '{r.Salary}'");
             }
@@ -211,7 +209,7 @@ namespace FileCabinetApp
                 foreach (var r in result)
                 {
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(EnglishUS)}', " +
+                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString("yyyy - MMM - dd", Culture)}', " +
                         $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
                         $"Salary = '{r.Salary}'");
                 }

@@ -30,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "create")
+            if (commandRequest.Command == "CREATE")
             {
                 if (commandRequest.Parameters.Length == 0)
                 {
@@ -54,7 +54,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private static Tuple<bool, string, DateTime> DateConverter(string data)
         {
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            CultureInfo culture = CultureInfo.InvariantCulture;
             DateTimeStyles styles = DateTimeStyles.None;
             if (DateTime.TryParse(data, culture, styles, out DateTime date))
             {

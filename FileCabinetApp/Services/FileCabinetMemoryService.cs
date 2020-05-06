@@ -15,7 +15,7 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> cache = new Dictionary<string, List<FileCabinetRecord>>();
-        private readonly CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
+        private readonly CultureInfo culture = CultureInfo.InvariantCulture;
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly IValidator validator;
         private readonly Dictionary<int, int> presentIdList = new Dictionary<int, int>();
@@ -75,9 +75,9 @@ namespace FileCabinetApp
                 Salary = recordData.Salary,
             };
             this.list.Add(record);
-            this.AddToDictionary(this.firstNameDictionary, recordData.FirstName.ToUpper(this.englishUS), record.Id);
-            this.AddToDictionary(this.lastNameDictionary, recordData.LastName.ToUpper(this.englishUS), record.Id);
-            this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.englishUS), record.Id);
+            this.AddToDictionary(this.firstNameDictionary, recordData.FirstName.ToUpperInvariant(), record.Id);
+            this.AddToDictionary(this.lastNameDictionary, recordData.LastName.ToUpperInvariant(), record.Id);
+            this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.culture), record.Id);
             this.cache.Clear();
             return record.Id;
         }
@@ -115,13 +115,14 @@ namespace FileCabinetApp
                 foundResult = this.list;
             }
 
-            if (this.cache.ContainsKey(filterString))
+            var filterStr = filterString.ToUpperInvariant();
+            if (this.cache.ContainsKey(filterStr))
             {
-                foundResult = this.cache[filterString];
+                foundResult = this.cache[filterStr];
             }
             else
             {
-                this.cache.Add(filterString, foundResult);
+                this.cache.Add(filterStr, foundResult);
             }
 
             return new ReadOnlyCollection<FileCabinetRecord>(foundResult);
@@ -153,9 +154,9 @@ namespace FileCabinetApp
             {
                 if (this.presentIdList.TryGetValue(record.Id, out int pos))
                 {
-                    RemoveFromDictionary(this.firstNameDictionary, this.list[pos].FirstName.ToUpper(this.englishUS), record.Id);
-                    RemoveFromDictionary(this.lastNameDictionary, this.list[pos].LastName.ToUpper(this.englishUS), record.Id);
-                    RemoveFromDictionary(this.dateOfBirthDictionary, this.list[pos].DateOfBirth.ToString(this.englishUS), record.Id);
+                    RemoveFromDictionary(this.firstNameDictionary, this.list[pos].FirstName.ToUpperInvariant(), record.Id);
+                    RemoveFromDictionary(this.lastNameDictionary, this.list[pos].LastName.ToUpperInvariant(), record.Id);
+                    RemoveFromDictionary(this.dateOfBirthDictionary, this.list[pos].DateOfBirth.ToString(this.culture), record.Id);
                     this.list[pos] = record;
                 }
                 else
@@ -164,9 +165,9 @@ namespace FileCabinetApp
                     this.presentIdList.Add(record.Id, this.list.Count - 1);
                 }
 
-                this.AddToDictionary(this.firstNameDictionary, record.FirstName.ToUpper(this.englishUS), record.Id);
-                this.AddToDictionary(this.lastNameDictionary, record.LastName.ToUpper(this.englishUS), record.Id);
-                this.AddToDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.englishUS), record.Id);
+                this.AddToDictionary(this.firstNameDictionary, record.FirstName.ToUpperInvariant(), record.Id);
+                this.AddToDictionary(this.lastNameDictionary, record.LastName.ToUpperInvariant(), record.Id);
+                this.AddToDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.culture), record.Id);
             }
         }
 
@@ -188,12 +189,13 @@ namespace FileCabinetApp
         /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public IEnumerable<int> Delete(string param)
         {
-            if (param == null)
+            if (string.IsNullOrWhiteSpace(param))
             {
-                throw new ArgumentNullException(nameof(param));
+                throw new ArgumentNullException(nameof(param), "Incorrect format");
             }
 
             string[] values = param.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+
             values[^1] = values[^1][0..^1];
             if (values.Length % 3 != 0)
             {
@@ -206,9 +208,9 @@ namespace FileCabinetApp
             {
                 deletedId.Add(foundResult[i].Id);
                 this.presentIdList.Remove(foundResult[i].Id);
-                this.firstNameDictionary[foundResult[i].FirstName.ToUpper(this.englishUS)].Remove(foundResult[i]);
-                this.lastNameDictionary[foundResult[i].LastName.ToUpper(this.englishUS)].Remove(foundResult[i]);
-                this.dateOfBirthDictionary[foundResult[i].DateOfBirth.ToString(this.englishUS)].Remove(foundResult[i]);
+                this.firstNameDictionary[foundResult[i].FirstName.ToUpperInvariant()].Remove(foundResult[i]);
+                this.lastNameDictionary[foundResult[i].LastName.ToUpperInvariant()].Remove(foundResult[i]);
+                this.dateOfBirthDictionary[foundResult[i].DateOfBirth.ToString(this.culture)].Remove(foundResult[i]);
                 this.list.Remove(foundResult[i]);
             }
 
@@ -275,7 +277,7 @@ namespace FileCabinetApp
             List<FileCabinetRecord> foundList = new List<FileCabinetRecord>();
             foreach (FileCabinetRecord record in fileCabinetRecords)
             {
-                if (record.Gender == gender)
+                if (string.Equals(record.Gender.ToString(CultureInfo.InvariantCulture), gender.ToString(CultureInfo.InvariantCulture), StringComparison.InvariantCultureIgnoreCase))
                 {
                     foundList.Add(record);
                 }
@@ -350,20 +352,20 @@ namespace FileCabinetApp
                 for (int i = 0; i < setValues.Length; i += 2)
                 {
                     RecordData recordData;
-                    switch (setValues[i].ToLower(this.englishUS))
+                    switch (setValues[i].ToUpperInvariant())
                     {
-                        case "firstname":
+                        case "FIRSTNAME":
                             recordData = new RecordData() { FirstName = setValues[i + 1] };
                             this.validator.ValidatePrameter("firstname", recordData);
                             foundResult[j].FirstName = setValues[i + 1];
                             break;
-                        case "lastname":
+                        case "LASTNAME":
                             recordData = new RecordData() { LastName = setValues[i + 1] };
                             this.validator.ValidatePrameter("lastname", recordData);
                             foundResult[j].LastName = setValues[i + 1];
                             break;
-                        case "dateofbirth":
-                            if (!DateTime.TryParse(setValues[i + 1], this.englishUS, DateTimeStyles.None, out DateTime dateOfBirth))
+                        case "DATEOFBIRTH":
+                            if (!DateTime.TryParse(setValues[i + 1], this.culture, DateTimeStyles.None, out DateTime dateOfBirth))
                             {
                                 throw new ArgumentException("Incorrect dateofbith", nameof(setValues));
                             }
@@ -372,7 +374,7 @@ namespace FileCabinetApp
                             this.validator.ValidatePrameter("dateofbirth", recordData);
                             foundResult[j].DateOfBirth = dateOfBirth;
                             break;
-                        case "gender":
+                        case "GENDER":
                             if (!char.TryParse(setValues[i + 1], out char gender))
                             {
                                 throw new ArgumentException("Incorrect gender", nameof(setValues));
@@ -382,7 +384,7 @@ namespace FileCabinetApp
                             this.validator.ValidatePrameter("gender", recordData);
                             foundResult[j].Gender = gender;
                             break;
-                        case "passportid":
+                        case "PASSPORTID":
                             if (!short.TryParse(setValues[i + 1], out short passportId))
                             {
                                 throw new ArgumentException("Incorrect passportId", nameof(setValues));
@@ -392,7 +394,7 @@ namespace FileCabinetApp
                             this.validator.ValidatePrameter("passportid", recordData);
                             foundResult[j].PassportId = passportId;
                             break;
-                        case "salary":
+                        case "SALARY":
                             if (!decimal.TryParse(setValues[i + 1], out decimal salary))
                             {
                                 throw new ArgumentException("Incorrect salary", nameof(setValues));
@@ -416,7 +418,7 @@ namespace FileCabinetApp
                 filterString += values[i];
             }
 
-            return filterString.ToLower(this.englishUS);
+            return filterString.ToUpperInvariant();
         }
 
         private bool Remove(int id)
@@ -430,9 +432,9 @@ namespace FileCabinetApp
             FileCabinetRecord record = this.list[i];
             this.list.RemoveAt(i);
 
-            RemoveFromDictionary(this.firstNameDictionary, record.FirstName.ToUpper(this.englishUS), id);
-            RemoveFromDictionary(this.lastNameDictionary, record.LastName.ToUpper(this.englishUS), id);
-            RemoveFromDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.englishUS), id);
+            RemoveFromDictionary(this.firstNameDictionary, record.FirstName.ToUpperInvariant(), id);
+            RemoveFromDictionary(this.lastNameDictionary, record.LastName.ToUpperInvariant(), id);
+            RemoveFromDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.culture), id);
             this.presentIdList.Remove(id);
 
             return true;
@@ -441,9 +443,10 @@ namespace FileCabinetApp
         private void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string name, int id)
         {
             List<FileCabinetRecord> list;
-            if (dictionary.ContainsKey(name.ToUpper(this.englishUS)))
+            string nameStr = name.ToUpperInvariant();
+            if (dictionary.ContainsKey(nameStr))
             {
-                dictionary[name.ToUpper(this.englishUS)].Add(this.list[this.presentIdList[id]]);
+                dictionary[nameStr].Add(this.list[this.presentIdList[id]]);
             }
             else
             {
@@ -451,7 +454,7 @@ namespace FileCabinetApp
                 {
                     this.list[this.presentIdList[id]],
                 };
-                dictionary.Add(name.ToUpper(this.englishUS), list);
+                dictionary.Add(nameStr, list);
             }
         }
 
@@ -477,27 +480,27 @@ namespace FileCabinetApp
             IEnumerable<FileCabinetRecord> modifiedList = this.list;
             for (int i = 0; i < values.Length; i += 3)
             {
-                switch (values[i + 1].ToLower(this.englishUS))
+                switch (values[i + 1].ToUpperInvariant())
                 {
-                    case "id":
+                    case "ID":
                         if (!int.TryParse(values[i + 2], out int id))
                         {
                             throw new ArgumentException("Incorrect id", nameof(values));
                         }
 
-                        if (values[i] == "and")
+                        if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))
                         {
                             modifiedList = modifiedList.Intersect(FindById(modifiedList, id));
                         }
                         else
                         {
-                            if (values[i] == "or")
+                            if (string.Equals(values[i], "OR", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 modifiedList = modifiedList.Union(FindById(this.list, id));
                             }
                             else
                             {
-                                if (i == 0 && values[i] == "where")
+                                if (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     modifiedList = FindById(this.list, id);
                                 }
@@ -509,24 +512,25 @@ namespace FileCabinetApp
                         }
 
                         break;
-                    case "firstname":
-                        if (this.firstNameDictionary.ContainsKey(values[i + 2].ToUpper(this.englishUS)))
+                    case "FIRSTNAME":
+                        string firstnameStr = values[i + 2].ToUpperInvariant();
+                        if (this.firstNameDictionary.ContainsKey(firstnameStr))
                         {
-                            if (values[i] == "and")
+                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                modifiedList = modifiedList.Intersect(this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                modifiedList = modifiedList.Intersect(this.firstNameDictionary[firstnameStr]);
                             }
                             else
                             {
-                                if (values[i] == "or")
+                                if (string.Equals(values[i], "OR", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    modifiedList = modifiedList.Union(this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                    modifiedList = modifiedList.Union(this.firstNameDictionary[firstnameStr]);
                                 }
                                 else
                                 {
-                                    if (i == 0 && values[i] == "where")
+                                    if (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase))
                                     {
-                                        modifiedList = this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                        modifiedList = this.firstNameDictionary[firstnameStr];
                                     }
                                     else
                                     {
@@ -537,31 +541,33 @@ namespace FileCabinetApp
                         }
                         else
                         {
-                            if (values[i] == "and" || (i == 0 && values[i] == "where"))
+                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase)
+                                || (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase)))
                             {
                                 modifiedList = new List<FileCabinetRecord>();
                             }
                         }
 
                         break;
-                    case "lastname":
-                        if (this.lastNameDictionary.ContainsKey(values[i + 2].ToUpper(this.englishUS)))
+                    case "LASTNAME":
+                        string lastnameStr = values[i + 2].ToUpperInvariant();
+                        if (this.lastNameDictionary.ContainsKey(lastnameStr))
                         {
-                            if (values[i] == "and")
+                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                modifiedList = modifiedList.Intersect(this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                modifiedList = modifiedList.Intersect(this.lastNameDictionary[lastnameStr]);
                             }
                             else
                             {
-                                if (values[i] == "or")
+                                if (string.Equals(values[i], "OR", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    modifiedList = modifiedList.Union(this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                    modifiedList = modifiedList.Union(this.lastNameDictionary[lastnameStr]);
                                 }
                                 else
                                 {
-                                    if (i == 0 && values[i] == "where")
+                                    if (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase))
                                     {
-                                        modifiedList = this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                        modifiedList = this.lastNameDictionary[lastnameStr];
                                     }
                                     else
                                     {
@@ -572,31 +578,33 @@ namespace FileCabinetApp
                         }
                         else
                         {
-                            if (values[i] == "and" || (i == 0 && values[i] == "where"))
+                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase)
+                                || (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase)))
                             {
                                 modifiedList = new List<FileCabinetRecord>();
                             }
                         }
 
                         break;
-                    case "dateofbirth":
-                        if (this.dateOfBirthDictionary.ContainsKey(values[i + 2].ToUpper(this.englishUS)))
+                    case "DATEOFBIRTH":
+                        string dateStr = values[i + 2].ToUpperInvariant();
+                        if (this.dateOfBirthDictionary.ContainsKey(dateStr))
                         {
-                            if (values[i] == "and")
+                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                modifiedList = modifiedList.Intersect(this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                modifiedList = modifiedList.Intersect(this.dateOfBirthDictionary[dateStr]);
                             }
                             else
                             {
-                                if (values[i] == "or")
+                                if (string.Equals(values[i], "OR", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    modifiedList = modifiedList.Union(this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                    modifiedList = modifiedList.Union(this.dateOfBirthDictionary[dateStr]);
                                 }
                                 else
                                 {
-                                    if (i == 0 && values[i] == "where")
+                                    if (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase))
                                     {
-                                        modifiedList = this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                        modifiedList = this.dateOfBirthDictionary[dateStr];
                                     }
                                     else
                                     {
@@ -607,32 +615,32 @@ namespace FileCabinetApp
                         }
                         else
                         {
-                            if (values[i] == "and" || (i == 0 && values[i] == "where"))
+                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase) || (i == 0 && values[i] == "where"))
                             {
                                 modifiedList = new List<FileCabinetRecord>();
                             }
                         }
 
                         break;
-                    case "gender":
+                    case "GENDER":
                         if (!char.TryParse(values[i + 2], out char gender))
                         {
                             throw new ArgumentException("Incorrect gender", nameof(values));
                         }
 
-                        if (values[i] == "and")
+                        if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))
                         {
                             modifiedList = modifiedList.Intersect(FindByGender(modifiedList, gender));
                         }
                         else
                         {
-                            if (values[i] == "or")
+                            if (string.Equals(values[i], "OR", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 modifiedList = modifiedList.Union(FindByGender(this.list, gender));
                             }
                             else
                             {
-                                if (i == 0 && values[i] == "where")
+                                if (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     modifiedList = FindByGender(this.list, gender);
                                 }
@@ -644,25 +652,25 @@ namespace FileCabinetApp
                         }
 
                         break;
-                    case "passportid":
+                    case "PASSPORTID":
                         if (!short.TryParse(values[i + 2], out short passportId))
                         {
                             throw new ArgumentException("Incorrect passportId", nameof(values));
                         }
 
-                        if (values[i] == "and")
+                        if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))
                         {
                             modifiedList = modifiedList.Intersect(FindByPassportId(modifiedList, passportId));
                         }
                         else
                         {
-                            if (values[i] == "or")
+                            if (string.Equals(values[i], "OR", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 modifiedList = modifiedList.Union(FindByPassportId(this.list, passportId));
                             }
                             else
                             {
-                                if (i == 0 && values[i] == "where")
+                                if (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     modifiedList = FindByPassportId(this.list, passportId);
                                 }
@@ -674,25 +682,25 @@ namespace FileCabinetApp
                         }
 
                         break;
-                    case "salary":
+                    case "SALARY":
                         if (!decimal.TryParse(values[i + 2], out decimal salary))
                         {
                             throw new ArgumentException("Incorrect passportId", nameof(values));
                         }
 
-                        if (values[i] == "and")
+                        if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))
                         {
                             modifiedList = modifiedList.Intersect(FindBySalary(modifiedList, salary));
                         }
                         else
                         {
-                            if (values[i] == "or")
+                            if (string.Equals(values[i], "OR", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 modifiedList = modifiedList.Union(FindBySalary(this.list, salary));
                             }
                             else
                             {
-                                if (i == 0 && values[i] == "where")
+                                if (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     modifiedList = FindBySalary(this.list, salary);
                                 }

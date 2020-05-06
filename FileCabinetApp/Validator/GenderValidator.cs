@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FileCabinetApp
@@ -9,9 +10,9 @@ namespace FileCabinetApp
     /// </summary>
     public class GenderValidator : IRecordValidator
     {
-        private char manSymbol;
+        private readonly char manSymbol;
 
-        private char womanSymbol;
+        private readonly char womanSymbol;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenderValidator"/> class.
@@ -35,7 +36,15 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData), "RecordData name can't be null");
             }
 
-            if (recordData.Gender != this.womanSymbol && recordData.Gender != this.manSymbol)
+            if (
+                !string.Equals(
+                    recordData.Gender.ToString(CultureInfo.InvariantCulture),
+                    this.womanSymbol.ToString(CultureInfo.InvariantCulture),
+                    StringComparison.InvariantCultureIgnoreCase)
+                && !string.Equals(
+                    recordData.Gender.ToString(CultureInfo.InvariantCulture),
+                    this.manSymbol.ToString(CultureInfo.InvariantCulture),
+                    StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new ArgumentException($"Gender should be {this.womanSymbol} or {this.manSymbol}", nameof(recordData));
             }

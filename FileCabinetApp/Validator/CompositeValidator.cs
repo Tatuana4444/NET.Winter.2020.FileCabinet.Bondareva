@@ -9,7 +9,7 @@ namespace FileCabinetApp
     /// </summary>
     public class CompositeValidator : IValidator
     {
-        private Dictionary<string, IRecordValidator> validators;
+        private readonly Dictionary<string, IRecordValidator> validators;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeValidator"/> class.
@@ -27,7 +27,25 @@ namespace FileCabinetApp
         /// <param name="recordData">Checking data.</param>
         public void ValidatePrameter(string validator, RecordData recordData)
         {
-            this.validators[validator].ValidateParameters(recordData);
+            if (validator is null)
+            {
+                throw new ArgumentNullException(nameof(validator), "Validator can't be null");
+            }
+
+            if (recordData is null)
+            {
+                throw new ArgumentNullException(nameof(recordData), "Record can't be null");
+            }
+
+            string validatorStr = validator.ToUpperInvariant();
+            if (this.validators.ContainsKey(validatorStr))
+            {
+                this.validators[validatorStr].ValidateParameters(recordData);
+            }
+            else
+            {
+                throw new ArgumentException("No such validator.", validator);
+            }
         }
 
         /// <summary>

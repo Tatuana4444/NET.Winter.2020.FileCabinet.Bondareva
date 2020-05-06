@@ -30,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(commandRequest), "CommandRequest can't be null.");
             }
 
-            if (commandRequest.Command == "import")
+            if (commandRequest.Command == "IMPORT")
             {
                 this.Import(commandRequest.Parameters);
             }
