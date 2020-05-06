@@ -33,9 +33,9 @@ namespace FileCabinetApp
         /// Create new snapshot.
         /// </summary>
         /// <returns>Snapshot.</returns>
-        public static FileCabinetServiceSnapshot MakeSnapshot()
+        public FileCabinetServiceSnapshot MakeSnapshot()
         {
-            return new FileCabinetServiceSnapshot();
+            return new FileCabinetServiceSnapshot(this.list.ToArray());
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace FileCabinetApp
             for (int i = 0; i < foundResult.Count; i++)
             {
                 deletedId.Add(foundResult[i].Id);
-
+                this.presentIdList.Remove(foundResult[i].Id);
                 this.firstNameDictionary[foundResult[i].FirstName.ToUpper(this.englishUS)].Remove(foundResult[i]);
                 this.lastNameDictionary[foundResult[i].LastName.ToUpper(this.englishUS)].Remove(foundResult[i]);
                 this.dateOfBirthDictionary[foundResult[i].DateOfBirth.ToString(this.englishUS)].Remove(foundResult[i]);

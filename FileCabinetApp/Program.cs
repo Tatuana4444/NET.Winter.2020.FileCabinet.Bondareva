@@ -25,7 +25,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "memory", "logger" };
+            string[] cmdParam = new string[] { "default", "memory", "stopwatch", "logger" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -48,7 +48,7 @@ namespace FileCabinetApp
 
                     if (args[i] == "use-logger")
                     {
-                        cmdParam[2] = "logger";
+                        cmdParam[3] = "logger";
                     }
 
                     string[] param = args[i].Split('=');
@@ -115,7 +115,7 @@ namespace FileCabinetApp
             ICommandHandler deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             ICommandHandler selectCommand = new SelectCommandHandler(fileCabinetService, Program.PrinterByFilter);
             ICommandHandler statCommandHandler = new StatCommandHandler(fileCabinetService);
-            ICommandHandler exportCommandHandler = new ExportCommandHandler();
+            ICommandHandler exportCommandHandler = new ExportCommandHandler(fileCabinetService);
             ICommandHandler importCommandHandler = new ImportCommandHandler(fileCabinetService);
             ICommandHandler purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
             ICommandHandler helpCommandHandler = new HelpCommandHandler();

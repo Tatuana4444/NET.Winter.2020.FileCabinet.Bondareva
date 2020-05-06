@@ -47,12 +47,12 @@ namespace FileCabinetApp
             this.writer.WriteStartElement("record");
             this.writer.WriteAttributeString("id", record.Id.ToString(this.englishUS));
             this.writer.WriteStartElement("name");
-            this.writer.WriteAttributeString("fist", record.FirstName);
+            this.writer.WriteAttributeString("first", record.FirstName);
             this.writer.WriteAttributeString("last", record.LastName);
             this.writer.WriteEndElement();
-            this.writer.WriteElementString("dateOfBirth", record.DateOfBirth.ToString(this.englishUS));
+            this.writer.WriteElementString("dateOfBirth", record.DateOfBirth.ToString("yyyy-MM-dd", this.englishUS));
             this.writer.WriteElementString("gender", record.Gender.ToString(this.englishUS));
-            this.writer.WriteElementString("passportID", record.PassportId.ToString(this.englishUS));
+            this.writer.WriteElementString("passportId", record.PassportId.ToString(this.englishUS));
             this.writer.WriteElementString("salary", record.Salary.ToString(this.englishUS));
             this.writer.WriteEndElement();
         }

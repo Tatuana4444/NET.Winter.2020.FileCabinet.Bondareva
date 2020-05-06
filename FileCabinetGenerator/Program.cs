@@ -59,48 +59,52 @@ namespace FileCabinetGenerator
                 i++;
             }
 
-            List<FileCabinetRecord> list = GenerateData(amount, startId);
+            RecordForSerializer list = GenerateData(amount, startId);
+            try
+            {
+                TextWriter writer = new StreamWriter(outputFile);
 
-            TextWriter writer = new StreamWriter(outputFile);
-            if (isCsv)
-            {
-                
-                foreach (var record in list)
+                if (isCsv)
                 {
-                    writer.WriteLine($"{record.Id}, {record.FirstName}, {record.LastName}, " +
-                    $"{record.DateOfBirth}, {record.Gender}, {record.PassportId}, {record.Salary}");
+
+                    foreach (var record in list.Record)
+                    {
+                        writer.WriteLine($"{record.Id}, {record.Name.FirstName}, {record.Name.LastName}, " +
+                        $"{record.DateOfBirth}, {record.Gender}, {record.PassportId}, {record.Salary}");
+                    }
+                    writer.Flush();
                 }
-                writer.Flush();
-            }
-            else
-            {
-                XmlSerializer ser = new XmlSerializer(typeof(List<FileCabinetRecord>));
+                else
+                {
+                    XmlSerializer ser = new XmlSerializer(typeof(RecordForSerializer));
                     ser.Serialize(writer, list);
 
+                }
+            }
+            catch(DirectoryNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
-        private static List<FileCabinetRecord> GenerateData(int amount, int startId)
+        private static RecordForSerializer GenerateData(int amount, int startId)
         {
             Random rnd = new Random();
             DateTime date = new DateTime(1950, 1, 1);
             DateTime currentDate = DateTime.Now;
-            List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+            RecordForSerializer list = new RecordForSerializer();
             for (int i = startId; i < startId + amount; i++)
             {
 
-                FileCabinetRecord record = new FileCabinetRecord
-                {
-                    Id = i,
-                    FirstName = GenerateString(rnd.Next(2, 60)),
-                    LastName = GenerateString(rnd.Next(2, 60)),
-                    DateOfBirth = date.AddDays(rnd.Next((currentDate - date).Days)),
-                    Gender = rnd.Next(1, 2) == 1 ? 'M' : 'W',
-                    PassportId = (short)rnd.Next(1000, 9999),
-                    Salary = rnd.Next(375, int.MaxValue),
-                };
+                Record record = new Record(i, 
+                    new Name { FirstName = GenerateString(rnd.Next(2, 60)), LastName = GenerateString(rnd.Next(2, 60))},
+                    date.AddDays(rnd.Next((currentDate - date).Days)), 
+                    rnd.Next(1, 3) == 1 ? 'M' : 'W', 
+                    (short)rnd.Next(1000, 9999), 
+                    rnd.Next(375, int.MaxValue));
 
-                list.Add(record);
+
+                list.Record.Add(record);
             }
             
             return list;

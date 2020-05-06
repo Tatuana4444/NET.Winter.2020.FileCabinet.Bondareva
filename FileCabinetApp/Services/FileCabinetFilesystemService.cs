@@ -152,6 +152,26 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Create new snapshot.
+        /// </summary>
+        /// <returns>Snapshot.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+            this.fileStream.Position = 0;
+            for (int i = 0; i < this.fileStream.Length / RecordLength; i++)
+            {
+                FileCabinetRecord record = this.ReadFromFile();
+                if (record != null)
+                {
+                    list.Add(record);
+                }
+            }
+
+            return new FileCabinetServiceSnapshot(list.ToArray());
+        }
+
+        /// <summary>
         /// Restore date from snapshot.
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
@@ -244,6 +264,7 @@ namespace FileCabinetApp
             for (int i = 0; i < foundResult.Count; i++)
             {
                 this.Remove(foundResult[i]);
+                this.offsetById.Remove(foundResult[i]);
             }
 
             return foundResult;

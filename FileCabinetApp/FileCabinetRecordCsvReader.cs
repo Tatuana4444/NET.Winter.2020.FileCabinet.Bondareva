@@ -10,7 +10,7 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetRecordCsvReader
     {
-        private StreamReader stream;
+        private readonly StreamReader stream;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvReader"/> class.
@@ -43,6 +43,17 @@ namespace FileCabinetApp
                     try
                     {
                         validator.ValidateParameters(recordData);
+                        var record = new FileCabinetRecord
+                        {
+                            Id = id,
+                            FirstName = recordData.FirstName,
+                            LastName = recordData.LastName,
+                            DateOfBirth = recordData.DateOfBirth,
+                            Gender = recordData.Gender,
+                            PassportId = recordData.PassportId,
+                            Salary = recordData.Salary,
+                        };
+                        list.Add(record);
                     }
                     catch (ArgumentNullException e)
                     {
@@ -52,18 +63,6 @@ namespace FileCabinetApp
                     {
                         Console.WriteLine(e.Message);
                     }
-
-                    var record = new FileCabinetRecord
-                    {
-                        Id = id,
-                        FirstName = recordData.FirstName,
-                        LastName = recordData.LastName,
-                        DateOfBirth = recordData.DateOfBirth,
-                        Gender = recordData.Gender,
-                        PassportId = recordData.PassportId,
-                        Salary = recordData.Salary,
-                    };
-                    list.Add(record);
                 }
 
                 rec = this.stream.ReadLine();

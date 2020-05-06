@@ -11,7 +11,7 @@ namespace FileCabinetApp
     /// </summary>
     public class ServiceMeter : IFileCabinetService
     {
-        private IFileCabinetService service;
+        private readonly IFileCabinetService service;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceMeter"/> class.
@@ -61,6 +61,20 @@ namespace FileCabinetApp
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             var result = this.service.GetStat();
+            stopWatch.Stop();
+            Console.WriteLine($"Get stat method execution duration is {stopWatch.ElapsedTicks} ticks.");
+            return result;
+        }
+
+        /// <summary>
+        /// Create new snapshot.
+        /// </summary>
+        /// <returns>Snapshot.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var result = this.service.MakeSnapshot();
             stopWatch.Stop();
             Console.WriteLine($"Get stat method execution duration is {stopWatch.ElapsedTicks} ticks.");
             return result;

@@ -10,7 +10,7 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetRecordCsvWriter
     {
-        private TextWriter writer;
+        private readonly TextWriter writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvWriter"/> class.

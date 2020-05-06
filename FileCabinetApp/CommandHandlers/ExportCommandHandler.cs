@@ -8,8 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Handler for command export.
     /// </summary>
-    public class ExportCommandHandler : CommandHandlerBase
+    public class ExportCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Current service.</param>
+        public ExportCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Export request handler.
         /// </summary>
@@ -52,7 +61,7 @@ namespace FileCabinetApp.CommandHandlers
             try
             {
                 StreamWriter writer = new StreamWriter(param[1]);
-                var snapshot = FileCabinetMemoryService.MakeSnapshot();
+                var snapshot = this.Service.MakeSnapshot();
                 if (param[0] == "csv")
                 {
                     snapshot.SaveToCsv(writer);

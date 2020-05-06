@@ -16,6 +16,27 @@ namespace FileCabinetApp
         private FileCabinetRecord[] records = Array.Empty<FileCabinetRecord>();
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetServiceSnapshot"/> class.
+        /// </summary>
+        public FileCabinetServiceSnapshot()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetServiceSnapshot"/> class.
+        /// </summary>
+        /// <param name="records">Records to write.</param>
+        public FileCabinetServiceSnapshot(FileCabinetRecord[] records)
+        {
+            if (records is null)
+            {
+                throw new ArgumentNullException(nameof(records), "Recoords can't be null");
+            }
+
+            this.records = records;
+        }
+
+        /// <summary>
         /// Gets records.
         /// </summary>
         /// <value>
@@ -42,10 +63,12 @@ namespace FileCabinetApp
         /// <param name="streamWriter">Stream for writing.</param>
         public void SaveToXml(StreamWriter streamWriter)
         {
-            XmlWriterSettings writerSettings = new XmlWriterSettings();
-            writerSettings.Indent = true;
-            writerSettings.OmitXmlDeclaration = true;
-            writerSettings.NewLineOnAttributes = false;
+            XmlWriterSettings writerSettings = new XmlWriterSettings
+            {
+                Indent = true,
+                OmitXmlDeclaration = true,
+                NewLineOnAttributes = false,
+            };
             var cabinetRecordXmlWriter = new FileCabinetRecordXmlWriter(XmlWriter.Create(streamWriter, writerSettings));
             foreach (var record in this.records)
             {

@@ -12,10 +12,10 @@ namespace FileCabinetApp
     /// </summary>
     public class ServiceLogger : IFileCabinetService
     {
-        private static CultureInfo englishUS = CultureInfo.CreateSpecificCulture("en-US");
-        private static DateTimeFormatInfo dtfi = englishUS.DateTimeFormat;
-        private IFileCabinetService service;
-        private TextWriter writer;
+        private static readonly CultureInfo EnglishUS = CultureInfo.CreateSpecificCulture("en-US");
+        private static readonly DateTimeFormatInfo Dtfi = EnglishUS.DateTimeFormat;
+        private readonly IFileCabinetService service;
+        private readonly TextWriter writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceLogger"/> class.
@@ -24,7 +24,7 @@ namespace FileCabinetApp
         public ServiceLogger(IFileCabinetService service)
         {
             this.service = new ServiceMeter(service);
-            dtfi.ShortDatePattern = "yyyy-MMM-dd";
+            Dtfi.ShortDatePattern = "yyyy-MMM-dd";
             this.writer = File.CreateText("log.txt");
         }
 
@@ -41,7 +41,7 @@ namespace FileCabinetApp
             }
 
             this.LogWriter($"{DateTime.Now} - Calling Create() with FirstName = '{recordData.FirstName}', " +
-                $"LastName = '{recordData.LastName}', DateOfBirth = '{recordData.DateOfBirth.ToString(englishUS)}', " +
+                $"LastName = '{recordData.LastName}', DateOfBirth = '{recordData.DateOfBirth.ToString(EnglishUS)}', " +
                 $"Gender = '{recordData.Gender}', PassportId = '{recordData.PassportId}', " +
                 $"Salary = '{recordData.Salary}'");
 
@@ -108,6 +108,35 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Create new snapshot.
+        /// </summary>
+        /// <returns>Snapshot.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            this.LogWriter($"{DateTime.Now} - Calling MakeSnapshot()");
+
+            try
+            {
+                var result = this.service.MakeSnapshot();
+                this.LogWriter($"{DateTime.Now} - MakeSnapshot() returned Snapshot with records:");
+                foreach (var r in result.Records)
+                {
+                    this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
+                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(EnglishUS)}', " +
+                        $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
+                        $"Salary = '{r.Salary}'");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                this.LogWriter($"{DateTime.Now} - GetStat() throw {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Defragment the data file and print tick that it took.
         /// </summary>
         /// <returns>Count of defragmented records.</returns>
@@ -149,7 +178,7 @@ namespace FileCabinetApp
             foreach (var r in snapshot.Records)
             {
                 this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                    $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
+                    $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(EnglishUS)}', " +
                     $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
                     $"Salary = '{r.Salary}'");
             }
@@ -182,7 +211,7 @@ namespace FileCabinetApp
                 foreach (var r in result)
                 {
                     this.LogWriter($"Id = '{r.Id}', FirstName = '{r.FirstName}', " +
-                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(englishUS)}', " +
+                        $"LastName = '{r.LastName}', DateOfBirth = '{r.DateOfBirth.ToString(EnglishUS)}', " +
                         $"Gender = '{r.Gender}', PassportId = '{r.PassportId}', " +
                         $"Salary = '{r.Salary}'");
                 }

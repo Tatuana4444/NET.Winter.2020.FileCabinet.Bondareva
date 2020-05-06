@@ -105,6 +105,12 @@
             Handler for command export.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExportCommandHandler"/> class.
+            </summary>
+            <param name="service">Current service.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Export request handler.
@@ -274,67 +280,6 @@
             </summary>
             <param name="commandRequest">Request.</param>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetRecord">
-            <summary>
-            Describes record.
-            </summary>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
-            <summary>
-            Gets or sets user's id.
-            </summary>
-            <value>
-            User's id.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
-            <summary>
-            Gets or sets user's First name.
-            </summary>
-            <value>
-            User's First name.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
-            <summary>
-            Gets or sets user's Last name.
-            </summary>
-            <value>
-            User's Last name.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
-            <summary>
-            Gets or sets user's date of Birth.
-            </summary>
-            <value>
-            User's date of Birth.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Gender">
-            <summary>
-            Gets or sets user's gender.
-            </summary>
-            <value>
-            User's gender.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.PassportId">
-            <summary>
-            Gets or sets user's passport id.
-            </summary>
-            <value>
-            User's passport id.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Salary">
-            <summary>
-            Gets or sets user's salary.
-            </summary>
-            <value>
-            User's salary.
-            </value>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
             <summary>
             Reader for csv.
@@ -413,6 +358,17 @@
             Snapshot.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.
+            </summary>
+            <param name="records">Records to write.</param>
+        </member>
         <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.Records">
             <summary>
             Gets records.
@@ -457,6 +413,173 @@
             Gets command and calls their methods.
             </summary>
             <param name="args">Arguments from console runs.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            Describes record.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets user's id.
+            </summary>
+            <value>
+            User's id.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets user's First name.
+            </summary>
+            <value>
+            User's First name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets user's Last name.
+            </summary>
+            <value>
+            User's Last name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets user's date of Birth.
+            </summary>
+            <value>
+            User's date of Birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Gender">
+            <summary>
+            Gets or sets user's gender.
+            </summary>
+            <value>
+            User's gender.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.PassportId">
+            <summary>
+            Gets or sets user's passport id.
+            </summary>
+            <value>
+            User's passport id.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Salary">
+            <summary>
+            Gets or sets user's salary.
+            </summary>
+            <value>
+            User's salary.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Name">
+            <summary>
+            Names.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Name.FirstName">
+            <summary>
+            Gets or sets the first name.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Name.LastName">
+            <summary>
+            Gets or sets the last name.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Record">
+            <summary>
+            Record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Record.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Record"/> class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Record.#ctor(System.Int32,FileCabinetApp.Name,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Record"/> class.
+            </summary>
+            <param name="id">User's id.</param>
+            <param name="name">User's first name and last name.</param>
+            <param name="dateOfBirth">User's date of Birth.</param>
+            <param name="gender">User's gender.</param>
+            <param name="passportId">User's passport id.</param>
+            <param name="salary">User's salary.</param>
+        </member>
+        <member name="P:FileCabinetApp.Record.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Record.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Record.DateOfBirth">
+            <summary>
+            Gets or sets the date of birth.
+            </summary>
+            <value>
+            The date of birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Record.DateOfBirthString">
+            <summary>
+            Gets or sets the date of birth.
+            </summary>
+            <value>
+            The date of birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Record.Gender">
+            <summary>
+            Gets or sets the gender.
+            </summary>
+            <value>
+            The gender.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Record.GenderString">
+            <summary>
+            Gets or sets user's gender by string.
+            </summary>
+            <value>
+            User's gender by string.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Record.PassportId">
+            <summary>
+            Gets or sets duration.
+            </summary>
+            <value>
+            The duration.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Record.Salary">
+            <summary>
+            Gets or sets credit sum.
+            </summary>
+            <value>
+            Credit sum.
+            </value>
         </member>
         <member name="T:FileCabinetApp.RecordData">
             <summary>
@@ -547,6 +670,24 @@
             User's salary.
             </value>
         </member>
+        <member name="T:FileCabinetApp.RecordForSerializer">
+            <summary>
+            Record for serializer.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordForSerializer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.RecordForSerializer"/> class.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.RecordForSerializer.Record">
+            <summary>
+            Gets the record.
+            </summary>
+            <value>
+            The record.
+            </value>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetFilesystemService">
             <summary>
             FileCabinetService with Filesystem.
@@ -581,6 +722,12 @@
             Returns count of records  and count of deleted records.
             </summary>
             <returns>Count of records  and count of deleted records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.MakeSnapshot">
+            <summary>
+            Create new snapshot.
+            </summary>
+            <returns>Snapshot.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
@@ -732,6 +879,12 @@
             </summary>
             <param name="param">Record parameters.</param>
         </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+            <summary>
+            Create new snapshot.
+            </summary>
+            <returns>Snapshot.</returns>
+        </member>
         <member name="T:FileCabinetApp.ServiceLogger">
             <summary>
             FileCabinetService with logger.
@@ -762,6 +915,12 @@
             Gets count of records  and count of deleted records and print tick that it took.
             </summary>
             <returns>Count of records  and count of deleted records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.MakeSnapshot">
+            <summary>
+            Create new snapshot.
+            </summary>
+            <returns>Snapshot.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceLogger.Purge">
             <summary>
@@ -818,6 +977,12 @@
             Gets count of records  and count of deleted records and print tick that it took.
             </summary>
             <returns>Count of records  and count of deleted records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.MakeSnapshot">
+            <summary>
+            Create new snapshot.
+            </summary>
+            <returns>Snapshot.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.Purge">
             <summary>

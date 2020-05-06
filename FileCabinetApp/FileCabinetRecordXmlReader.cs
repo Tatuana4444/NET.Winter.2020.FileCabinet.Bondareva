@@ -12,7 +12,7 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetRecordXmlReader
     {
-        private XmlReader stream;
+        private readonly XmlReader stream;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordXmlReader"/> class.
@@ -20,8 +20,10 @@ namespace FileCabinetApp
         /// <param name="stream">Current Stream.</param>
         public FileCabinetRecordXmlReader(StreamReader stream)
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.Async = true;
+            XmlReaderSettings settings = new XmlReaderSettings
+            {
+                Async = true,
+            };
             this.stream = XmlReader.Create(stream, settings);
         }
 
@@ -31,33 +33,52 @@ namespace FileCabinetApp
         /// <returns>List of records.</returns>
         public IList<FileCabinetRecord> ReadAll()
         {
-            List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            RecordForSerializer list;
+
             var validator = new ValidatorBuilder().CreateDefault();
 
-            XmlSerializer ser = new XmlSerializer(typeof(List<FileCabinetRecord>));
-            list = (List<FileCabinetRecord>)ser.Deserialize(this.stream);
+            XmlSerializer ser = new XmlSerializer(typeof(RecordForSerializer));
+            try
+            {
+                list = (RecordForSerializer)ser.Deserialize(this.stream);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return result;
+            }
+
             int i = 0;
-            while (i < list.Count)
+            foreach (var record in list.Record)
             {
                 try
                 {
-                    RecordData data = new RecordData(list[i].FirstName, list[i].LastName, list[i].DateOfBirth, list[i].Gender, list[i].PassportId, list[i].Salary);
+                    RecordData data = new RecordData(record.Name.FirstName, record.Name.LastName, record.DateOfBirth, record.Gender, record.PassportId, record.Salary);
                     validator.ValidateParameters(data);
+                    result.Add(new FileCabinetRecord()
+                    {
+                        Id = record.Id,
+                        FirstName = record.Name.FirstName,
+                        LastName = record.Name.LastName,
+                        DateOfBirth = record.DateOfBirth,
+                        Gender = record.Gender,
+                        PassportId = record.PassportId,
+                        Salary = record.Salary,
+                    });
                     i++;
                 }
                 catch (ArgumentNullException e)
                 {
                     Console.WriteLine(e.Message);
-                    list.RemoveAt(i);
                 }
                 catch (ArgumentException e)
                 {
                     Console.WriteLine(e.Message);
-                    list.RemoveAt(i);
                 }
             }
 
-            return list;
+            return result;
         }
     }
 }

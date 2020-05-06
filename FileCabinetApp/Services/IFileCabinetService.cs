@@ -54,5 +54,11 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="param">Record parameters.</param>
         void Update(string param);
+
+        /// <summary>
+        /// Create new snapshot.
+        /// </summary>
+        /// <returns>Snapshot.</returns>
+        FileCabinetServiceSnapshot MakeSnapshot();
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -8,7 +10,6 @@ namespace FileCabinetApp
     /// <summary>
     /// Describes record.
     /// </summary>
-    [XmlRoot("Record")]
     public class FileCabinetRecord
     {
         /// <summary>
@@ -17,7 +18,6 @@ namespace FileCabinetApp
         /// <value>
         /// User's id.
         /// </value>
-        [XmlAttribute]
         public int Id { get; set; }
 
         /// <summary>
@@ -26,7 +26,6 @@ namespace FileCabinetApp
         /// <value>
         /// User's First name.
         /// </value>
-        [XmlElement]
         public string FirstName { get; set; }
 
         /// <summary>
@@ -35,7 +34,6 @@ namespace FileCabinetApp
         /// <value>
         /// User's Last name.
         /// </value>
-        [XmlElement]
         public string LastName { get; set; }
 
         /// <summary>
@@ -44,7 +42,6 @@ namespace FileCabinetApp
         /// <value>
         /// User's date of Birth.
         /// </value>
-        [XmlElement]
         public DateTime DateOfBirth { get; set; }
 
         /// <summary>
@@ -53,7 +50,6 @@ namespace FileCabinetApp
         /// <value>
         /// User's gender.
         /// </value>
-        [XmlElement]
         public char Gender { get; set; }
 
         /// <summary>
@@ -62,7 +58,6 @@ namespace FileCabinetApp
         /// <value>
         /// User's passport id.
         /// </value>
-        [XmlElement]
         public short PassportId { get; set; }
 
         /// <summary>
@@ -71,7 +66,6 @@ namespace FileCabinetApp
         /// <value>
         /// User's salary.
         /// </value>
-        [XmlElement]
         public decimal Salary { get; set; }
     }
 }
