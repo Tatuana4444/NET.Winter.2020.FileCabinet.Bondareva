@@ -96,15 +96,24 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(filter));
             }
 
-            string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
-            values[^1] = values[^1][0..^1];
-            if (values.Length % 3 != 0)
-            {
-                throw new ArgumentException("Incorrect format", nameof(filter));
-            }
-
-            string filterString = this.GetFilterString(values);
             List<FileCabinetRecord> foundResult;
+            string filterString = string.Empty;
+            if (filter.Length != 0)
+            {
+                string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
+                values[^1] = values[^1][0..^1];
+                if (values.Length % 3 != 0)
+                {
+                    throw new ArgumentException("Incorrect format", nameof(filter));
+                }
+
+                filterString = this.GetFilterString(values);
+                foundResult = this.Find(values).ToList();
+            }
+            else
+            {
+                foundResult = this.list;
+            }
 
             if (this.cache.ContainsKey(filterString))
             {
@@ -112,7 +121,6 @@ namespace FileCabinetApp
             }
             else
             {
-                foundResult = this.Find(values).ToList();
                 this.cache.Add(filterString, foundResult);
             }
 
@@ -153,6 +161,7 @@ namespace FileCabinetApp
                 else
                 {
                     this.list.Add(record);
+                    this.presentIdList.Add(record.Id, this.list.Count - 1);
                 }
 
                 this.AddToDictionary(this.firstNameDictionary, record.FirstName.ToUpper(this.englishUS), record.Id);
@@ -501,76 +510,106 @@ namespace FileCabinetApp
 
                         break;
                     case "firstname":
-                        if (values[i] == "and")
+                        if (this.firstNameDictionary.ContainsKey(values[i + 2].ToUpper(this.englishUS)))
                         {
-                            modifiedList = modifiedList.Intersect(this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
-                        }
-                        else
-                        {
-                            if (values[i] == "or")
+                            if (values[i] == "and")
                             {
-                                modifiedList = modifiedList.Union(this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                modifiedList = modifiedList.Intersect(this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
                             }
                             else
                             {
-                                if (i == 0 && values[i] == "where")
+                                if (values[i] == "or")
                                 {
-                                    modifiedList = this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                    modifiedList = modifiedList.Union(this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
                                 }
                                 else
                                 {
-                                    throw new ArgumentException("Incorrect format", nameof(values));
+                                    if (i == 0 && values[i] == "where")
+                                    {
+                                        modifiedList = this.firstNameDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                    }
+                                    else
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
                                 }
+                            }
+                        }
+                        else
+                        {
+                            if (values[i] == "and" || (i == 0 && values[i] == "where"))
+                            {
+                                modifiedList = new List<FileCabinetRecord>();
                             }
                         }
 
                         break;
                     case "lastname":
-                        if (values[i] == "and")
+                        if (this.lastNameDictionary.ContainsKey(values[i + 2].ToUpper(this.englishUS)))
                         {
-                            modifiedList = modifiedList.Intersect(this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
-                        }
-                        else
-                        {
-                            if (values[i] == "or")
+                            if (values[i] == "and")
                             {
-                                modifiedList = modifiedList.Union(this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                modifiedList = modifiedList.Intersect(this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
                             }
                             else
                             {
-                                if (i == 0 && values[i] == "where")
+                                if (values[i] == "or")
                                 {
-                                    modifiedList = this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                    modifiedList = modifiedList.Union(this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)]);
                                 }
                                 else
                                 {
-                                    throw new ArgumentException("Incorrect format", nameof(values));
+                                    if (i == 0 && values[i] == "where")
+                                    {
+                                        modifiedList = this.lastNameDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                    }
+                                    else
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
                                 }
+                            }
+                        }
+                        else
+                        {
+                            if (values[i] == "and" || (i == 0 && values[i] == "where"))
+                            {
+                                modifiedList = new List<FileCabinetRecord>();
                             }
                         }
 
                         break;
                     case "dateofbirth":
-                        if (values[i] == "and")
+                        if (this.dateOfBirthDictionary.ContainsKey(values[i + 2].ToUpper(this.englishUS)))
                         {
-                            modifiedList = modifiedList.Intersect(this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)]);
-                        }
-                        else
-                        {
-                            if (values[i] == "or")
+                            if (values[i] == "and")
                             {
-                                modifiedList = modifiedList.Union(this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)]);
+                                modifiedList = modifiedList.Intersect(this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)]);
                             }
                             else
                             {
-                                if (i == 0 && values[i] == "where")
+                                if (values[i] == "or")
                                 {
-                                    modifiedList = this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                    modifiedList = modifiedList.Union(this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)]);
                                 }
                                 else
                                 {
-                                    throw new ArgumentException("Incorrect format", nameof(values));
+                                    if (i == 0 && values[i] == "where")
+                                    {
+                                        modifiedList = this.dateOfBirthDictionary[values[i + 2].ToUpper(this.englishUS)];
+                                    }
+                                    else
+                                    {
+                                        throw new ArgumentException("Incorrect format", nameof(values));
+                                    }
                                 }
+                            }
+                        }
+                        else
+                        {
+                            if (values[i] == "and" || (i == 0 && values[i] == "where"))
+                            {
+                                modifiedList = new List<FileCabinetRecord>();
                             }
                         }
 

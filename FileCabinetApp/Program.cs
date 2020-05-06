@@ -25,7 +25,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "default", "file", "logger" };
+            string[] cmdParam = new string[] { "default", "memory", "logger" };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
