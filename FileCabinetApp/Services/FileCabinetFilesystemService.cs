@@ -319,7 +319,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    if (!string.Equals(operatorSring, "AND", StringComparison.InvariantCultureIgnoreCase) 
+                    if (!string.Equals(operatorSring, "AND", StringComparison.InvariantCultureIgnoreCase)
                         && !(index == 0 && string.Equals(operatorSring, "WHERE", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         throw new ArgumentException("Incorrect format", nameof(operatorSring));
@@ -620,7 +620,7 @@ namespace FileCabinetApp
                 {
                     switch (values[i + 1].ToUpperInvariant())
                     {
-                        case "id":
+                        case "ID":
                             if (!int.TryParse(values[i + 2], out int id))
                             {
                                 throw new ArgumentException("Incorrect id", nameof(values));
