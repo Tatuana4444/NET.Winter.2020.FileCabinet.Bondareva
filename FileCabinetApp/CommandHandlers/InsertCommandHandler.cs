@@ -143,7 +143,7 @@ namespace FileCabinetApp.CommandHandlers
                         var convertingGender = CharConverter(data[i + 8]);
                         gender = convertingGender.Item3;
                         break;
-                    case "PASPORTID":
+                    case "PASSPORTID":
                         isHere[5] = true;
                         var convertingPassportId = ShortConverter(data[i + 8]);
                         passportId = convertingPassportId.Item3;
