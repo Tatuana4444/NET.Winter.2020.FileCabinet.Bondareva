@@ -22,7 +22,7 @@ namespace FileCabinetApp
         /// <param name="service">Service that needs to use.</param>
         public ServiceLogger(IFileCabinetService service)
         {
-            this.service = new ServiceMeter(service);
+            this.service = service;
             this.writer = File.CreateText("log.txt");
         }
 
