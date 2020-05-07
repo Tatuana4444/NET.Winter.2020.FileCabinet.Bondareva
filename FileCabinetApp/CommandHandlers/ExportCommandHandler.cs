@@ -45,14 +45,24 @@ namespace FileCabinetApp.CommandHandlers
             string[] param = parameters.Split(' ');
             if (File.Exists(param[1]))
             {
-                char answer;
-                do
+                string answer = string.Empty;
+                bool isFind = false;
+                while (!isFind)
                 {
                     Console.Write($"File is exist - rewrite {param[1]}? [Y/n] ");
-                    answer = (char)Console.Read();
+                    answer = Console.ReadLine();
+                    if (string.Equals(answer, "Y", StringComparison.InvariantCultureIgnoreCase)
+                        || string.Equals(answer, "N", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isFind = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Incorrect answer. Please try again.");
+                    }
                 }
-                while (answer != 'Y' && answer != 'n');
-                if (answer == 'n')
+
+                if (string.Equals(answer, "N", StringComparison.InvariantCultureIgnoreCase))
                 {
                     return;
                 }
