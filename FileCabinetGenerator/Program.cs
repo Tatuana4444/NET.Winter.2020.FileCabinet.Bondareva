@@ -59,31 +59,41 @@ namespace FileCabinetGenerator
                 i++;
             }
 
-            RecordForSerializer list = GenerateData(amount, startId);
-            try
+            if ((string.Equals(Path.GetExtension(outputFile)[1..], "csv", StringComparison.InvariantCultureIgnoreCase) && isCsv) ||
+                (string.Equals(Path.GetExtension(outputFile)[1..], "xml", StringComparison.InvariantCultureIgnoreCase) && !isCsv))
             {
-                TextWriter writer = new StreamWriter(outputFile);
-
-                if (isCsv)
+                RecordForSerializer list = GenerateData(amount, startId);
+                try
                 {
+                    TextWriter writer = new StreamWriter(outputFile);
 
-                    foreach (var record in list.Record)
+                    if (isCsv)
                     {
-                        writer.WriteLine($"{record.Id}, {record.Name.FirstName}, {record.Name.LastName}, " +
-                        $"{record.DateOfBirth}, {record.Gender}, {record.PassportId}, {record.Salary}");
-                    }
-                    writer.Flush();
-                }
-                else
-                {
-                    XmlSerializer ser = new XmlSerializer(typeof(RecordForSerializer));
-                    ser.Serialize(writer, list);
 
+                        foreach (var record in list.Record)
+                        {
+                            writer.WriteLine($"{record.Id}, {record.Name.FirstName}, {record.Name.LastName}, " +
+                            $"{record.DateOfBirth}, {record.Gender}, {record.PassportId}, {record.Salary}");
+                        }
+                        writer.Flush();
+                    }
+                    else
+                    {
+                        XmlSerializer ser = new XmlSerializer(typeof(RecordForSerializer));
+                        ser.Serialize(writer, list);
+
+                    }
                 }
+                catch (DirectoryNotFoundException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                Console.WriteLine($"{amount} records wrote to {outputFile} start with {startId} index.");
             }
-            catch(DirectoryNotFoundException ex)
+            else
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Incorrect file extension.");
             }
         }
 

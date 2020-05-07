@@ -43,43 +43,60 @@ namespace FileCabinetApp.CommandHandlers
         private void Export(string parameters)
         {
             string[] param = parameters.Split(' ');
-            if (File.Exists(param[1]))
+            if (string.Equals(Path.GetExtension(param[1])[1..], param[0], StringComparison.InvariantCultureIgnoreCase))
             {
-                string answer = string.Empty;
-                bool isFind = false;
-                while (!isFind)
+                if (File.Exists(param[1]))
                 {
-                    Console.Write($"File is exist - rewrite {param[1]}? [Y/n] ");
-                    answer = Console.ReadLine();
-                    if (string.Equals(answer, "Y", StringComparison.InvariantCultureIgnoreCase)
-                        || string.Equals(answer, "N", StringComparison.InvariantCultureIgnoreCase))
+                    string answer = string.Empty;
+                    bool isFind = false;
+                    while (!isFind)
                     {
-                        isFind = true;
+                        Console.Write($"File is exist - rewrite {param[1]}? [Y/n] ");
+                        answer = Console.ReadLine();
+                        if (string.Equals(answer, "Y", StringComparison.InvariantCultureIgnoreCase)
+                            || string.Equals(answer, "N", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            isFind = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect answer. Please try again.");
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine("Incorrect answer. Please try again.");
-                    }
-                }
 
-                if (string.Equals(answer, "N", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return;
+                    if (string.Equals(answer, "N", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return;
+                    }
+
                 }
+            }
+            else
+            {
+                Console.WriteLine("Incorrect file extension.");
+                return;
             }
 
             try
             {
                 StreamWriter writer = new StreamWriter(param[1]);
                 var snapshot = this.Service.MakeSnapshot();
-                if (param[0] == "csv")
+                if (string.Equals(param[0], "csv", StringComparison.InvariantCultureIgnoreCase))
                 {
                     snapshot.SaveToCsv(writer);
                 }
-
-                if (param[0] == "xml")
+                else
                 {
-                    snapshot.SaveToXml(writer);
+                    if (string.Equals(param[0], "xml", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        snapshot.SaveToXml(writer);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Incorrect file structure.");
+                        writer.Close();
+                        return;
+                    }
                 }
 
                 writer.Close();
