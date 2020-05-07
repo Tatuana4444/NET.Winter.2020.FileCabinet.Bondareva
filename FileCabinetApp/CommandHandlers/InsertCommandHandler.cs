@@ -96,7 +96,7 @@ namespace FileCabinetApp.CommandHandlers
             string[] parametersName = { "id", "firstName", "lastname", "dateofbirth", "gender", "passportid", "salary" };
             bool[] isHere = new bool[7];
             string[] data = parameters.Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
-            if (data.Length != 15 || data[7].Trim() != "values")
+            if (data.Length != 15 || !string.Equals(data[7].Trim(), "values", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new ArgumentException("Uncorrect format of insert.");
             }

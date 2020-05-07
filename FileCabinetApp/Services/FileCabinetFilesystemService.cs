@@ -283,7 +283,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(param));
             }
 
-            int whereIndex = param.IndexOf("where", StringComparison.Ordinal);
+            int whereIndex = param.IndexOf("where", StringComparison.InvariantCultureIgnoreCase);
             if (whereIndex == -1)
             {
                 throw new ArgumentException("Incorrect format", nameof(param));
@@ -313,13 +313,14 @@ namespace FileCabinetApp
         {
             if (isEqual)
             {
-                if (operatorSring == "or")
+                if (string.Equals(operatorSring, "OR", StringComparison.InvariantCultureIgnoreCase))
                 {
                     isNeedAdd = true;
                 }
                 else
                 {
-                    if (operatorSring != "and" && !(index == 0 && operatorSring == "where"))
+                    if (!string.Equals(operatorSring, "AND", StringComparison.InvariantCultureIgnoreCase) 
+                        && !(index == 0 && string.Equals(operatorSring, "WHERE", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         throw new ArgumentException("Incorrect format", nameof(operatorSring));
                     }
@@ -327,7 +328,7 @@ namespace FileCabinetApp
             }
             else
             {
-                if (!(isNeedAdd && operatorSring == "or"))
+                if (!(isNeedAdd && string.Equals(operatorSring, "OR", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     isNeedAdd = false;
                 }

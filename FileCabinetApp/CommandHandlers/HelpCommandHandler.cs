@@ -19,7 +19,7 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "insert", "inserts record", "The 'insert' command inserts record.\nExample: insert (id, firstname, lastname, dateofbirth, gender, salary, passportId) values ('1', 'John', 'Doe', '5/18/1986', 'M', '1234', '1234')" },
             new string[] { "update", "updates records by parameters", "The 'update' command updates records by parameters.\nExample: update set firstname = 'John', lastname = 'Doe' , dateofbirth = '5/18/1986' where id = '1'" },
             new string[] { "delete", "deletes records by parameters", "The 'delete' command deletes records by parameters.\nExample: delete where id = '1'" },
-            new string[] { "select", "selects records by parameters", "The 'select' command selects records by parameters.\nExample: select (id, firstname, lastname) where FirstName='Stan' and LastName='Smith'" },
+            new string[] { "select", "selects records by parameters", "The 'select' command selects records by parameters.\nExample: select id, firstname, lastname where FirstName='Stan' and LastName='Smith'" },
             new string[] { "stat", "prints statistics by records", "The 'stat' command prints statistics by records.\nExample: stat" },
             new string[] { "export", "exports records", "The 'export' command expords records.\nExample: export csv fileName.csv" },
             new string[] { "import", "imports records", "The 'import' command imports records.\nExample: import csv fileName.csv" },

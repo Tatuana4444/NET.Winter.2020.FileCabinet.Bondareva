@@ -51,7 +51,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            int whereIndex = parameters.IndexOf("where", StringComparison.Ordinal);
+            int whereIndex = parameters.IndexOf("where", StringComparison.InvariantCultureIgnoreCase);
             string whereParams;
             if (whereIndex == -1)
             {

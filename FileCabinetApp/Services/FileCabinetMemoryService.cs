@@ -231,7 +231,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(param));
             }
 
-            int whereIndex = param.IndexOf("where", StringComparison.Ordinal);
+            int whereIndex = param.IndexOf("WHERE", StringComparison.InvariantCultureIgnoreCase);
             if (whereIndex == -1)
             {
                 throw new ArgumentException("Incorrect format", nameof(param));
@@ -615,7 +615,8 @@ namespace FileCabinetApp
                         }
                         else
                         {
-                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase) || (i == 0 && values[i] == "where"))
+                            if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase)
+                                || (i == 0 && string.Equals(values[i], "WHERE", StringComparison.InvariantCultureIgnoreCase)))
                             {
                                 modifiedList = new List<FileCabinetRecord>();
                             }
