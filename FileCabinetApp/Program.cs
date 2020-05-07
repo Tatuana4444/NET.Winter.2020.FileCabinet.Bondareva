@@ -29,7 +29,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            string[] cmdParam = new string[] { "DEFAULT", "MEMORY", string.Empty, string.Empty };
+            string[] cmdParam = new string[] { "DEFAULT", "FILE", string.Empty, string.Empty };
             if (args != null && args.Length > 0)
             {
                 int i = 0;
@@ -187,7 +187,7 @@ namespace FileCabinetApp
             }
             else
             {
-                FileStream stream = new FileStream("cabinet-records.db", FileMode.Create);
+                FileStream stream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
                 SetDecorators(param, new FileCabinetFilesystemService(stream, validator));
                 Console.WriteLine(FileMessage);
             }

@@ -30,6 +30,11 @@ namespace FileCabinetApp
             List<FileCabinetRecord> list = new List<FileCabinetRecord>();
             var validator = new ValidatorBuilder().CreateDefault();
             string rec = this.stream.ReadLine();
+            if (string.IsNullOrEmpty(rec))
+            {
+                return list;
+            }
+
             do
             {
                 string[] elements = rec.Split(", ");

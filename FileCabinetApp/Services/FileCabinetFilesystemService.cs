@@ -23,6 +23,7 @@ namespace FileCabinetApp
         private const int OffsetSalary = OffsetPassportId + sizeof(short);
         private const int RecordLength = OffsetSalary + sizeof(decimal);
         private readonly Dictionary<int, long> offsetById = new Dictionary<int, long>();
+        private readonly Dictionary<int, long> offsetDeletedById = new Dictionary<int, long>();
 
         private readonly CultureInfo culture = CultureInfo.InvariantCulture;
         private readonly FileStream fileStream;
@@ -49,6 +50,27 @@ namespace FileCabinetApp
 
             this.fileStream = fileStream;
             this.validator = validator;
+            int i = 0;
+            while (i < this.fileStream.Length / RecordLength)
+            {
+                this.fileStream.Position = (i * RecordLength) + 1;
+                int b = this.fileStream.ReadByte();
+                byte[] temp = new byte[sizeof(int)];
+                this.fileStream.Read(temp, 0, sizeof(int));
+                int id = BitConverter.ToInt32(temp, 0);
+                if ((b & 2) == 2)
+                {
+                    this.offsetDeletedById.Add(id, i * RecordLength);
+                }
+                else
+                {
+                    this.offsetById.Add(id, i * RecordLength);
+                }
+
+                i++;
+            }
+
+            this.fileStream.Position = 0;
         }
 
         /// <summary>
@@ -193,6 +215,12 @@ namespace FileCabinetApp
                 }
                 catch (KeyNotFoundException)
                 {
+                    if (this.offsetDeletedById.ContainsKey(record.Id))
+                    {
+                        pos = this.offsetDeletedById[record.Id];
+                        this.offsetDeletedById.Remove(record.Id);
+                    }
+
                     this.offsetById.Add(record.Id, pos);
                 }
 
@@ -209,9 +237,30 @@ namespace FileCabinetApp
         {
             int purgedCount = 0;
             int i = 0, offsetCount = 0;
+            this.fileStream.Position = 0;
             while (i < this.fileStream.Length / RecordLength)
             {
-                this.fileStream.Position = (i * RecordLength) + 1;
+                this.fileStream.Position = i * RecordLength;
+                FileCabinetRecord record = this.ReadFromFile(true);
+                if (!this.offsetDeletedById.ContainsKey(record.Id))
+                {
+                    if (offsetCount > 0)
+                    {
+                        this.DefragmentFile(i, offsetCount);
+                        i -= offsetCount;
+                        purgedCount += offsetCount;
+                        offsetCount = 0;
+                    }
+
+                    this.offsetDeletedById.Remove(record.Id);
+                }
+                else
+                {
+                    offsetCount++;
+                }
+
+                i++;
+                /*this.fileStream.Position = (i * RecordLength) + 1;
                 int b = this.fileStream.ReadByte();
                 if ((b & 2) == 2)
                 {
@@ -231,7 +280,7 @@ namespace FileCabinetApp
                     {
                         i++;
                     }
-                }
+                }*/
             }
 
             this.fileStream.SetLength(this.fileStream.Length - (offsetCount * RecordLength));
@@ -263,6 +312,7 @@ namespace FileCabinetApp
             List<int> foundResult = this.Find(values).ToList();
             for (int i = 0; i < foundResult.Count; i++)
             {
+                this.offsetDeletedById.Add(foundResult[i], this.offsetById[foundResult[i]]);
                 this.Remove(foundResult[i]);
                 this.offsetById.Remove(foundResult[i]);
             }
@@ -425,9 +475,10 @@ namespace FileCabinetApp
             while (i < this.fileStream.Length / RecordLength)
             {
                 this.fileStream.Position = i * RecordLength;
-                FileCabinetRecord record = this.ReadFromFile();
+                FileCabinetRecord record = this.ReadFromFile(true);
                 RecordData recordData = new RecordData(record.FirstName, record.LastName, record.DateOfBirth, record.Gender, record.PassportId, record.Salary);
                 this.WriteToFile(recordData, record.Id, (i - offsetCount) * RecordLength);
+
                 i++;
             }
 
@@ -506,7 +557,7 @@ namespace FileCabinetApp
             this.fileStream.Flush();
         }
 
-        private FileCabinetRecord ReadFromFile()
+        private FileCabinetRecord ReadFromFile(bool isNeedDeleted = false)
         {
             byte[] temp = new byte[RecordLength - (2 * StringLength)];
             FileCabinetRecord record = new FileCabinetRecord();
@@ -514,8 +565,11 @@ namespace FileCabinetApp
             this.fileStream.Read(temp, 0, sizeof(short));
             if ((temp[1] & 2) == 2)
             {
-                this.fileStream.Position += RecordLength;
-                return null;
+                if (!isNeedDeleted)
+                {
+                    this.fileStream.Position += RecordLength - sizeof(short);
+                    return null;
+                }
             }
 
             this.fileStream.Read(temp, OffsetId, sizeof(int));
@@ -615,6 +669,12 @@ namespace FileCabinetApp
             while (j < this.fileStream.Length / RecordLength)
             {
                 FileCabinetRecord record = this.ReadFromFile();
+                if (record is null)
+                {
+                    j++;
+                    continue;
+                }
+
                 bool isNeedAdd = true;
                 for (int i = 0; i < values.Length; i += 3)
                 {
