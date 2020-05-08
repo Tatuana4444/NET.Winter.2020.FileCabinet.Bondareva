@@ -251,12 +251,11 @@ namespace FileCabinetApp
                         purgedCount += offsetCount;
                         offsetCount = 0;
                     }
-
-                    this.offsetDeletedById.Remove(record.Id);
                 }
                 else
                 {
                     offsetCount++;
+                    this.offsetDeletedById.Remove(record.Id);
                 }
 
                 i++;
@@ -297,9 +296,9 @@ namespace FileCabinetApp
         /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public IEnumerable<int> Delete(string param)
         {
-            if (param == null)
+            if (string.IsNullOrEmpty(param))
             {
-                throw new ArgumentNullException(nameof(param));
+                throw new ArgumentNullException(nameof(param), "Parameters are empty.");
             }
 
             string[] values = param.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
@@ -312,7 +311,6 @@ namespace FileCabinetApp
             List<int> foundResult = this.Find(values).ToList();
             for (int i = 0; i < foundResult.Count; i++)
             {
-                this.offsetDeletedById.Add(foundResult[i], this.offsetById[foundResult[i]]);
                 this.Remove(foundResult[i]);
                 this.offsetById.Remove(foundResult[i]);
             }
@@ -466,7 +464,9 @@ namespace FileCabinetApp
 
             this.fileStream.Position = pos + 1;
             this.fileStream.WriteByte(0b10);
+            this.fileStream.Flush();
             this.offsetById.Remove(id);
+            this.offsetDeletedById.Add(id, pos);
             return true;
         }
 
@@ -478,6 +478,14 @@ namespace FileCabinetApp
                 FileCabinetRecord record = this.ReadFromFile(true);
                 RecordData recordData = new RecordData(record.FirstName, record.LastName, record.DateOfBirth, record.Gender, record.PassportId, record.Salary);
                 this.WriteToFile(recordData, record.Id, (i - offsetCount) * RecordLength);
+                if (this.offsetById.ContainsKey(record.Id))
+                {
+                    this.offsetById[record.Id] = (i - offsetCount) * RecordLength;
+                }
+                else
+                {
+                    this.offsetDeletedById[record.Id] = (i - offsetCount) * RecordLength;
+                }
 
                 i++;
             }
