@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FileCabinetApp.CommandHandlers
+﻿namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>
-    /// Base class for command handler whith service.
+    /// Base class for command handler with service.
     /// </summary>
     public abstract class ServiceCommandHandlerBase : CommandHandlerBase
     {

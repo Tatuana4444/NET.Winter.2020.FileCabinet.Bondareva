@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace FileCabinetApp
@@ -30,7 +29,7 @@ namespace FileCabinetApp
         {
             if (records is null)
             {
-                throw new ArgumentNullException(nameof(records), "Recoords can't be null");
+                throw new ArgumentNullException(nameof(records), "Records can't be null");
             }
 
             this.records = records;

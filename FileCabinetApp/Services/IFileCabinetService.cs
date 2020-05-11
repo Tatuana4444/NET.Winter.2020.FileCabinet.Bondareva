@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace FileCabinetApp
 {
@@ -21,7 +20,7 @@ namespace FileCabinetApp
         /// Returns records.
         /// </summary>
         /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-        /// <returns>Records by filret.</returns>
+        /// <returns>Records by filter.</returns>
         public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter);
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace FileCabinetApp
         /// Delete records by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>
-        /// <returns>List of id recored, that was deleted.</returns>
+        /// <returns>List of id records, that was deleted.</returns>
         IEnumerable<int> Delete(string param);
 
         /// <summary>

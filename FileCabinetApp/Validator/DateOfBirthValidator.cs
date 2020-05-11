@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Validator for date of Bith.
+    /// Validator for date of Birth.
     /// </summary>
     public class DateOfBirthValidator : IRecordValidator
     {
@@ -25,9 +23,11 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Check date of bith from date.
+        /// Check date of birth from date.
         /// </summary>
         /// <param name="recordData">Data.</param>
+        /// <exception cref="ArgumentNullException">Throw when recordData is null.</exception>
+        /// <exception cref="ArgumentException">Throw when DateOfBirth more than to or less than from.</exception>
         public void ValidateParameters(RecordData recordData)
         {
             if (recordData is null)

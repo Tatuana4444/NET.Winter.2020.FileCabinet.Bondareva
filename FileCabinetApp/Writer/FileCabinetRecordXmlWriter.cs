@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 
 namespace FileCabinetApp
@@ -18,6 +16,7 @@ namespace FileCabinetApp
         /// Initializes a new instance of the <see cref="FileCabinetRecordXmlWriter"/> class.
         /// </summary>
         /// <param name="writer">Writer for text.</param>
+        /// <exception cref="ArgumentNullException">Thrown when writer is null.</exception>
         public FileCabinetRecordXmlWriter(XmlWriter writer)
         {
             if (writer is null)
@@ -35,6 +34,7 @@ namespace FileCabinetApp
         /// Writes records to xml file.
         /// </summary>
         /// <param name="record">Record.</param>
+        /// <exception cref="ArgumentNullException">Thrown when record is null.</exception>
         public void Write(FileCabinetRecord record)
         {
             if (record is null)

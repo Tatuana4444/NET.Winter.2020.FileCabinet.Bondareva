@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -47,23 +45,16 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static Tuple<bool, string, string> StringConverter(string data)
-        {
-            return new Tuple<bool, string, string>(true, string.Empty, data);
-        }
-
         private static Tuple<bool, string, DateTime> DateConverter(string data)
         {
             CultureInfo culture = CultureInfo.InvariantCulture;
             DateTimeStyles styles = DateTimeStyles.None;
-            if (DateTime.TryParse(data, culture, styles, out DateTime date))
+            if (DateTime.TryParseExact(data, "M/d/yyyy", culture, styles, out DateTime date))
             {
                 return new Tuple<bool, string, DateTime>(true, string.Empty, date);
             }
-            else
-            {
-                return new Tuple<bool, string, DateTime>(false, "Error, Date of birth should be in forma 'month/day/year'. Try again, please", date);
-            }
+
+            return new Tuple<bool, string, DateTime>(false, "Error, Date of birth should be in format 'month/day/year'. Try again, please", date);
         }
 
         private static Tuple<bool, string, char> CharConverter(string data)
@@ -72,10 +63,8 @@ namespace FileCabinetApp.CommandHandlers
             {
                 return new Tuple<bool, string, char>(true, string.Empty, gender);
             }
-            else
-            {
-                return new Tuple<bool, string, char>(false, "Error, Unvalued value. Try again, please", gender);
-            }
+
+            return new Tuple<bool, string, char>(false, "Error, Incorrect value. Try again, please", gender);
         }
 
         private static Tuple<bool, string, short> ShortConverter(string data)
@@ -84,10 +73,8 @@ namespace FileCabinetApp.CommandHandlers
             {
                 return new Tuple<bool, string, short>(true, string.Empty, passportId);
             }
-            else
-            {
-                return new Tuple<bool, string, short>(false, "Error, passportId should be short integer. Try again, please", passportId);
-            }
+
+            return new Tuple<bool, string, short>(false, "Error, passportId should be short integer. Try again, please", passportId);
         }
 
         private static Tuple<bool, string, decimal> DecimalConverter(string data)
@@ -96,10 +83,8 @@ namespace FileCabinetApp.CommandHandlers
             {
                 return new Tuple<bool, string, decimal>(true, string.Empty, salary);
             }
-            else
-            {
-                return new Tuple<bool, string, decimal>(false, "Error, salary should be decimal. Try again, please", salary);
-            }
+
+            return new Tuple<bool, string, decimal>(false, "Error, salary should be decimal. Try again, please", salary);
         }
 
         private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter)
@@ -107,7 +92,6 @@ namespace FileCabinetApp.CommandHandlers
             do
             {
                 T value;
-
                 var input = Console.ReadLine();
                 var conversionResult = converter(input);
 
@@ -127,10 +111,10 @@ namespace FileCabinetApp.CommandHandlers
         private void Create()
         {
             Console.Write("First name: ");
-            var firstName = ReadInput(StringConverter);
+            var firstName = Console.ReadLine();
 
             Console.Write("Last name: ");
-            var lastName = ReadInput(StringConverter);
+            var lastName = Console.ReadLine();
 
             Console.Write("Date of birth: ");
             var dateOfBirth = ReadInput(DateConverter);

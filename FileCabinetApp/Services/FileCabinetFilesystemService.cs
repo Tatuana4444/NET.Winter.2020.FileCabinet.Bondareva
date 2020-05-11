@@ -107,7 +107,7 @@ namespace FileCabinetApp
         /// Returns records.
         /// </summary>
         /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-        /// <returns>Records by filret.</returns>
+        /// <returns>Records by filter.</returns>
         /// <exception cref="ArgumentNullException">Throw when filter is null.</exception>
         public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
         {
@@ -120,7 +120,7 @@ namespace FileCabinetApp
             if (filter.Length != 0)
             {
                 string[] values = filter.Split(new string[] { " = '", " ='", "= '", "='", "' ", " " }, StringSplitOptions.RemoveEmptyEntries);
-                values[^1] = values[^1][0..^1];
+                values[^1] = values[^1][..^1];
                 if (values.Length % 3 != 0)
                 {
                     throw new ArgumentException("Incorrect format", nameof(filter));
@@ -208,13 +208,9 @@ namespace FileCabinetApp
             List<FileCabinetRecord> list = snapshot.Records.ToList();
             foreach (FileCabinetRecord record in list)
             {
-                long pos = this.fileStream.Length;
-                try
+                if (!this.offsetById.TryGetValue(record.Id, out long pos))
                 {
-                    pos = this.offsetById[record.Id];
-                }
-                catch (KeyNotFoundException)
-                {
+                    pos = this.fileStream.Length;
                     if (this.offsetDeletedById.ContainsKey(record.Id))
                     {
                         pos = this.offsetDeletedById[record.Id];
@@ -259,27 +255,6 @@ namespace FileCabinetApp
                 }
 
                 i++;
-                /*this.fileStream.Position = (i * RecordLength) + 1;
-                int b = this.fileStream.ReadByte();
-                if ((b & 2) == 2)
-                {
-                    offsetCount++;
-                    i++;
-                }
-                else
-                {
-                    if (offsetCount > 0)
-                    {
-                        this.DefragmentFile(i, offsetCount);
-                        i -= offsetCount;
-                        purgedCount += offsetCount;
-                        offsetCount = 0;
-                    }
-                    else
-                    {
-                        i++;
-                    }
-                }*/
             }
 
             this.fileStream.SetLength(this.fileStream.Length - (offsetCount * RecordLength));
@@ -291,7 +266,7 @@ namespace FileCabinetApp
         /// Delete record by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>
-        /// <returns>List of id recored, that was deleted.</returns>
+        /// <returns>List of id records, that was deleted.</returns>
         /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
         /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public IEnumerable<int> Delete(string param)
@@ -357,26 +332,26 @@ namespace FileCabinetApp
             this.UpdateRecords(foundResult, setValues);
         }
 
-        private static bool CheckOperator(string operatorSring, bool isEqual, bool isNeedAdd, int index)
+        private static bool CheckOperator(string operatorString, bool isEqual, bool isNeedAdd, int index)
         {
             if (isEqual)
             {
-                if (string.Equals(operatorSring, "OR", StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(operatorString, "OR", StringComparison.InvariantCultureIgnoreCase))
                 {
                     isNeedAdd = true;
                 }
                 else
                 {
-                    if (!string.Equals(operatorSring, "AND", StringComparison.InvariantCultureIgnoreCase)
-                        && !(index == 0 && string.Equals(operatorSring, "WHERE", StringComparison.InvariantCultureIgnoreCase)))
+                    if (!string.Equals(operatorString, "AND", StringComparison.InvariantCultureIgnoreCase)
+                        && !(index == 0 && string.Equals(operatorString, "WHERE", StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        throw new ArgumentException("Incorrect format", nameof(operatorSring));
+                        throw new ArgumentException("Incorrect format", nameof(operatorString));
                     }
                 }
             }
             else
             {
-                if (!(isNeedAdd && string.Equals(operatorSring, "OR", StringComparison.InvariantCultureIgnoreCase)))
+                if (!(isNeedAdd && string.Equals(operatorString, "OR", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     isNeedAdd = false;
                 }
@@ -396,22 +371,22 @@ namespace FileCabinetApp
                     {
                         case "FIRSTNAME":
                             recordData = new RecordData() { FirstName = setValues[i + 1] };
-                            this.validator.ValidatePrameter("firstname", recordData);
+                            this.validator.ValidateParameter("firstname", recordData);
                             this.WriteFirstName(setValues[i + 1], this.offsetById[foundResult[j]]);
                             break;
                         case "LASTNAME":
                             recordData = new RecordData() { LastName = setValues[i + 1] };
-                            this.validator.ValidatePrameter("lastname", recordData);
+                            this.validator.ValidateParameter("lastname", recordData);
                             this.WriteLastName(setValues[i + 1], this.offsetById[foundResult[j]]);
                             break;
                         case "DATEOFBIRTH":
-                            if (!DateTime.TryParse(setValues[i + 1], this.culture, DateTimeStyles.None, out DateTime dateOfBirth))
+                            if (!DateTime.TryParseExact(setValues[i + 1], "M/d/yyyy", this.culture, DateTimeStyles.None, out DateTime dateOfBirth))
                             {
-                                throw new ArgumentException("Incorrect dateofbith", nameof(setValues));
+                                throw new ArgumentException("Incorrect date of birth", nameof(setValues));
                             }
 
                             recordData = new RecordData() { DateOfBirth = dateOfBirth };
-                            this.validator.ValidatePrameter("dateofbirth", recordData);
+                            this.validator.ValidateParameter("dateofbirth", recordData);
                             this.WriteDateOfBirth(dateOfBirth, this.offsetById[foundResult[j]]);
                             break;
                         case "GENDER":
@@ -421,7 +396,7 @@ namespace FileCabinetApp
                             }
 
                             recordData = new RecordData() { Gender = gender };
-                            this.validator.ValidatePrameter("gender", recordData);
+                            this.validator.ValidateParameter("gender", recordData);
                             this.WriteGender(gender, this.offsetById[foundResult[j]]);
                             break;
                         case "PASSPORTID":
@@ -431,7 +406,7 @@ namespace FileCabinetApp
                             }
 
                             recordData = new RecordData() { PassportId = passportId };
-                            this.validator.ValidatePrameter("passportid", recordData);
+                            this.validator.ValidateParameter("passportid", recordData);
                             this.WritePassportId(passportId, this.offsetById[foundResult[j]]);
                             break;
                         case "SALARY":
@@ -441,7 +416,7 @@ namespace FileCabinetApp
                             }
 
                             recordData = new RecordData() { Salary = salary };
-                            this.validator.ValidatePrameter("salary", recordData);
+                            this.validator.ValidateParameter("salary", recordData);
                             this.WriteSalary(salary, this.offsetById[foundResult[j]]);
                             break;
                         default: throw new ArgumentException("Incorrect format", nameof(setValues));
@@ -452,12 +427,7 @@ namespace FileCabinetApp
 
         private bool Remove(int id)
         {
-            long pos;
-            try
-            {
-                pos = this.offsetById[id];
-            }
-            catch (KeyNotFoundException)
+            if (!this.offsetById.TryGetValue(id, out long pos))
             {
                 return false;
             }
@@ -546,10 +516,12 @@ namespace FileCabinetApp
             this.fileStream.Write(BitConverter.GetBytes(0), 0, sizeof(short));
             this.fileStream.Write(BitConverter.GetBytes(id), 0, sizeof(int));
             byte[] tempFirstName = this.enc.GetBytes(recordData.FirstName);
-            this.fileStream.Write(tempFirstName, 0, tempFirstName.Length);
+            Array.Resize(ref tempFirstName, StringLength);
+            this.fileStream.Write(tempFirstName, 0, StringLength);
             this.fileStream.Position += StringLength - tempFirstName.Length;
             byte[] tempLastName = this.enc.GetBytes(recordData.LastName);
-            this.fileStream.Write(tempLastName, 0, tempLastName.Length);
+            Array.Resize(ref tempLastName, StringLength);
+            this.fileStream.Write(tempLastName, 0, StringLength);
             this.fileStream.Position += StringLength - tempLastName.Length;
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Year), 0, sizeof(int));
             this.fileStream.Write(BitConverter.GetBytes(recordData.DateOfBirth.Month), 0, sizeof(int));
@@ -640,12 +612,11 @@ namespace FileCabinetApp
             bool isFound = false;
             while (!isFound)
             {
-                try
+                if (this.offsetById.TryGetValue(i, out _))
                 {
-                    _ = this.offsetById[i];
                     i++;
                 }
-                catch (KeyNotFoundException)
+                else
                 {
                     isFound = true;
                 }
@@ -657,12 +628,11 @@ namespace FileCabinetApp
 
         private void CheckId(int id)
         {
-            try
+            if (this.offsetById.TryGetValue(id, out long pos))
             {
-                long pos = this.offsetById[id];
                 this.fileStream.Position = pos;
             }
-            catch (KeyNotFoundException)
+            else
             {
                 this.offsetById.Add(id, this.fileStream.Length);
                 this.fileStream.Seek(0, SeekOrigin.End);
@@ -711,9 +681,14 @@ namespace FileCabinetApp
                                 i);
                             break;
                         case "DATEOFBIRTH":
+                            if (!DateTime.TryParseExact(values[i + 2], "M/d/yyyy", this.culture, DateTimeStyles.None, out _))
+                            {
+                                throw new ArgumentException("Incorrect date of birth", nameof(values));
+                            }
+
                             isNeedAdd = CheckOperator(
                                 values[i],
-                                string.Equals(record.DateOfBirth.ToString(this.culture), values[i + 2], StringComparison.InvariantCultureIgnoreCase),
+                                string.Equals(record.DateOfBirth.ToString("M/d/yyyy", this.culture), values[i + 2], StringComparison.InvariantCultureIgnoreCase),
                                 isNeedAdd,
                                 i);
                             break;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace FileCabinetApp
 {
@@ -41,10 +40,10 @@ namespace FileCabinetApp
                 if (int.TryParse(elements[0], out int id)
                     && DateTime.TryParse(elements[3], out DateTime dateOfBirth)
                     && char.TryParse(elements[4], out char gender)
-                    && short.TryParse(elements[5], out short pasportId)
+                    && short.TryParse(elements[5], out short passportId)
                     && decimal.TryParse(elements[6], out decimal salary))
                 {
-                    RecordData recordData = new RecordData(elements[1], elements[2], dateOfBirth, gender, pasportId, salary);
+                    RecordData recordData = new RecordData(elements[1], elements[2], dateOfBirth, gender, passportId, salary);
                     try
                     {
                         validator.ValidateParameters(recordData);

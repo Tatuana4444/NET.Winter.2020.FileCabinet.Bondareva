@@ -17,12 +17,12 @@ namespace FileCabinetApp
         /// Write IEnumerable T to text stream.
         /// </summary>
         /// <typeparam name="T">Type of records.</typeparam>
-        /// <param name="records">Rcords.</param>
+        /// <param name="records">Records.</param>
         /// <param name="stream">Text Stream.</param>
-        /// <param name="values">Name of colums that need to print.</param>
+        /// <param name="values">Name of columns that need to print.</param>
         /// <exception cref="ArgumentNullException">Thrown when records, stream, values or culture is null.</exception>
         /// <exception cref="ArgumentException">Thrown when records is empty.</exception>
-        public static void WriteToTextSream<T>(IEnumerable<T> records, TextWriter stream, string[] values)
+        public static void WriteToTextStream<T>(IEnumerable<T> records, TextWriter stream, string[] values)
         {
             if (records is null)
             {
@@ -137,11 +137,11 @@ namespace FileCabinetApp
                     if (isStringOrChar[j])
                     {
                         stream.Write(fieldsToPrint[i][j]);
-                        stream.Write(PrintSimbol(fieldMaxLength[j] - fieldsToPrint[i][j].Length, ' '));
+                        stream.Write(PrintSymbol(fieldMaxLength[j] - fieldsToPrint[i][j].Length, ' '));
                     }
                     else
                     {
-                        stream.Write(PrintSimbol(fieldMaxLength[j] - fieldsToPrint[i][j].Length, ' '));
+                        stream.Write(PrintSymbol(fieldMaxLength[j] - fieldsToPrint[i][j].Length, ' '));
                         stream.Write(fieldsToPrint[i][j]);
                     }
                 }
@@ -149,7 +149,7 @@ namespace FileCabinetApp
                 stream.WriteLine('|');
             }
 
-            stream.Write(delimiter + '\n');
+            stream.WriteLine(delimiter);
         }
 
         private static string GetDelimiter(int[] fieldMaxLength)
@@ -158,14 +158,14 @@ namespace FileCabinetApp
             for (int i = 0; i < fieldMaxLength.Length; i++)
             {
                 result.Append('+');
-                result.Append(PrintSimbol(fieldMaxLength[i], '-'));
+                result.Append(PrintSymbol(fieldMaxLength[i], '-'));
             }
 
             result.Append('+');
             return result.ToString();
         }
 
-        private static string PrintSimbol(int count, char symbol)
+        private static string PrintSymbol(int count, char symbol)
         {
             StringBuilder result = new StringBuilder();
 

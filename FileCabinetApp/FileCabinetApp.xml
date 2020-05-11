@@ -13,8 +13,9 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.AppCommandRequest"/> class.
             </summary>
-            <param name="command">Currend command.</param>
-            <param name="parameters">Command's parameters.</param>
+            <param name="command">Current command.</param>
+            <param name="parameters">Command parameters.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when command or parameters is null.</exception>
         </member>
         <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
             <summary>
@@ -42,6 +43,7 @@
             Base request handler.
             </summary>
             <param name="commandRequest">Request.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when commandRequest is null.</exception>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.CommandHandlerBase.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <summary>
@@ -132,7 +134,7 @@
             <summary>
             Get command name by id.
             </summary>
-            <param name="i">Command's id.</param>
+            <param name="i">Command id.</param>
             <returns>Command name.</returns>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
@@ -229,7 +231,7 @@
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
             <summary>
-            Base class for command handler whith service.
+            Base class for command handler with service.
             </summary>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.#ctor(FileCabinetApp.IFileCabinetService)">
@@ -332,7 +334,7 @@
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
-            Class that gets comands and information from user and give it to FileCabinetService.
+            Class that gets commands and information from user and give it to FileCabinetService.
             </summary>
         </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
@@ -675,7 +677,7 @@
             Returns records.
             </summary>
             <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-            <returns>Records by filret.</returns>
+            <returns>Records by filter.</returns>
             <exception cref="T:System.ArgumentNullException">Throw when filter is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
@@ -708,7 +710,7 @@
             Delete record by parameters.
             </summary>
             <param name="param">Record parameters.</param>
-            <returns>List of id recored, that was deleted.</returns>
+            <returns>List of id records, that was deleted.</returns>
             <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
             <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
@@ -730,6 +732,7 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> class.
             </summary>
             <param name="validator">Validator for params.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when validator is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.MakeSnapshot">
             <summary>
@@ -750,7 +753,7 @@
             Returns records.
             </summary>
             <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-            <returns>Records by filret.</returns>
+            <returns>Records by filter.</returns>
             <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
             <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
@@ -762,7 +765,7 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
-            Restore data fron snapshot.
+            Restore data from snapshot.
             </summary>
             <param name="snapshot">Snapshot.</param>
             <exception cref="T:System.ArgumentNullException">Throw when snapshot is null.</exception>
@@ -778,7 +781,7 @@
             Delete record by parameters.
             </summary>
             <param name="param">Record parameters.</param>
-            <returns>List of id recored, that was deleted.</returns>
+            <returns>List of id records, that was deleted.</returns>
             <exception cref="T:System.ArgumentNullException">Throw when param is null.</exception>
             <exception cref="T:System.ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         </member>
@@ -807,7 +810,7 @@
             Returns records.
             </summary>
             <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-            <returns>Records by filret.</returns>
+            <returns>Records by filter.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
             <summary>
@@ -832,7 +835,7 @@
             Delete records by parameters.
             </summary>
             <param name="param">Record parameters.</param>
-            <returns>List of id recored, that was deleted.</returns>
+            <returns>List of id records, that was deleted.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Update(System.String)">
             <summary>
@@ -863,13 +866,14 @@
             </summary>
             <param name="recordData">User's data.</param>
             <returns>Id of a new record.</returns>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData is null.</exception>
         </member>
         <member name="M:FileCabinetApp.ServiceLogger.Delete(System.String)">
             <summary>
             Delete record by parameters.
             </summary>
             <param name="param">Record parameters.</param>
-            <returns>List of id recored, that was deleted.</returns>
+            <returns>List of id records, that was deleted.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceLogger.GetStat">
             <summary>
@@ -900,7 +904,7 @@
             Returns records.
             </summary>
             <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-            <returns>Records by filret.</returns>
+            <returns>Records by filter.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceLogger.Update(System.String)">
             <summary>
@@ -931,7 +935,7 @@
             Delete record by parameters.
             </summary>
             <param name="param">Record parameters.</param>
-            <returns>List of id recored, that was deleted.</returns>
+            <returns>List of id records, that was deleted.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.GetStat">
             <summary>
@@ -962,7 +966,7 @@
             Returns records.
             </summary>
             <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-            <returns>Records by filret.</returns>
+            <returns>Records by filter.</returns>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.Update(System.String)">
             <summary>
@@ -1111,12 +1115,13 @@
             </summary>
             <param name="validators">Validators.</param>
         </member>
-        <member name="M:FileCabinetApp.CompositeValidator.ValidatePrameter(System.String,FileCabinetApp.RecordData)">
+        <member name="M:FileCabinetApp.CompositeValidator.ValidateParameter(System.String,FileCabinetApp.RecordData)">
             <summary>
             Check data by validator.
             </summary>
             <param name="validator">Name of Validator.</param>
             <param name="recordData">Checking data.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when validator or recordData is null.</exception>
         </member>
         <member name="M:FileCabinetApp.CompositeValidator.ValidateParameters(FileCabinetApp.RecordData)">
             <summary>
@@ -1126,7 +1131,7 @@
         </member>
         <member name="T:FileCabinetApp.DateOfBirthValidator">
             <summary>
-            Validator for date of Bith.
+            Validator for date of Birth.
             </summary>
         </member>
         <member name="M:FileCabinetApp.DateOfBirthValidator.#ctor(System.DateTime,System.DateTime)">
@@ -1138,9 +1143,11 @@
         </member>
         <member name="M:FileCabinetApp.DateOfBirthValidator.ValidateParameters(FileCabinetApp.RecordData)">
             <summary>
-            Check date of bith from date.
+            Check date of birth from date.
             </summary>
             <param name="recordData">Data.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when DateOfBirth more than to or less than from.</exception>
         </member>
         <member name="T:FileCabinetApp.FirstNameValidator">
             <summary>
@@ -1159,6 +1166,8 @@
             Check first name from data.
             </summary>
             <param name="recordData">Data.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData, recordData.FirstName is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when FirstName length more than maxLength or less than minLength.</exception>
         </member>
         <member name="T:FileCabinetApp.GenderValidator">
             <summary>
@@ -1177,10 +1186,12 @@
             Check gender from data.
             </summary>
             <param name="recordData">Data.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when Gender isn't manSymbol or womanSymbol.</exception>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
-            Inferface for validators.
+            Interface for validators.
             </summary>
         </member>
         <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.RecordData)">
@@ -1191,10 +1202,10 @@
         </member>
         <member name="T:FileCabinetApp.IValidator">
             <summary>
-            Inferface for validator.
+            Interface for validator.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.IValidator.ValidatePrameter(System.String,FileCabinetApp.RecordData)">
+        <member name="M:FileCabinetApp.IValidator.ValidateParameter(System.String,FileCabinetApp.RecordData)">
             <summary>
             Validate data by parameter.
             </summary>
@@ -1218,6 +1229,8 @@
             Check last name from data.
             </summary>
             <param name="recordData">Data.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData, recordData.LastName is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when LastName length more than maxLength or less than minLength.</exception>
         </member>
         <member name="T:FileCabinetApp.PassportIdValidator">
             <summary>
@@ -1236,6 +1249,8 @@
             Check passport id from data.
             </summary>
             <param name="recordData">Data.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when PassportId more than maxValue or less than minValue.</exception>
         </member>
         <member name="T:FileCabinetApp.SalaryValidator">
             <summary>
@@ -1253,6 +1268,8 @@
             Check salary from data.
             </summary>
             <param name="recordData">Data.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when recordData is null.</exception>
+            <exception cref="T:System.ArgumentException">Throw when Salary less than minSalary.</exception>
         </member>
         <member name="T:FileCabinetApp.ValidatorBuilder">
             <summary>
@@ -1334,12 +1351,14 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvWriter"/> class.
             </summary>
             <param name="writer">Writer for text.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when writer is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Writes records to csv file.
             </summary>
             <param name="record">Record.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when record is null.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>
@@ -1351,12 +1370,14 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
             </summary>
             <param name="writer">Writer for text.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when writer is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Writes records to xml file.
             </summary>
             <param name="record">Record.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when record is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.EndSaving">
             <summary>
@@ -1368,14 +1389,14 @@
             Writer for type T.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.TWriter.WriteToTextSream``1(System.Collections.Generic.IEnumerable{``0},System.IO.TextWriter,System.String[])">
+        <member name="M:FileCabinetApp.TWriter.WriteToTextStream``1(System.Collections.Generic.IEnumerable{``0},System.IO.TextWriter,System.String[])">
             <summary>
             Write IEnumerable T to text stream.
             </summary>
             <typeparam name="T">Type of records.</typeparam>
-            <param name="records">Rcords.</param>
+            <param name="records">Records.</param>
             <param name="stream">Text Stream.</param>
-            <param name="values">Name of colums that need to print.</param>
+            <param name="values">Name of columns that need to print.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when records, stream, values or culture is null.</exception>
             <exception cref="T:System.ArgumentException">Thrown when records is empty.</exception>
         </member>

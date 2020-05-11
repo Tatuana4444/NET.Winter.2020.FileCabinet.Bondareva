@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace FileCabinetApp
 {
@@ -29,6 +27,8 @@ namespace FileCabinetApp
         /// Check gender from data.
         /// </summary>
         /// <param name="recordData">Data.</param>
+        /// <exception cref="ArgumentNullException">Throw when recordData is null.</exception>
+        /// <exception cref="ArgumentException">Throw when Gender isn't manSymbol or womanSymbol.</exception>
         public void ValidateParameters(RecordData recordData)
         {
             if (recordData is null)

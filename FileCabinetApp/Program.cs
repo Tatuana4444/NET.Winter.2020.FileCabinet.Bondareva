@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using FileCabinetApp.CommandHandlers;
 
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Class that gets comands and information from user and give it to FileCabinetService.
+    /// Class that gets commands and information from user and give it to FileCabinetService.
     /// </summary>
     public static class Program
     {
@@ -79,29 +78,32 @@ namespace FileCabinetApp
             do
             {
                 Console.Write("> ");
-                var inputs = Console.ReadLine().Trim().Split(' ', 2);
+                var inputs = Console.ReadLine()?.Trim().Split(' ', 2);
                 const int commandIndex = 0;
-                var command = inputs[commandIndex];
+                if (inputs != null)
+                {
+                    var command = inputs[commandIndex];
 
-                if (string.IsNullOrEmpty(command))
-                {
-                    Console.WriteLine(Program.HintMessage);
-                    continue;
-                }
+                    if (string.IsNullOrEmpty(command))
+                    {
+                        Console.WriteLine(Program.HintMessage);
+                        continue;
+                    }
 
-                const int parametersIndex = 1;
-                var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
-                try
-                {
-                    commandHandler.Handle(new AppCommandRequest(command, parameters));
-                }
-                catch (ArgumentNullException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                catch (ArgumentException ex)
-                {
-                    Console.WriteLine(ex.Message);
+                    const int parametersIndex = 1;
+                    var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
+                    try
+                    {
+                        commandHandler.Handle(new AppCommandRequest(command, parameters));
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
             while (isRunning);
@@ -144,7 +146,7 @@ namespace FileCabinetApp
         {
             string[] values = filter.Split(new string[] { ", ", "," }, StringSplitOptions.None);
 
-            TWriter.WriteToTextSream(records, Console.Out, values);
+            TWriter.WriteToTextStream(records, Console.Out, values);
         }
 
         private static void SetDecorators(string[] param, IFileCabinetService service)

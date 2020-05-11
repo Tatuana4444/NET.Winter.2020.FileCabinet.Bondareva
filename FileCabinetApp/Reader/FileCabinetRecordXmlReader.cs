@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -49,7 +48,6 @@ namespace FileCabinetApp
                 return result;
             }
 
-            int i = 0;
             foreach (var record in list.Record)
             {
                 try
@@ -66,7 +64,6 @@ namespace FileCabinetApp
                         PassportId = record.PassportId,
                         Salary = record.Salary,
                     });
-                    i++;
                 }
                 catch (ArgumentNullException e)
                 {

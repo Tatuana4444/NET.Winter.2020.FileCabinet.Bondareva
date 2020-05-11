@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using System.Text;
 
 namespace FileCabinetApp
 {
@@ -31,6 +30,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="recordData">User's data.</param>
         /// <returns>Id of a new record.</returns>
+        /// <exception cref="ArgumentNullException">Throw when recordData is null.</exception>
         public int CreateRecord(RecordData recordData)
         {
             if (recordData is null)
@@ -60,7 +60,7 @@ namespace FileCabinetApp
         /// Delete record by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>
-        /// <returns>List of id recored, that was deleted.</returns>
+        /// <returns>List of id records, that was deleted.</returns>
         public IEnumerable<int> Delete(string param)
         {
             this.LogWriter($"{DateTime.Now} - Calling Delete() with parameters = '{param}'");
@@ -164,13 +164,13 @@ namespace FileCabinetApp
         {
             if (snapshot is null)
             {
-                this.LogWriter($"{DateTime.Now} - Calling Restore() with Snaphot = 'null'");
+                this.LogWriter($"{DateTime.Now} - Calling Restore() with Snapshot = 'null'");
                 this.LogWriter($"{DateTime.Now} - Restore() throw Snapshot can't be null");
                 throw new ArgumentNullException(nameof(snapshot), "Snapshot can't be null");
             }
             else
             {
-                this.LogWriter($"{DateTime.Now} - Calling Restore() with Snaphot: ");
+                this.LogWriter($"{DateTime.Now} - Calling Restore() with Snapshot: ");
             }
 
             foreach (var r in snapshot.Records)
@@ -197,7 +197,7 @@ namespace FileCabinetApp
         /// Returns records.
         /// </summary>
         /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-        /// <returns>Records by filret.</returns>
+        /// <returns>Records by filter.</returns>
         public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
         {
             this.LogWriter($"{DateTime.Now} - Calling SelectRecords()");

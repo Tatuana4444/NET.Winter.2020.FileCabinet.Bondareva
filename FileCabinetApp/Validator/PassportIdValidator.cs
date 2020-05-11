@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FileCabinetApp
 {
@@ -28,6 +26,8 @@ namespace FileCabinetApp
         /// Check passport id from data.
         /// </summary>
         /// <param name="recordData">Data.</param>
+        /// <exception cref="ArgumentNullException">Throw when recordData is null.</exception>
+        /// <exception cref="ArgumentException">Throw when PassportId more than maxValue or less than minValue.</exception>
         public void ValidateParameters(RecordData recordData)
         {
             if (recordData is null)

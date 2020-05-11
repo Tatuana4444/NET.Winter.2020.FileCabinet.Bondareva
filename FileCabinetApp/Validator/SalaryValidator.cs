@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FileCabinetApp
 {
@@ -24,6 +22,8 @@ namespace FileCabinetApp
         /// Check salary from data.
         /// </summary>
         /// <param name="recordData">Data.</param>
+        /// <exception cref="ArgumentNullException">Throw when recordData is null.</exception>
+        /// <exception cref="ArgumentException">Throw when Salary less than minSalary.</exception>
         public void ValidateParameters(RecordData recordData)
         {
             if (recordData is null)

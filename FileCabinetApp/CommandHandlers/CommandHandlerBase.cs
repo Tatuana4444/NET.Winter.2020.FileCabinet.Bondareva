@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -17,6 +16,7 @@ namespace FileCabinetApp.CommandHandlers
         /// Base request handler.
         /// </summary>
         /// <param name="commandRequest">Request.</param>
+        /// <exception cref="ArgumentNullException">Thrown when commandRequest is null.</exception>
         public virtual void Handle(AppCommandRequest commandRequest)
         {
             if (commandRequest is null)
@@ -32,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 PrintMissedCommandInfo(commandRequest.Command);
                 List<string> similarCommands = this.FindSimilarCommand(commandRequest.Command);
-                this.PrintSimilarComands(similarCommands);
+                PrintSimilarCommands(similarCommands);
             }
         }
 
@@ -89,7 +89,7 @@ namespace FileCabinetApp.CommandHandlers
             Console.WriteLine();
         }
 
-        private void PrintSimilarComands(List<string> similarCommands)
+        private static void PrintSimilarCommands(List<string> similarCommands)
         {
             if (similarCommands.Count > 1)
             {

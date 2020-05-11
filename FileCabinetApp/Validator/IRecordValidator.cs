@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FileCabinetApp
+﻿namespace FileCabinetApp
 {
     /// <summary>
-    /// Inferface for validators.
+    /// Interface for validators.
     /// </summary>
     public interface IRecordValidator
     {

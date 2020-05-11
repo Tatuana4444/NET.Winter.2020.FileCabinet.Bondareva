@@ -1,17 +1,21 @@
 ﻿using FileCabinetApp;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace FileCabinetGenerator
 {
-    class Program
+    /// <summary>
+    /// Class that gets generation parameters from user and generates records.
+    /// </summary>
+    public static class Program
     {
-        
-        static void Main(string[] args)
+        /// <summary>
+        /// Gets  generation parameters and generates records.
+        /// </summary>
+        /// <param name="args">Arguments from console runs.</param>
+        public static void Main(string[] args)
         {
             bool isCsv = false;
             string outputFile = "1.xml";
@@ -66,10 +70,8 @@ namespace FileCabinetGenerator
                 try
                 {
                     TextWriter writer = new StreamWriter(outputFile);
-
                     if (isCsv)
                     {
-
                         foreach (var record in list.Record)
                         {
                             writer.WriteLine($"{record.Id}, {record.Name.FirstName}, {record.Name.LastName}, " +
@@ -81,7 +83,6 @@ namespace FileCabinetGenerator
                     {
                         XmlSerializer ser = new XmlSerializer(typeof(RecordForSerializer));
                         ser.Serialize(writer, list);
-
                     }
                 }
                 catch (DirectoryNotFoundException ex)
@@ -112,8 +113,6 @@ namespace FileCabinetGenerator
                     rnd.Next(1, 3) == 1 ? 'M' : 'W', 
                     (short)rnd.Next(1000, 9999), 
                     rnd.Next(375, int.MaxValue));
-
-
                 list.Record.Add(record);
             }
             

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -42,17 +40,14 @@ namespace FileCabinetApp.CommandHandlers
 
         private static Tuple<bool, string, DateTime> DateConverter(string data)
         {
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            culture.DateTimeFormat.ShortDatePattern = "MMM/dd/yyyy";
+            CultureInfo culture = CultureInfo.InvariantCulture;
             DateTimeStyles styles = DateTimeStyles.None;
-            if (DateTime.TryParse(data, culture, styles, out DateTime date))
+            if (DateTime.TryParseExact(data, "M/d/yyyy", culture, styles, out DateTime date))
             {
                 return new Tuple<bool, string, DateTime>(true, string.Empty, date);
             }
-            else
-            {
-                return new Tuple<bool, string, DateTime>(false, "Error, Date of birth should be in forma 'month/day/year'. Try again, please", date);
-            }
+
+            return new Tuple<bool, string, DateTime>(false, "Error, Date of birth should be in format 'month/day/year'. Try again, please", date);
         }
 
         private static Tuple<bool, string, char> CharConverter(string data)
@@ -61,10 +56,8 @@ namespace FileCabinetApp.CommandHandlers
             {
                 return new Tuple<bool, string, char>(true, string.Empty, gender);
             }
-            else
-            {
-                return new Tuple<bool, string, char>(false, "Error, Unvalued value. Try again, please", gender);
-            }
+
+            return new Tuple<bool, string, char>(false, "Error, Incorrect value. Try again, please", gender);
         }
 
         private static Tuple<bool, string, short> ShortConverter(string data)
@@ -73,10 +66,8 @@ namespace FileCabinetApp.CommandHandlers
             {
                 return new Tuple<bool, string, short>(true, string.Empty, passportId);
             }
-            else
-            {
-                return new Tuple<bool, string, short>(false, "Error, passportId should be short integer. Try again, please", passportId);
-            }
+
+            return new Tuple<bool, string, short>(false, "Error, passportId should be short integer. Try again, please", passportId);
         }
 
         private static Tuple<bool, string, decimal> DecimalConverter(string data)
@@ -85,10 +76,8 @@ namespace FileCabinetApp.CommandHandlers
             {
                 return new Tuple<bool, string, decimal>(true, string.Empty, salary);
             }
-            else
-            {
-                return new Tuple<bool, string, decimal>(false, "Error, salary should be decimal. Try again, please", salary);
-            }
+
+            return new Tuple<bool, string, decimal>(false, "Error, salary should be decimal. Try again, please", salary);
         }
 
         private void Insert(string parameters)
@@ -98,7 +87,7 @@ namespace FileCabinetApp.CommandHandlers
             string[] data = parameters.Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
             if (data.Length != 15 || !string.Equals(data[7].Trim(), "values", StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new ArgumentException("Uncorrect format of insert.");
+                throw new ArgumentException("Incorrect format of insert.");
             }
 
             for (int i = 8; i < 15; i++)
@@ -113,6 +102,7 @@ namespace FileCabinetApp.CommandHandlers
             char gender = default;
             short passportId = default;
             decimal salary = default;
+
             for (int i = 0; i < 7; i++)
             {
                 switch (data[i].Trim().ToUpperInvariant())
@@ -136,22 +126,55 @@ namespace FileCabinetApp.CommandHandlers
                     case "DATEOFBIRTH":
                         isHere[3] = true;
                         var concertingDate = DateConverter(data[i + 8]);
-                        dateOfBirth = concertingDate.Item3;
+                        if (concertingDate.Item1)
+                        {
+                            dateOfBirth = concertingDate.Item3;
+                        }
+                        else
+                        {
+                            throw new ArgumentException(concertingDate.Item2, nameof(parameters));
+                        }
+
                         break;
                     case "GENDER":
                         isHere[4] = true;
+
                         var convertingGender = CharConverter(data[i + 8]);
-                        gender = convertingGender.Item3;
+                        if (convertingGender.Item1)
+                        {
+                            gender = convertingGender.Item3;
+                        }
+                        else
+                        {
+                            throw new ArgumentException(convertingGender.Item2, nameof(parameters));
+                        }
+
                         break;
                     case "PASSPORTID":
                         isHere[5] = true;
                         var convertingPassportId = ShortConverter(data[i + 8]);
-                        passportId = convertingPassportId.Item3;
+                        if (convertingPassportId.Item1)
+                        {
+                            passportId = convertingPassportId.Item3;
+                        }
+                        else
+                        {
+                            throw new ArgumentException(convertingPassportId.Item2, nameof(parameters));
+                        }
+
                         break;
                     case "SALARY":
                         isHere[6] = true;
-                        var convertingSalaty = DecimalConverter(data[i + 8]);
-                        salary = convertingSalaty.Item3;
+                        var convertingSalary = DecimalConverter(data[i + 8]);
+                        if (convertingSalary.Item1)
+                        {
+                            salary = convertingSalary.Item3;
+                        }
+                        else
+                        {
+                            throw new ArgumentException(convertingSalary.Item2, nameof(parameters));
+                        }
+
                         break;
                 }
             }

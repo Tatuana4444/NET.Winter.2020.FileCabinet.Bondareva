@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FileCabinetApp
+﻿namespace FileCabinetApp
 {
     /// <summary>
-    /// Inferface for validator.
+    /// Interface for validator.
     /// </summary>
     public interface IValidator : IRecordValidator
     {
@@ -14,6 +10,6 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="validator">Name of Validator.</param>
         /// <param name="recordData">User's data.</param>
-        public void ValidatePrameter(string validator, RecordData recordData);
+        public void ValidateParameter(string validator, RecordData recordData);
     }
 }

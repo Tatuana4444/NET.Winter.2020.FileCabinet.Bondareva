@@ -24,8 +24,14 @@ namespace FileCabinetApp
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
         /// </summary>
         /// <param name="validator">Validator for params.</param>
+        /// <exception cref="ArgumentNullException">Throw when validator is null.</exception>
         public FileCabinetMemoryService(IValidator validator)
         {
+            if (validator is null)
+            {
+                throw new ArgumentNullException(nameof(validator), "Validator can't be null");
+            }
+
             this.validator = validator;
         }
 
@@ -77,7 +83,7 @@ namespace FileCabinetApp
             this.list.Add(record);
             this.AddToDictionary(this.firstNameDictionary, recordData.FirstName.ToUpperInvariant(), record.Id);
             this.AddToDictionary(this.lastNameDictionary, recordData.LastName.ToUpperInvariant(), record.Id);
-            this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString(this.culture), record.Id);
+            this.AddToDictionary(this.dateOfBirthDictionary, recordData.DateOfBirth.ToString("M/d/yyyy", this.culture), record.Id);
             this.cache.Clear();
             return record.Id;
         }
@@ -86,7 +92,7 @@ namespace FileCabinetApp
         /// Returns records.
         /// </summary>
         /// <param name="filter">Record's filter. Filter start from 'where' and can contain 'and' and 'or'.</param>
-        /// <returns>Records by filret.</returns>
+        /// <returns>Records by filter.</returns>
         /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
         /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public ReadOnlyCollection<FileCabinetRecord> SelectRecords(string filter)
@@ -138,7 +144,7 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Restore data fron snapshot.
+        /// Restore data from snapshot.
         /// </summary>
         /// <param name="snapshot">Snapshot.</param>
         /// <exception cref="ArgumentNullException">Throw when snapshot is null.</exception>
@@ -156,7 +162,7 @@ namespace FileCabinetApp
                 {
                     RemoveFromDictionary(this.firstNameDictionary, this.list[pos].FirstName.ToUpperInvariant(), record.Id);
                     RemoveFromDictionary(this.lastNameDictionary, this.list[pos].LastName.ToUpperInvariant(), record.Id);
-                    RemoveFromDictionary(this.dateOfBirthDictionary, this.list[pos].DateOfBirth.ToString(this.culture), record.Id);
+                    RemoveFromDictionary(this.dateOfBirthDictionary, this.list[pos].DateOfBirth.ToString("M/d/yyyy", this.culture), record.Id);
                     this.list[pos] = record;
                 }
                 else
@@ -167,7 +173,7 @@ namespace FileCabinetApp
 
                 this.AddToDictionary(this.firstNameDictionary, record.FirstName.ToUpperInvariant(), record.Id);
                 this.AddToDictionary(this.lastNameDictionary, record.LastName.ToUpperInvariant(), record.Id);
-                this.AddToDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.culture), record.Id);
+                this.AddToDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString("M/d/yyyy", this.culture), record.Id);
             }
         }
 
@@ -184,7 +190,7 @@ namespace FileCabinetApp
         /// Delete record by parameters.
         /// </summary>
         /// <param name="param">Record parameters.</param>
-        /// <returns>List of id recored, that was deleted.</returns>
+        /// <returns>List of id records, that was deleted.</returns>
         /// <exception cref="ArgumentNullException">Throw when param is null.</exception>
         /// <exception cref="ArgumentException">Throw when param not contains 'where', 'or', 'and' or have incorrect data.</exception>
         public IEnumerable<int> Delete(string param)
@@ -210,7 +216,7 @@ namespace FileCabinetApp
                 this.presentIdList.Remove(foundResult[i].Id);
                 this.firstNameDictionary[foundResult[i].FirstName.ToUpperInvariant()].Remove(foundResult[i]);
                 this.lastNameDictionary[foundResult[i].LastName.ToUpperInvariant()].Remove(foundResult[i]);
-                this.dateOfBirthDictionary[foundResult[i].DateOfBirth.ToString(this.culture)].Remove(foundResult[i]);
+                this.dateOfBirthDictionary[foundResult[i].DateOfBirth.ToString("M/d/yyyy", this.culture)].Remove(foundResult[i]);
                 this.list.Remove(foundResult[i]);
             }
 
@@ -356,23 +362,29 @@ namespace FileCabinetApp
                     {
                         case "FIRSTNAME":
                             recordData = new RecordData() { FirstName = setValues[i + 1] };
-                            this.validator.ValidatePrameter("firstname", recordData);
+                            this.validator.ValidateParameter("firstname", recordData);
+                            RemoveFromDictionary(this.firstNameDictionary, foundResult[j].FirstName.ToUpperInvariant(), foundResult[j].Id);
                             foundResult[j].FirstName = setValues[i + 1];
+                            this.AddToDictionary(this.firstNameDictionary, foundResult[j].FirstName.ToUpperInvariant(), foundResult[j].Id);
                             break;
                         case "LASTNAME":
                             recordData = new RecordData() { LastName = setValues[i + 1] };
-                            this.validator.ValidatePrameter("lastname", recordData);
+                            this.validator.ValidateParameter("lastname", recordData);
+                            RemoveFromDictionary(this.lastNameDictionary, foundResult[j].LastName.ToUpperInvariant(), foundResult[j].Id);
                             foundResult[j].LastName = setValues[i + 1];
+                            this.AddToDictionary(this.lastNameDictionary, foundResult[j].LastName.ToUpperInvariant(), foundResult[j].Id);
                             break;
                         case "DATEOFBIRTH":
-                            if (!DateTime.TryParse(setValues[i + 1], this.culture, DateTimeStyles.None, out DateTime dateOfBirth))
+                            if (!DateTime.TryParseExact(setValues[i + 1], "M/d/yyyy", this.culture, DateTimeStyles.None, out DateTime dateOfBirth))
                             {
-                                throw new ArgumentException("Incorrect dateofbith", nameof(setValues));
+                                throw new ArgumentException("Incorrect date of birth", nameof(setValues));
                             }
 
                             recordData = new RecordData() { DateOfBirth = dateOfBirth };
-                            this.validator.ValidatePrameter("dateofbirth", recordData);
+                            this.validator.ValidateParameter("dateofbirth", recordData);
+                            RemoveFromDictionary(this.dateOfBirthDictionary, foundResult[j].DateOfBirth.ToString("M/d/yyyy", this.culture), foundResult[j].Id);
                             foundResult[j].DateOfBirth = dateOfBirth;
+                            this.AddToDictionary(this.dateOfBirthDictionary, foundResult[j].DateOfBirth.ToString("M/d/yyyy", this.culture), foundResult[j].Id);
                             break;
                         case "GENDER":
                             if (!char.TryParse(setValues[i + 1], out char gender))
@@ -381,7 +393,7 @@ namespace FileCabinetApp
                             }
 
                             recordData = new RecordData() { Gender = gender };
-                            this.validator.ValidatePrameter("gender", recordData);
+                            this.validator.ValidateParameter("gender", recordData);
                             foundResult[j].Gender = gender;
                             break;
                         case "PASSPORTID":
@@ -391,7 +403,7 @@ namespace FileCabinetApp
                             }
 
                             recordData = new RecordData() { PassportId = passportId };
-                            this.validator.ValidatePrameter("passportid", recordData);
+                            this.validator.ValidateParameter("passportid", recordData);
                             foundResult[j].PassportId = passportId;
                             break;
                         case "SALARY":
@@ -401,7 +413,7 @@ namespace FileCabinetApp
                             }
 
                             recordData = new RecordData() { Salary = salary };
-                            this.validator.ValidatePrameter("salary", recordData);
+                            this.validator.ValidateParameter("salary", recordData);
                             foundResult[j].Salary = salary;
                             break;
                         default: throw new ArgumentException("Incorrect format", nameof(setValues));
@@ -434,7 +446,7 @@ namespace FileCabinetApp
 
             RemoveFromDictionary(this.firstNameDictionary, record.FirstName.ToUpperInvariant(), id);
             RemoveFromDictionary(this.lastNameDictionary, record.LastName.ToUpperInvariant(), id);
-            RemoveFromDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString(this.culture), id);
+            RemoveFromDictionary(this.dateOfBirthDictionary, record.DateOfBirth.ToString("M/d/yyyy", this.culture), id);
             this.presentIdList.Remove(id);
 
             return true;
@@ -587,7 +599,12 @@ namespace FileCabinetApp
 
                         break;
                     case "DATEOFBIRTH":
-                        string dateStr = values[i + 2].ToUpperInvariant();
+                        if (!DateTime.TryParseExact(values[i + 2], "M/d/yyyy", this.culture, DateTimeStyles.None, out _))
+                        {
+                            throw new ArgumentException("Incorrect date of birth", nameof(values));
+                        }
+
+                        string dateStr = values[i + 2];
                         if (this.dateOfBirthDictionary.ContainsKey(dateStr))
                         {
                             if (string.Equals(values[i], "AND", StringComparison.InvariantCultureIgnoreCase))

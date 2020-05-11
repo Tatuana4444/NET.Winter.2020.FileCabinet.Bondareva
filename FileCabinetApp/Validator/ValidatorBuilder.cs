@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using FileCabinetApp.Validation;
 using Microsoft.Extensions.Configuration;
 
@@ -128,7 +127,6 @@ namespace FileCabinetApp
             DateTimeStyles styles = DateTimeStyles.None;
             this.ValidateFirstName(rules.FirstName.Min, rules.FirstName.Max);
             this.ValidateLastName(rules.LastName.Min, rules.LastName.Max);
-            DateTime.Parse(rules.DateOfBirth.From, culture, styles);
             this.ValidateDateOfBirth(
                 DateTime.Parse(rules.DateOfBirth.From, culture, styles),
                 DateTime.Parse(rules.DateOfBirth.To, culture, styles));

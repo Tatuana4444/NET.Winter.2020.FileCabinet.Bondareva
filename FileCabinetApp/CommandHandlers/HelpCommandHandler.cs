@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -40,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers
         /// <summary>
         /// Get command name by id.
         /// </summary>
-        /// <param name="i">Command's id.</param>
+        /// <param name="i">Command id.</param>
         /// <returns>Command name.</returns>
         public static string GetCommandName(int i)
         {

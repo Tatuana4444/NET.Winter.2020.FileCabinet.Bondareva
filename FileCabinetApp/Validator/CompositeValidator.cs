@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FileCabinetApp
 {
@@ -25,7 +24,8 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="validator">Name of Validator.</param>
         /// <param name="recordData">Checking data.</param>
-        public void ValidatePrameter(string validator, RecordData recordData)
+        /// <exception cref="ArgumentNullException">Throw when validator or recordData is null.</exception>
+        public void ValidateParameter(string validator, RecordData recordData)
         {
             if (validator is null)
             {

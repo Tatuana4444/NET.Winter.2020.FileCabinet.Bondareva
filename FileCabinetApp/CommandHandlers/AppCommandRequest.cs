@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -13,8 +10,9 @@ namespace FileCabinetApp.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="AppCommandRequest"/> class.
         /// </summary>
-        /// <param name="command">Currend command.</param>
-        /// <param name="parameters">Command's parameters.</param>
+        /// <param name="command">Current command.</param>
+        /// <param name="parameters">Command parameters.</param>
+        /// <exception cref="ArgumentNullException">Thrown when command or parameters is null.</exception>
         public AppCommandRequest(string command, string parameters)
         {
             if (command is null)

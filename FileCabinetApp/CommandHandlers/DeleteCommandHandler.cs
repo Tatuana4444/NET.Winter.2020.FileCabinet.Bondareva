@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -51,7 +50,7 @@ namespace FileCabinetApp.CommandHandlers
                     Console.Write($"#{deletedId[i]}, ");
                 }
 
-                Console.WriteLine($"#{deletedId[deletedId.Count - 1]} is deleted.");
+                Console.WriteLine($"#{deletedId[^1]} is deleted.");
             }
             else
             {
